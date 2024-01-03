@@ -1,26 +1,30 @@
-import { Storage } from '@google-cloud/storage';
-import { GOOGLE_CLOUD_KEY_FILE } from '$env/static/private';
-
-const storage = new Storage({ keyFile: GOOGLE_CLOUD_KEY_FILE });
-const bucketName = 'lingoimages';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '$lib/firebase/firebase';
 
 export async function load() {
     try {
-        const [files] = await storage.bucket(bucketName).getFiles();
+        // read from scenario collection
+        const scenarioCollection = collection(db, 'scenario');
+        
+        // fetch documents from collection
+        const snapshot = await getDocs(scenarioCollection);
 
-        const imageUrls = files
-            .filter(file => file.name.endsWith('.png') || file.name.endsWith('.jpg'))
-            .map(file => `https://storage.googleapis.com/${bucketName}/${file.name}`);
+        // process documents
+        const scenarios = snapshot.docs.map(doc => {
+            return {
+                id: doc.id,
+                ...doc.data()
+            };
+        });
 
-        console.log(imageUrls);
-
+        // return data
         return {
-            imageUrls
-        };
+            scenarios
+        }
     } catch (error) {
         console.error('Error: ', error);
         return {
-            imageUrls: []
+            scenarios: []
         };
     }
 }
