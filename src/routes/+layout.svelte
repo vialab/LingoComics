@@ -58,7 +58,7 @@
 				<a href="/achievements" class="transition-bg" class:primary-bg={$page.url.pathname === '/achievements'}>Achievements</a>
 			</li>
 			<li class="text-xl px-1">
-				<a href="/story" class="transition-bg" class:primary-bg={$page.url.pathname === '/story'}>Create new scenario</a>
+				<a href="/story" class="transition-bg" class:primary-bg={$page.url.pathname === '/story'}>Story designer</a>
 			</li>
 		</ul>
 	</div>
