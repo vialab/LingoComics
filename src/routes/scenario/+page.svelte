@@ -2,15 +2,7 @@
 <script lang="ts">
 	import type { Scenario, Situation } from './data.js';
     import Header from '../../components/Header.svelte';
-
-    // Define the expected structure of the data received from +page.server.ts
-    type FirestoreData = {
-        scenarios: Array<{
-            id: string;
-            image: string;
-            title: string;
-        }>;
-    };
+	import type { FirestoreData } from '../../utils/types.js';
 
     // Get data from +page.server.ts
     export let data: FirestoreData;
@@ -78,6 +70,7 @@
     .scenario-page {
         overflow-y: scroll;
         height: calc(100vh - 80px);
+        padding: 2rem;
     }
 
     .scenario-card {

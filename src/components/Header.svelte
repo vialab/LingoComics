@@ -1,4 +1,4 @@
-<div class="max-w-7xl mx-auto p-4 h-auto">
+<div class="max-w-7xl mx-auto pb-3 h-auto">
 	<!-- header -->
 	<header class="flex justify-center items-end border-b border-black">
         <slot name="back" />

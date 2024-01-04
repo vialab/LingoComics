@@ -1,7 +1,8 @@
 import { OPENAI_KEY } from "$env/static/private";
 import { OpenAI } from 'openai';
-import { generateMomentPrompt, generateScenarioPrompt, generateSituationsPrompt } from './prompts.js';
-import type { MomentObject } from "../../utils/types.js";
+import { generateMomentPrompt, generateScenarioPrompt, generateSituationsPrompt } from '../prompts.js';
+import { v4 as uuidv4 } from 'uuid';
+import type { MomentObject } from "../../../utils/types.js";
 
 
 // initialize openai
@@ -48,7 +49,7 @@ export const POST = async ({ request }) => {
         });
 
         // create response data object
-        const data = { scenario: scenario, situations: structuredSituations };
+        const data = { scenarioId: uuidv4(), scenario: scenario, situations: structuredSituations };
 
         return new Response(JSON.stringify(data), { status: 200});
     } catch (error) {
@@ -56,7 +57,6 @@ export const POST = async ({ request }) => {
         return new Response(JSON.stringify({ "data": "error generating scenario" }), { status: 500 });
     }
 }
-
 
 async function gptPrompt(openai: OpenAI, model: string, prompt: string) : Promise<OpenAI.Chat.Completions.ChatCompletion> {
     return await openai.chat.completions.create({
