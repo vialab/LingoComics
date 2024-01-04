@@ -35,7 +35,7 @@ export function generateMomentPrompt(scenario: string, situation: string, tone: 
         - tone: '${tone}'
         - conflict: '${conflict}'
 
-        Provide a concise description for each key moment.
+        Provide a concise one-sentence brief for each key moment.
 
         The output should be in the format Moment: <moment>
     `;
