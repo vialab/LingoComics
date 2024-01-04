@@ -190,8 +190,6 @@
 </div>
 
 <style>
-
-
     .scrollable-content {
         overflow-y: auto;
         max-height: calc(100vh - 80px);
