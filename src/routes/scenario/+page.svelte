@@ -15,7 +15,9 @@
             title: item.title,
             situation: [] as Array<Situation>
         }));
-    }
+    };
+
+    let filteredScenarios = data.scenarios.filter(scenario => ['1', '2', '3', '4', '5'].includes(scenario.id));
 
     // Transform the received data
     let scenarios: Array<Scenario> = transformToScenario(data);
@@ -29,7 +31,7 @@
     
     <div class="flex justify-center items-center overflow-x-auto p-4 space-x-4">
         <div class="grid grid-cols-5 gap-4 w-full max-w-6xl">
-            {#each data.scenarios.slice(0, 5) as scenario}
+            {#each filteredScenarios.slice(0, 5) as scenario}
               <!-- Scenario card with a fixed aspect ratio for images -->
                 <a href="/scenario/{scenario.id}" class="scenario-card flex-none sm:w-1/2 md:w-full lg:w-full xl:w-48 h-[30rem] overflow-hidden rounded-lg bg-black relative">
                     <img src={scenario.image} alt={scenario.title} class="w-full h-full object-cover absolute top-0 left-0" />

@@ -14,8 +14,6 @@ export async function load() {
             }
         }).filter(scenario => !['1', '2', '3', '4', '5'].includes(scenario.id));
 
-        console.log(scenarios);
-
         return {
             scenarios
         }

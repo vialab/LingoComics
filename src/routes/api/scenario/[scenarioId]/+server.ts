@@ -36,7 +36,6 @@ export const GET: RequestHandler = async ({ params }) => {
             const moments : MomentObject = {};
             momentsSnapshot.forEach(momentDoc => {
                 const momentData = momentDoc.data();
-                console.log(momentData);
                 moments[momentDoc.id] = momentData.description;
             });
 
@@ -52,8 +51,6 @@ export const GET: RequestHandler = async ({ params }) => {
             scenario: scenarioData!.title,
             situations: situations
         };
-
-        console.log(responseData);
 
         return new Response(JSON.stringify(responseData), { status: 200 });    
     } catch (error) {

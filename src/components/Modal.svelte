@@ -13,6 +13,7 @@
     function handleScenarioClick(scenarioId: string) {
         if (selectedScenario) {
             selectedScenario(scenarioId);
+            toggleModal();
         }
     }
 </script>
