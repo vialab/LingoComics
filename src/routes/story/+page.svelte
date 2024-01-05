@@ -5,6 +5,7 @@
 	import { messages } from '../../utils/loading-messages';
 	import Form from '../../components/Form.svelte';
 	import type { Moment } from '../scenario/data';
+    import Modal from '../../components/Modal.svelte';
 
     // initialize all variables
     let isLoading : boolean = false;
@@ -128,14 +129,8 @@
                                 <button class="btn custom-btn-bg mb-2 text-xl" on:click={saveStory}>{ isSaving ? `Saving` : `Save` }</button>
                                 <button class="btn custom-btn-bg-2 mb-2 text-xl" on:click={toggleEditing}>Edit</button>
                                 {#if existingScenarios.length > 0}
-                                    <select name="load" id="scenarios" class="mb-2 text-lg">
-                                        <option disabled selected value>Load</option>
-                                        {#each existingScenarios as scenario}  
-                                            <option>{ scenario.title }</option>
-                                        {/each}
-                                    </select>
+                                    <Modal scenarios={existingScenarios} />
                                 {/if}
-                                <!-- {/if} -->
                         </header>
                     </div>
 
