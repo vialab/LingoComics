@@ -8,6 +8,13 @@
     }
 
     export let scenarios : Scenario[];
+    export let selectedScenario : (scenarioId: string) => void;
+
+    function handleScenarioClick(scenarioId: string) {
+        if (selectedScenario) {
+            selectedScenario(scenarioId);
+        }
+    }
 </script>
 
 <button class="btn mb-2 text-xl" on:click={toggleModal}>Load</button>
@@ -20,7 +27,7 @@
             <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52 w-full">
                 {#each scenarios as scenario}
                     <li class="px-5 py-1 my-1">
-                        <button class="text-lg">{ scenario.title }</button>
+                        <button class="text-lg" on:click={() => handleScenarioClick(scenario.id)}>{ scenario.title }</button>
                     </li>
                 {/each}
             </ul>   

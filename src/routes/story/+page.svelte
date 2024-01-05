@@ -4,7 +4,6 @@
     import { typewriter } from '../../utils/transition';    
 	import { messages } from '../../utils/loading-messages';
 	import Form from '../../components/Form.svelte';
-	import type { Moment } from '../scenario/data';
     import Modal from '../../components/Modal.svelte';
 
     // initialize all variables
@@ -72,7 +71,7 @@
         isSaving = true;
 
         try {
-            const response = await fetch('/api/save', {
+            const response = await fetch('/api/scenario', {
                 method: "POST",
                 body: JSON.stringify(responseData)
             });
@@ -87,6 +86,26 @@
         }
     }
 
+    // load stored stories
+    async function fetchScenario(scenarioId: string) {
+        try {
+            const response = await fetch(`/api/scenario/${scenarioId}`, {
+                method: "GET"
+            });
+    
+            console.log('scenarioID', scenarioId);
+    
+            const result = await response.json();
+
+            console.log(result);
+
+            responseData = result as StoryStruct;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    // handle changes in the scenario
     function handleScenarioChange(event: Event) {
         const target = event.target as HTMLSpanElement;
         const updatedContent = target.textContent || '';
@@ -94,13 +113,17 @@
         responseData!.scenario = updatedContent;
     }
 
+    // handle changes for situation and moment on edit
     function handleContentChange(event: Event, situationIndex: number, momentIndex : string | null = null): void {
         const target = event.target as HTMLSpanElement;
         const updatedContent = target.textContent || '';
 
         if (momentIndex !== null) {
-            // Update a specific moment in a situation
-            responseData!.situations[situationIndex].moments[momentIndex] = updatedContent;
+            const moments = responseData!.situations[situationIndex].moments as { [key: string]: string };
+
+            if (momentIndex in moments) {
+                moments[momentIndex] = updatedContent;
+            }
         } else {
             // Update the title of a situation
             responseData!.situations[situationIndex].title = updatedContent;
@@ -129,7 +152,10 @@
                                 <button class="btn custom-btn-bg mb-2 text-xl" on:click={saveStory}>{ isSaving ? `Saving` : `Save` }</button>
                                 <button class="btn custom-btn-bg-2 mb-2 text-xl" on:click={toggleEditing}>Edit</button>
                                 {#if existingScenarios.length > 0}
-                                    <Modal scenarios={existingScenarios} />
+                                    <Modal 
+                                        selectedScenario={fetchScenario}
+                                        scenarios={existingScenarios}
+                                    />
                                 {/if}
                         </header>
                     </div>

@@ -52,7 +52,7 @@ export const POST = async ({ request }) => {
         // create response data object
         const data = { scenarioId: uuidv4(), scenario: scenario, situations: structuredSituations };
 
-        return new Response(JSON.stringify(data), { status: 200});
+        return new Response(JSON.stringify(data), { status: 200 });
     } catch (error) {
         console.error(error);
         return new Response(JSON.stringify({ "data": "error generating scenario" }), { status: 500 });

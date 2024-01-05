@@ -1,5 +1,5 @@
 export type Scenario = {
-    id: number,
+    id: string,
     image: string;
     title: string;
     situation: Array<Situation>;

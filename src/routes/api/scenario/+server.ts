@@ -1,7 +1,6 @@
 import { db } from '$lib/firebase/firebase.js';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { collection, addDoc, doc, getDoc, setDoc, query, getDocs, where, updateDoc } from 'firebase/firestore';
-import { v4 as uuidv4 } from 'uuid';
 import type { StoryStruct } from '../../../utils/types.js';
 
 export const POST = async ({ request }) => {
@@ -62,7 +61,6 @@ export const POST = async ({ request }) => {
                 }
             }
         }
-
 
         return new Response(JSON.stringify({ "data": scenarioId }), { status: 200 });
     } catch (error) {
