@@ -14,6 +14,7 @@
 	let isLoading: boolean = false;
 	let isSaving: boolean = false;
 	let isEditing: boolean = false;
+    let isStoryGenerated : boolean, isImageGenerated : boolean, isFinish : boolean = false;
 	let responseData: StoryStruct | null = null;
 	const editableStyle =
 		"border: 1px solid #ccc; padding: 4px; background-color: white; cursor: text; border-radius: 3px;";
@@ -68,6 +69,7 @@
 			console.error(error);
 		} finally {
 			isLoading = false;
+            isStoryGenerated = true;
 		}
 	}
 
@@ -105,7 +107,9 @@
 			responseData = result as StoryStruct;
 		} catch (error) {
 			console.error(error);
-		}
+		} finally {
+            isStoryGenerated = true;
+        }
 	}
 
 	// handle changes in the scenario
@@ -246,9 +250,9 @@
 		</div>
 
         <ul class="steps absolute bottom-0 left-0 right-0">
-            <li class="step step-primary">Generate story</li>
-            <li class="step step-primary">Generate images</li>
-            <li class="step">Finish</li>
+            <li class="step {isStoryGenerated ? 'step-primary' : ''}">Generate story</li>
+            <li class="step {isImageGenerated ? 'step-primary' : ''}">Generate images</li>
+            <li class="step {isFinish ? 'step-primary': ''}">Finish</li>
         </ul>
 	</div>
 </div>
