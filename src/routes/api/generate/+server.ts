@@ -43,6 +43,7 @@ export const POST = async ({ request }) => {
             }, {} as MomentObject);
 
             return {
+                id: uuidv4(),
                 title: situation?.title,
                 moments: momentsObject
             };

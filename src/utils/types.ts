@@ -15,6 +15,7 @@ type Moment = {
 }
 
 type Situation = {
+    id: string,
     title: string,
     moments: Moment[]
 }

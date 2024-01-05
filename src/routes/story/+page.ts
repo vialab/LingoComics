@@ -14,8 +14,6 @@ export async function load() {
             }
         });
 
-        console.log('scenarios', scenarios);
-
         return {
             scenarios
         }
