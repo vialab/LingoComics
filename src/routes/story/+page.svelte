@@ -9,12 +9,15 @@
 	import { messages } from "../../utils/loading-messages";
 	import Form from "../../components/Form.svelte";
 	import Modal from "../../components/Modal.svelte";
+    import { fade } from "svelte/transition";
 
 	// initialize all variables
+    let isGenerating: boolean = false;
 	let isLoading: boolean = false;
 	let isSaving: boolean = false;
 	let isEditing: boolean = false;
-    let isStoryGenerated : boolean, isImageGenerated : boolean, isFinish : boolean = false;
+    // let isStoryGenerated : boolean, isImageGenerated : boolean, isFinish : boolean = false;
+    let currentStep: number = 0;
 	let responseData: StoryStruct | null = null;
 	const editableStyle =
 		"border: 1px solid #ccc; padding: 4px; background-color: white; cursor: text; border-radius: 3px;";
@@ -39,7 +42,7 @@
 
 	// handle form submit
 	async function handleSubmit(event: Event) {
-		isLoading = true;
+		isGenerating = true;
 
 		// get form input elements
 		const form = event.target as HTMLFormElement;
@@ -68,8 +71,8 @@
 		} catch (error) {
 			console.error(error);
 		} finally {
-			isLoading = false;
-            isStoryGenerated = true;
+			isGenerating = false;
+            currentStep = 1;
 		}
 	}
 
@@ -108,7 +111,7 @@
 		} catch (error) {
 			console.error(error);
 		} finally {
-            isStoryGenerated = true;
+            currentStep = 1;
         }
 	}
 
@@ -151,47 +154,44 @@
 
 <div class="flex flex-col lg:flex-row justify-center items-center">
 	<!-- left side -->
-	<Form {handleSubmit} />
+    <div class="relative left-side">
+        <Form {handleSubmit} isGenerating={isGenerating} />
+        <button class="btn btn-square m-4 text-xl" style="width: 93%">Save & Exit</button>
+    </div>   
 
 	<!-- right side -->
 	<div class="flex-1 self-start w-full lg:w-2/3 relative right-side">
 		<div class="flex-1 scrollable-content p-4 w-full">
 			<div class="p-0">
 				<!-- Header -->
-				<div class="max-w-7xl mx-auto pb-3 h-auto">
+				<div class="max-w-7xl mx-auto pb-3 h-auto absolute top-0 left-0 right-0 bg-white p-3">
 					<header
 						class="flex justify-center items-end border-b border-black gap-2 header-container"
 					>
 						<h1 class="flex-1 text-left text-2xl pb-2 px-2">
 							Generated scenario
 						</h1>
-						<!-- {#if responseData} -->
-						<button class="btn custom-btn-bg mb-2 text-xl" on:click={saveStory}
-							>{isSaving ? `Saving` : `Save`}</button
-						>
-						<button
-							class="btn custom-btn-bg-2 mb-2 text-xl"
-							on:click={toggleEditing}>Edit</button
-						>
+						{#if responseData}
+						    <button class="btn custom-btn-bg mb-2 text-xl" on:click={saveStory}>{isSaving ? `Saving` : `Save`}</button>
+						    <button class="btn custom-btn-bg-2 mb-2 text-xl" on:click={toggleEditing}>{isEditing ? 'Save changes' : 'Edit'}</button>
+                        {/if}
 						{#if existingScenarios.length > 0}
-							<Modal
-								selectedScenario={fetchScenario}
-								scenarios={existingScenarios}
-							/>
+							<Modal selectedScenario={fetchScenario} scenarios={existingScenarios}/>
 						{/if}
 					</header>
 				</div>
 
-				<div>
+                <!-- content -->
+				<div class="pt-14">
 					<!-- Show loading text -->
-					{#if isLoading}
+					{#if isGenerating}
 						{#key i}
 							<p in:typewriter={{ speed: 2 }}>
 								{messages[i] || ""}
 							</p>
 						{/key}
-						<!-- show response from api -->
-					{:else if responseData}
+						<!-- show response from api SHOW CONTENT -->
+					{:else if responseData && currentStep === 1}
 						{#if isEditing}
 							<!-- Scenario Title -->
 							<h1 class="text-lg">
@@ -249,11 +249,27 @@
 			</div>
 		</div>
 
-        <ul class="steps absolute bottom-0 left-0 right-0">
-            <li class="step {isStoryGenerated ? 'step-primary' : ''}">Generate story</li>
-            <li class="step {isImageGenerated ? 'step-primary' : ''}">Generate images</li>
-            <li class="step {isFinish ? 'step-primary': ''}">Finish</li>
-        </ul>
+        <!-- bottom navigations -->
+        <div class="flex justify-between absolute bottom-0 w-full">
+            {#if currentStep > 0}
+                <button class="mr-5 px-5 py-2 custom-btn-bg-2 text-xl rounded" on:click={() => currentStep -= 1}>
+                    Back
+                </button>
+            {/if}
+
+            <ul class="steps w-5/6">
+                <li class="step {currentStep > 0 ? 'step-primary' : ''}">Generate story</li>
+                <li class="step {currentStep > 1 ? 'step-primary' : ''}" transition:fade={{ delay: 250, duration: 300 }}>Generate images</li>
+                <li class="step {currentStep > 2 ? 'step-primary': ''}">Finish</li>
+            </ul>
+
+            <!-- display after the first step is achieved -->
+            {#if currentStep > 0}
+                <button class="mr-5 px-5 py-2 custom-btn-bg-2 text-xl rounded" on:click={() => currentStep = 2}>
+                    { currentStep === 2 ? 'Finish' : 'Next' }
+                </button>
+            {/if}
+        </div>
 	</div>
 </div>
 

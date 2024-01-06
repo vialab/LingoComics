@@ -1,8 +1,9 @@
 <script lang="ts">
     export let handleSubmit : (event: Event) => void;
+    export let isGenerating : boolean = false;
 </script>
 
-<form on:submit|preventDefault={handleSubmit} class="form-bg bg-neutral text-neutral content shadow-md rounded p-4 sm:p-10 w-full sm:w-3/4 md:w-2/3 lg:w-2/5 m-5">
+<form on:submit|preventDefault={handleSubmit} class="form-bg bg-neutral text-neutral content shadow-md rounded p-4 m-4">
     <!-- story title question -->
     <div class="mb-4">
         <label class="block text-white text-md font-bold mb-2" for="question1">Specify the title of this story</label>
@@ -54,7 +55,7 @@
 
     <!-- submit button -->
     <div class="flex justify-center items-center mb-6">
-        <button class="btn btn-square hover:bg-transparent hover:text-white custom-btn-bg w-full text-xl">Generate</button>
+        <button class="btn btn-square hover:bg-transparent hover:text-white custom-btn-bg w-full text-xl">{isGenerating ? 'Generating story...' : 'Generate'}</button>
     </div>
 </form>
 
