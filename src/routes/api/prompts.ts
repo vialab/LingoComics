@@ -8,6 +8,14 @@ export function generateScenarioPrompt(title: string, setting: string, tone: str
     `;
 }
 
+
+export function generateScenarioImagePrompt(scenario: string) {
+    return `
+        Generate a comic-style art image for, ${scenario},
+        NO chat bubbles and NO text in the image.
+    `;
+}
+
 export function generateSituationsPrompt(situations: number, scenario: string, tone: string, conflict: string) {
     return `
         Based on the following scenario, generate ${situations} concise situations titles that fit within the story's context creating a natural story progression, essentially each situation is an arc of the scenario: 

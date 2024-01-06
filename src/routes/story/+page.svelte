@@ -10,15 +10,20 @@
 	import Form from "../../components/Form.svelte";
 	import Modal from "../../components/Modal.svelte";
     import { fade } from "svelte/transition";
+	import { goto } from "$app/navigation";
 
 	// initialize all variables
     let isGenerating: boolean = false;
+	let isGeneratingImage: boolean = false;
 	let isLoading: boolean = false;
 	let isSaving: boolean = false;
 	let isEditing: boolean = false;
-    // let isStoryGenerated : boolean, isImageGenerated : boolean, isFinish : boolean = false;
+    let isExiting: boolean = false;
     let currentStep: number = 0;
 	let responseData: StoryStruct | null = null;
+
+	let scenarioImage = '';
+
 	const editableStyle =
 		"border: 1px solid #ccc; padding: 4px; background-color: white; cursor: text; border-radius: 3px;";
 
@@ -124,11 +129,7 @@
 	}
 
 	// handle changes for situation and moment on edit
-	function handleContentChange(
-		event: Event,
-		situationIndex: number,
-		momentIndex: string | null = null
-	): void {
+	function handleContentChange(event: Event,situationIndex: number,momentIndex: string | null = null): void {
 		const target = event.target as HTMLSpanElement;
 		const updatedContent = target.textContent || "";
 
@@ -146,6 +147,47 @@
 		}
 	}
 
+	// handle exiting
+	async function exitPage() {
+		// if not saved then 
+		if (!isSaving) {
+			isExiting = true;
+		}
+	}
+
+	// save and exit page
+	async function saveAndExit() {
+	    try {
+	        console.log("saving and exiting");
+			
+			const dummyEvent = new Event('dummy');
+			await saveStory(dummyEvent).then(() => {
+				goto('/');
+			});
+	    } catch (error) {
+	        console.error(error);
+	    }
+	}
+
+	// handle image generation
+	async function generateImages() {
+		isGeneratingImage = true;
+		try {
+			const response = await fetch('/api/generate/images', {
+				method: "POST",
+				body: JSON.stringify(responseData)
+			});
+
+			const result = await response.json();
+
+			scenarioImage = result.data;
+		} catch (error) {
+			console.error(error);
+		} finally {
+			isGeneratingImage = false;
+		}
+	}
+
 	// toggle editing mode
 	function toggleEditing() {
 		isEditing = !isEditing;
@@ -155,8 +197,25 @@
 <div class="flex flex-col lg:flex-row justify-center items-center">
 	<!-- left side -->
     <div class="relative left-side">
-        <Form {handleSubmit} isGenerating={isGenerating} />
-        <button class="btn btn-square m-4 text-xl" style="width: 93%">Save & Exit</button>
+        <Form handleSubmit={handleSubmit} isGenerating={isGenerating} />
+        <button class="btn btn-square m-4 text-xl" style="width: 93%" on:click={exitPage}>Exit</button>
+		{#if isExiting}
+			<div class="modal modal-open">
+				<div class="modal-box relative">
+					<h3 class="font-medium text-2xl mb-2">Exit story designer?</h3>
+					{#if currentStep > 0}
+						<p>Unsaved changes will be lost.</p>
+					{/if}
+					<div class="modal-action">
+						<button class="btn" on:click={() => isExiting = !isExiting}>Close</button>
+						<a class="btn" href="/">Exit page</a>
+						{#if currentStep > 0} 
+							<button class="btn" on:click={saveAndExit}>Save and Exit</button>
+						{/if}
+					</div>
+				</div>
+			</div>
+		{/if}
     </div>   
 
 	<!-- right side -->
@@ -164,7 +223,7 @@
 		<div class="flex-1 scrollable-content p-4 w-full">
 			<div class="p-0">
 				<!-- Header -->
-				<div class="max-w-7xl mx-auto pb-3 h-auto absolute top-0 left-0 right-0 bg-white p-3">
+				<div class="max-w-7xl mx-auto pb-3 h-auto absolute top-0 left-0 right-0 bg-white p-3 w-full">
 					<header
 						class="flex justify-center items-end border-b border-black gap-2 header-container"
 					>
@@ -182,9 +241,9 @@
 				</div>
 
                 <!-- content -->
-				<div class="pt-14">
+				<div class="pt-20">
 					<!-- Show loading text -->
-					{#if isGenerating}
+					{#if isGenerating || isGeneratingImage }
 						{#key i}
 							<p in:typewriter={{ speed: 2 }}>
 								{messages[i] || ""}
@@ -243,6 +302,13 @@
 									{/each}
 								{/each}
 							</ul>
+						{/if}
+					<!-- step 2 : generate images -->
+					{:else if currentStep === 2}
+						{#if scenarioImage.length > 0}
+							<img class="w-full h-auto" src={scenarioImage} alt="scenario" />
+						{:else}
+							<button class="btn w-full" on:click={generateImages}>Generate images</button>
 						{/if}
 					{/if}
 				</div>
