@@ -303,14 +303,18 @@
 								{/each}
 							</ul>
 						{/if}
+
 					<!-- step 2 : generate images -->
 					{:else if currentStep === 2}
 						{#if scenarioImage.length > 0}
-							<img class="w-full h-auto" src={scenarioImage} alt="scenario" />
+							<div class="scenario-card rounded-lg relative h-[30rem] w-[10rem] overflow-hidden">
+								<img class="w-full h-full object-cover" src={scenarioImage} alt="scenario" />
+							</div>
 						{:else}
 							<button class="btn w-full" on:click={generateImages}>Generate images</button>
 						{/if}
 					{/if}
+
 				</div>
 			</div>
 		</div>
@@ -340,6 +344,11 @@
 </div>
 
 <style>
+	.scenario-card {
+      background: #fff;
+      box-shadow: 0 2px 2px #000;
+      transition: transform 0.3s ease;
+    }
 	.scrollable-content {
 		overflow-y: auto;
 		max-height: calc(100vh - 160px);
