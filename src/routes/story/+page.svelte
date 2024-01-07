@@ -23,6 +23,7 @@
 	let responseData: StoryStruct | null = null;
 
 	let scenarioImage = '';
+	let situationImages : string[] = [];
 
 	const editableStyle =
 		"border: 1px solid #ccc; padding: 4px; background-color: white; cursor: text; border-radius: 3px;";
@@ -84,6 +85,13 @@
 	// handle saving story
 	async function saveStory(event: Event) {
 		isSaving = true;
+
+		if (situationImages.length > 0 && scenarioImage.length > 0) {
+			responseData!.image = scenarioImage;
+			responseData!.situations.forEach((situation, index) => {
+				situation.image = situationImages[index]
+			});
+		}
 
 		try {
 			const response = await fetch("/api/scenario", {
@@ -180,7 +188,10 @@
 
 			const result = await response.json();
 
+			console.log(result);
+
 			scenarioImage = result.data;
+			situationImages = result.situationImages;
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -307,8 +318,20 @@
 					<!-- step 2 : generate images -->
 					{:else if currentStep === 2}
 						{#if scenarioImage.length > 0}
-							<div class="scenario-card rounded-lg relative h-[30rem] w-[10rem] overflow-hidden">
-								<img class="w-full h-full object-cover" src={scenarioImage} alt="scenario" />
+							<div class="flex gap-2 w-full h-[30rem]">
+								<!-- Scenario Image Container -->
+								<div class="scenario-card rounded-lg relative w-[10rem] overflow-hidden flex-1">
+								  <img class="w-full h-full object-cover" src="{scenarioImage}" alt="scenario" />
+								</div>
+							
+								<!-- Situations Images Container -->
+								<div class="w-1/2 h-full flex flex-col m-2 justify-between pl-2">
+								  {#each situationImages as img}
+									<div class="h-1/3">
+									  <img class="scenario-card w-full h-full object-cover rounded-lg p-2" src="{img}" alt="situation" />
+									</div>
+								  {/each}
+								</div>
 							</div>
 						{:else}
 							<button class="btn w-full" on:click={generateImages}>Generate images</button>

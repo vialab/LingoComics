@@ -1,6 +1,6 @@
 import { GOOGLE_API_KEY, OPENAI_KEY } from '$env/static/private';
 import OpenAI from 'openai';
-import { generateScenarioImagePrompt } from '../../prompts.js';
+import { generateScenarioImagePrompt, generateSituationImagePrompt } from '../../prompts.js';
 import fetch from 'node-fetch';
 import { Storage } from '@google-cloud/storage';
 
@@ -16,32 +16,23 @@ const fileName = 'temp-file.jpg';
 
 export const POST = async ({ request }) => {
     const body = await request.json();
-    const { scenario } = body;
+    const { scenario, situations } = body;
 
     try {
-        const response = await openai.images.generate({
-            prompt: generateScenarioImagePrompt(scenario),
-            model: model,
-            n: 1,
-            size: "1024x1024"
-        });
+        // generate scenario image
+        const scenarioPrompt = generateScenarioImagePrompt(scenario);
+        const scenarioImage  = await generateImage(scenarioPrompt);
 
-        // Fetch the image from the URL
-        const imageUrl = response.data[0].url;
-        const imageResponse = await fetch(imageUrl);
-        const arrayBuffer = await imageResponse.arrayBuffer();
-
-        const imageBuffer = Buffer.from(arrayBuffer);
-
-        // Convert the buffer to a base64 string
-        const base64data = imageBuffer.toString('base64');
-
-        // TEMPORARY - TO SAVE IMAGE TO GOOGLE CLOUD STORAGE //
-        uploadImage(imageBuffer);
-
+        // generate situation image
+        const situationImages = [];
+        for (const situation of situations) {
+            const situationPrompt = generateSituationImagePrompt(situation.title);
+            const situationImage = await generateImage(situationPrompt);
+            situationImages.push(situationImage);
+        }
+        
         // Send the base64 string as a response
-        return new Response(JSON.stringify({ "data": `data:image/png;base64,${base64data}` }), { status: 200 });
-
+        return new Response(JSON.stringify({ "data": scenarioImage, situationImages }), { status: 200 });
     } catch (error) {
         console.error(error);
         return new Response(JSON.stringify({ "error": "error occurred when generating images" }), { status: 500 });
@@ -49,7 +40,7 @@ export const POST = async ({ request }) => {
 };
 
 // upload to google storgae bucket
-async function uploadImage(imageBuffer: Buffer) {
+async function uploadImage(imageBuffer: string) {
     const bucket = storage.bucket(bucketName);
     const file = bucket.file(fileName);
 
@@ -60,6 +51,32 @@ async function uploadImage(imageBuffer: Buffer) {
 
         await file.makePublic();
         console.log(`${fileName} uploaded to ${bucketName}`);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function generateImage(prompt: string) {
+    try {
+        const response = await openai.images.generate({
+            prompt: prompt,
+            model: model,
+            n: 1,
+            size: '1024x1024'
+        });
+
+        // fetch image from URL
+        const imageUrl = response.data[0].url;
+        const imageResponse = await fetch(imageUrl);
+        const arrayBuffer = await imageResponse.arrayBuffer();
+
+        const imageBuffer = Buffer.from(arrayBuffer);
+
+        // convert the buffer to a base64 string
+        const base64data = imageBuffer.toString('base64');
+
+        // send base64 string as a response
+        return `data:image/png;base64,${base64data}`;
     } catch (error) {
         console.error(error);
     }

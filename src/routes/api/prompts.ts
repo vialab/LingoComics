@@ -11,7 +11,7 @@ export function generateScenarioPrompt(title: string, setting: string, tone: str
 
 export function generateScenarioImagePrompt(scenario: string) {
     return `
-        Generate a comic-style art image for, ${scenario},
+        Generate a comic-style art image for: ${scenario},
         NO chat bubbles and NO text in the image.
     `;
 }
@@ -29,6 +29,13 @@ export function generateSituationsPrompt(situations: number, scenario: string, t
         The title should be concise like the scenario.
 
         The output should be in the format Title: <title>
+    `;
+}
+
+export function generateSituationImagePrompt(situation: string) {
+    return `
+        Generate a comic-style art image for: ${situation}.
+        NO chat bubbles and NO text in the image.
     `;
 }
 

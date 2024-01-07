@@ -11,12 +11,14 @@ export type MomentObject = {
 type Situation = {
     id: string,
     title: string,
+    image: string,
     moments: MomentObject
 }
 
 export type StoryStruct = {
     scenarioId: string,
     scenario: string,
+    image: string,
     situations: Situation[],
     moments: string
 }
