@@ -13,6 +13,8 @@ export async function load({ params, fetch }) {
 
         const scenario = result as StoryStruct;
 
+        console.log('loaded scenario',  scenario);
+
         
         return { scenario }
     } catch (error) {
