@@ -19,6 +19,7 @@
 	let isSaving: boolean = false;
 	let isEditing: boolean = false;
     let isExiting: boolean = false;
+	let isFinish: boolean = false;
     let currentStep: number = 0;
 	let responseData: StoryStruct | null = null;
 
@@ -358,7 +359,13 @@
 
             <!-- display after the first step is achieved -->
             {#if currentStep > 0}
-                <button class="mr-5 px-5 py-2 custom-btn-bg-2 text-xl rounded" on:click={() => currentStep = 2}>
+                <button class="mr-5 px-5 py-2 custom-btn-bg-2 text-xl rounded" on:click={() => {
+					if (currentStep < 2) {
+						currentStep = 2;
+					} else if (currentStep > 2) {
+						isFinish = !isFinish;
+					}
+				}}>
                     { currentStep === 2 ? 'Finish' : 'Next' }
                 </button>
             {/if}

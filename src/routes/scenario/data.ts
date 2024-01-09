@@ -2,7 +2,7 @@ export type Scenario = {
     id: string,
     image: string;
     title: string;
-    situation: Array<Situation>;
+    situations: Array<Situation>;
 }
 
 export type Situation = {
