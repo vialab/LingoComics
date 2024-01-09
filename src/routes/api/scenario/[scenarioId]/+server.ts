@@ -39,9 +39,11 @@ export const GET: RequestHandler = async ({ params }) => {
                 moments[momentDoc.id] = momentData.description;
             });
 
+
             situations.push({
                 id: situationDoc.id,
                 title: situationData.title,
+                image: situationData?.image,
                 moments: moments
             });
         }
@@ -49,6 +51,7 @@ export const GET: RequestHandler = async ({ params }) => {
         const responseData = {
             scenarioId: scenarioId,
             scenario: scenarioData!.title,
+            image: scenarioData?.image,
             situations: situations
         };
 

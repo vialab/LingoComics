@@ -234,12 +234,12 @@
 		<div class="flex-1 scrollable-content p-4 w-full">
 			<div class="p-0">
 				<!-- Header -->
-				<div class="max-w-7xl mx-auto pb-3 h-auto absolute top-0 left-0 right-0 bg-white p-3 w-full">
+				<div class="mx-auto pb-3 h-auto absolute top-0 left-0 right-0 bg-white p-3 w-full">
 					<header
 						class="flex justify-center items-end border-b border-black gap-2 header-container"
 					>
 						<h1 class="flex-1 text-left text-2xl pb-2 px-2">
-							Generated scenario
+							{ responseData?.scenario ? responseData?.scenario : 'Generated scenario'}
 						</h1>
 						{#if responseData}
 						    <button class="btn custom-btn-bg mb-2 text-xl" on:click={saveStory}>{isSaving ? `Saving` : `Save`}</button>
