@@ -1,21 +1,18 @@
 <script lang="ts">
-	import type {
-		FirestoreData,
-		MomentObject,
-		StoryStruct,
-	} from "../../utils/types";
-	import { onMount } from "svelte";
-	import { typewriter } from "../../utils/transition";
-	import { messages } from "../../utils/loading-messages";
+	import type { FirestoreData, StoryStruct } from "../../utils/types";
 	import Form from "../../components/Form.svelte";
 	import Modal from "../../components/Modal.svelte";
     import { fade } from "svelte/transition";
 	import { goto } from "$app/navigation";
+    import { generateImages, saveStory } from "$lib/services/apiService";
+    import Loading from "../../components/Loading.svelte";
+    import FormBottomNav from "../../components/story/FormBottomNav.svelte";
+    import Header from "../../components/Header.svelte";
+    import FormHeader from "../../components/story/FormHeader.svelte";
 
 	// initialize all variables
     let isGenerating: boolean = false;
 	let isGeneratingImage: boolean = false;
-	let isLoading: boolean = false;
 	let isSaving: boolean = false;
 	let isEditing: boolean = false;
     let isExiting: boolean = false;
@@ -33,19 +30,6 @@
 	export let data: FirestoreData;
 
 	let existingScenarios = data.scenarios;
-
-	// typewriter effect
-	let i = -1;
-	onMount(() => {
-		const interval = setInterval(() => {
-			i += 1;
-			i %= messages.length;
-		}, 2500);
-
-		return () => {
-			clearInterval(interval);
-		};
-	});
 
 	// handle form submit
 	async function handleSubmit(event: Event) {
@@ -84,25 +68,13 @@
 	}
 
 	// handle saving story
-	async function saveStory(event: Event) {
+	async function handleSaveStory() {
 		isSaving = true;
-
-		if (situationImages.length > 0 && scenarioImage.length > 0) {
-			responseData!.image = scenarioImage;
-			responseData!.situations.forEach((situation, index) => {
-				situation.image = situationImages[index]
-			});
-		}
-
 		try {
-			const response = await fetch("/api/scenario", {
-				method: "POST",
-				body: JSON.stringify(responseData),
-			});
-
-			const result = await response.json();
-
-			console.log("response from api", result);
+			if (responseData) {
+				const result = await saveStory(scenarioImage, situationImages, responseData);
+				console.log("response from api:", result);
+			}
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -169,8 +141,7 @@
 	    try {
 	        console.log("saving and exiting");
 			
-			const dummyEvent = new Event('dummy');
-			await saveStory(dummyEvent).then(() => {
+			await handleSaveStory().then(() => {
 				goto('/');
 			});
 	    } catch (error) {
@@ -179,18 +150,11 @@
 	}
 
 	// handle image generation
-	async function generateImages() {
+	async function handleImageGeneration() {
 		isGeneratingImage = true;
 		try {
-			const response = await fetch('/api/generate/images', {
-				method: "POST",
-				body: JSON.stringify(responseData)
-			});
-
-			const result = await response.json();
-
+			const result = await generateImages(responseData);
 			console.log(result);
-
 			scenarioImage = result.data;
 			situationImages = result.situationImages;
 		} catch (error) {
@@ -235,32 +199,21 @@
 		<div class="flex-1 scrollable-content p-4 w-full">
 			<div class="p-0">
 				<!-- Header -->
-				<div class="mx-auto pb-3 h-auto absolute top-0 left-0 right-0 bg-white p-3 w-full">
-					<header
-						class="flex justify-center items-end border-b border-black gap-2 header-container"
-					>
-						<h1 class="flex-1 text-left text-2xl pb-2 px-2">
-							{ responseData?.scenario ? responseData?.scenario : 'Generated scenario'}
-						</h1>
-						{#if responseData}
-						    <button class="btn custom-btn-bg mb-2 text-xl" on:click={saveStory}>{isSaving ? `Saving` : `Save`}</button>
-						    <button class="btn custom-btn-bg-2 mb-2 text-xl" on:click={toggleEditing}>{isEditing ? 'Save changes' : 'Edit'}</button>
-                        {/if}
-						{#if existingScenarios.length > 0}
-							<Modal selectedScenario={fetchScenario} scenarios={existingScenarios}/>
-						{/if}
-					</header>
-				</div>
+				<FormHeader 
+					responseData={responseData} 
+					isSaving={isSaving} 
+					isEditing={isEditing} 
+					existingScenarios={existingScenarios} 
+					handleSaveStory={handleSaveStory} 
+					toggleEditing={toggleEditing}
+					fetchScenario={fetchScenario}  
+				/>
 
                 <!-- content -->
 				<div class="pt-20">
 					<!-- Show loading text -->
 					{#if isGenerating || isGeneratingImage }
-						{#key i}
-							<p in:typewriter={{ speed: 2 }}>
-								{messages[i] || ""}
-							</p>
-						{/key}
+						<Loading />
 						<!-- show response from api SHOW CONTENT -->
 					{:else if responseData && currentStep === 1}
 						{#if isEditing}
@@ -335,7 +288,7 @@
 								</div>
 							</div>
 						{:else}
-							<button class="btn w-full" on:click={generateImages}>Generate images</button>
+							<button class="btn w-full" on:click={handleImageGeneration}>Generate images</button>
 						{/if}
 					{/if}
 
@@ -344,32 +297,7 @@
 		</div>
 
         <!-- bottom navigations -->
-        <div class="flex justify-between absolute bottom-0 w-full">
-            {#if currentStep > 0}
-                <button class="mr-5 px-5 py-2 custom-btn-bg-2 text-xl rounded" on:click={() => currentStep -= 1}>
-                    Back
-                </button>
-            {/if}
-
-            <ul class="steps w-5/6">
-                <li class="step {currentStep > 0 ? 'step-primary' : ''}">Generate story</li>
-                <li class="step {currentStep > 1 ? 'step-primary' : ''}" transition:fade={{ delay: 250, duration: 300 }}>Generate images</li>
-                <li class="step {currentStep > 2 ? 'step-primary': ''}">Finish</li>
-            </ul>
-
-            <!-- display after the first step is achieved -->
-            {#if currentStep > 0}
-                <button class="mr-5 px-5 py-2 custom-btn-bg-2 text-xl rounded" on:click={() => {
-					if (currentStep < 2) {
-						currentStep = 2;
-					} else if (currentStep > 2) {
-						isFinish = !isFinish;
-					}
-				}}>
-                    { currentStep === 2 ? 'Finish' : 'Next' }
-                </button>
-            {/if}
-        </div>
+		<FormBottomNav currentStep={currentStep} isFinish={isFinish} />
 	</div>
 </div>
 
@@ -386,9 +314,5 @@
 	}
     .right-side {
         height: calc(100vh - 80px);
-    }
-    .steps .step-primary + .step-primary:before, .steps .step-primary:after {
-        background-color: var(--primary-background-color);
-        color: #000;
     }
 </style>
