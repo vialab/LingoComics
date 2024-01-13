@@ -9,6 +9,7 @@
     import FormBottomNav from "../../components/story/FormBottomNav.svelte";
     import Header from "../../components/Header.svelte";
     import FormHeader from "../../components/story/FormHeader.svelte";
+    import ScenarioEditor from "../../components/story/ScenarioEditor.svelte";
 
 	// initialize all variables
     let isGenerating: boolean = false;
@@ -219,62 +220,16 @@
 					<!-- Show loading text -->
 					{#if isGenerating || isGeneratingImage }
 						<Loading />
-						<!-- show response from api SHOW CONTENT -->
+					<!-- Step 1: Show content for scenario, situations, and moments -->
 					{:else if responseData && currentStep === 1}
-						{#if isEditing}
-							<!-- Scenario Title -->
-							<h1 class="text-lg">
-								<strong>Scenario:</strong>
-								<span
-									style={editableStyle}
-									contenteditable="true"
-									on:input={(event) => handleScenarioChange(event)}
-									>{responseData?.scenario}</span
-								>
-							</h1>
-							<ul>
-								<!-- Situations -->
-								{#each responseData?.situations as situation, situationIndex}
-									<li class="text-lg font-medium py-2">
-										<span
-											style={editableStyle}
-											contenteditable="true"
-											on:input={(event) =>
-												handleContentChange(event, situationIndex)}
-											>{situation.title}</span
-										>
-									</li>
-									<!-- Moments -->
-									{#each Object.entries(situation.moments) as [momentKey, momentValue], momentIndex}
-										<strong>{momentKey}:</strong>
-										<p
-											style={editableStyle}
-											contenteditable="true"
-											on:input={(event) =>
-												handleContentChange(event, situationIndex, momentKey)}
-										>
-											{momentValue}
-										</p>
-									{/each}
-								{/each}
-							</ul>
-						{:else}
-							<h1 class="text-lg">
-								<strong>Scenario:</strong>
-								{responseData?.scenario}
-							</h1>
-							<ul>
-								{#each responseData.situations as situation}
-									<li class="text-lg font-medium py-2">{situation.title}</li>
-									{#each Object.entries(situation.moments) as [momentKey, momentValue], index}
-										<strong>Moment {index + 1}:</strong>
-										<p>{momentValue}</p>
-									{/each}
-								{/each}
-							</ul>
-						{/if}
-
-					<!-- step 2 : generate images -->
+						<ScenarioEditor 
+							responseData={responseData} 
+							isEditing={isEditing} 
+							handleScenarioChange={handleScenarioChange} 
+							handleContentChange={handleContentChange}
+							editableStyle={editableStyle}
+						/>
+					<!-- Step 2 : image generation step -->
 					{:else if currentStep === 2}
 						{#if scenarioImage.length > 0}
 							<div class="flex gap-2 w-full h-[30rem]">
