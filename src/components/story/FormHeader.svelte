@@ -17,7 +17,7 @@
         <h1 class="flex-1 text-left text-2xl pb-2 px2">{responseData?.scenario ? responseData?.scenario : 'Generated scenario'}</h1>
         {#if responseData}
             <button class="btn custom-btn-bg mb-2 text-xl" on:click={handleSaveStory}>{isSaving ? 'Saving' : 'Save'}</button>
-            <button class="btn custom-btn-bg-2 mb-2 text-xl" on:click={toggleEditing}>{isEditing ? 'Save changes' : 'Edit'}</button>
+            <button class="btn custom-btn-bg-2 mb-2 text-xl" on:click={toggleEditing}>{isEditing ? 'Confirm changes' : 'Edit'}</button>
         {/if}
         {#if existingScenarios.length > 0}
             <Modal selectedScenario={fetchScenario} scenarios={existingScenarios} />

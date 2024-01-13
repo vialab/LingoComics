@@ -10,6 +10,7 @@
     import Header from "../../components/Header.svelte";
     import FormHeader from "../../components/story/FormHeader.svelte";
     import ScenarioEditor from "../../components/story/ScenarioEditor.svelte";
+	import ScenarioImageGen from "../../components/story/ScenarioImageGen.svelte";
 
 	// initialize all variables
     let isGenerating: boolean = false;
@@ -19,7 +20,7 @@
     let isExiting: boolean = false;
 	let isFinish: boolean = false;
     let currentStep: number = 0;
-	let responseData: StoryStruct | null = null;
+	let responseData: StoryStruct;
 
 	let scenarioImage = '';
 	let situationImages : string[] = [];
@@ -100,6 +101,8 @@
 			const result = await response.json();
 
 			responseData = result as StoryStruct;
+
+			console.log(responseData);
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -231,27 +234,8 @@
 						/>
 					<!-- Step 2 : image generation step -->
 					{:else if currentStep === 2}
-						{#if scenarioImage.length > 0}
-							<div class="flex gap-2 w-full h-[30rem]">
-								<!-- Scenario Image Container -->
-								<div class="scenario-card rounded-lg relative w-[10rem] overflow-hidden flex-1">
-								  <img class="w-full h-full object-cover" src="{scenarioImage}" alt="scenario" />
-								</div>
-							
-								<!-- Situations Images Container -->
-								<div class="w-1/2 h-full flex flex-col m-2 justify-between pl-2">
-								  {#each situationImages as img}
-									<div class="h-1/3">
-									  <img class="scenario-card w-full h-full object-cover rounded-lg p-2" src="{img}" alt="situation" />
-									</div>
-								  {/each}
-								</div>
-							</div>
-						{:else}
-							<button class="btn w-full" on:click={handleImageGeneration}>Generate images</button>
-						{/if}
+						<ScenarioImageGen responseData={responseData} />
 					{/if}
-
 				</div>
 			</div>
 		</div>
