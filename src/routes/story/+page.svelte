@@ -31,6 +31,11 @@
 
 	let existingScenarios = data.scenarios;
 
+	// handle step change
+	function handleStepChange(event : CustomEvent) {
+		currentStep = event.detail.currentStep;
+	}
+
 	// handle form submit
 	async function handleSubmit(event: Event) {
 		isGenerating = true;
@@ -297,7 +302,7 @@
 		</div>
 
         <!-- bottom navigations -->
-		<FormBottomNav currentStep={currentStep} isFinish={isFinish} />
+		<FormBottomNav bind:isFinish currentStep={currentStep} on:stepchange={handleStepChange} />
 	</div>
 </div>
 

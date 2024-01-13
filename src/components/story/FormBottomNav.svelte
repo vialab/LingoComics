@@ -1,34 +1,45 @@
 <!-- Bottom Navigator for Scenario Designer -->
 <script lang="ts">
     import { fade } from "svelte/transition";
+    import { createEventDispatcher } from "svelte";
 
     // current step for scenario designer
     export let currentStep : number;
     export let isFinish : boolean;
 
+    // dispatcher event
+    const dispatch = createEventDispatcher();
+
+    // updates current step and dispatch an event
+    function updateStep(newStep : number) {
+        currentStep = newStep;
+        dispatch('stepchange', { currentStep });
+    }
+
     // advances to the next step
     function nextStep() {
-        currentStep += 1;
+        updateStep(currentStep + 1);
     }
 
     // advances to the previous step
     function lastStep() {
-        currentStep -= 1;
+        updateStep(currentStep - 1);
     }
 
     // finish or next btn function
     function nextOrFinish() {
         if (currentStep < 2) {
-            currentStep = 2;
+            updateStep(2);
         } else if (currentStep > 2) {
             isFinish = !isFinish;
+            dispatch('finish', { isFinish });
         }
     }
 </script>
 
 <div class="flex justify-between absolute bottom-0 w-full">
     {#if currentStep > 0}
-        <button class="mr-5 px-5 py-2 custom-btn-bg-2 text-xl rounded" on:click={nextStep}>Button</button>
+        <button class="mr-5 px-5 py-2 custom-btn-bg-2 text-xl rounded" on:click={lastStep}>Back</button>
     {/if}
 
     <ul class="steps w-5/6">
