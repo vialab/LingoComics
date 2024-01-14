@@ -1,17 +1,15 @@
 <script lang="ts">
 	import type { FirestoreData, StoryStruct } from "../../utils/types";
 	import Form from "../../components/Form.svelte";
-	import Modal from "../../components/Modal.svelte";
-    import { fade } from "svelte/transition";
 	import { goto } from "$app/navigation";
     import { generateImages, saveStory } from "$lib/services/apiService";
     import Loading from "../../components/Loading.svelte";
     import FormBottomNav from "../../components/story/FormBottomNav.svelte";
-    import Header from "../../components/Header.svelte";
     import FormHeader from "../../components/story/FormHeader.svelte";
     import ScenarioEditor from "../../components/story/ScenarioEditor.svelte";
 	import ScenarioImageGen from "../../components/story/ScenarioImageGen.svelte";
 	import ExitModal from '../../components/story/ExitModal.svelte';
+	import Icon from '@iconify/svelte';
 
 	// initialize all variables
     let isGenerating: boolean = false;
@@ -183,11 +181,13 @@
 	function toggleExiting() {
 		isExiting = !isExiting;
 	}
+
+	let drawerOpen = true;
 </script>
 
 <div class="flex flex-col lg:flex-row justify-center items-center">
 	<!-- left side -->
-    <div class="relative left-side">
+    <div class="relative {drawerOpen ? 'left-side' : 'left-side-close'}">
         <Form handleSubmit={handleSubmit} isGenerating={isGenerating} />
         <button class="btn btn-square m-4 text-xl" style="width: 93%" on:click={exitPage}>Exit</button>
 		<!-- Exit Modal below form -->
@@ -199,6 +199,19 @@
 			/>
 		{/if}
     </div>   
+
+	<!-- button container -->
+	<div class="self-start relative right-side relative">
+		<div class="flex h-screen justify-center items-center">
+			<button class="" on:click={() => drawerOpen = !drawerOpen}>
+				{#if drawerOpen}
+					<Icon icon="mingcute:left-fill" height={30}/>
+				{:else}
+					<Icon icon="mingcute:right-fill" height={30}/>
+				{/if}
+			</button>
+		</div>
+	</div>
 
 	<!-- right side -->
 	<div class="flex-1 self-start w-full lg:w-2/3 relative right-side">
@@ -231,7 +244,7 @@
 						/>
 					<!-- Step 2 : image generation step -->
 					{:else if currentStep === 2}
-						<ScenarioImageGen responseData={responseData} />
+						<ScenarioImageGen responseData={responseData} handleImageGeneration={handleImageGeneration} />
 					{/if}
 				</div>
 			</div>
@@ -251,4 +264,15 @@
     .right-side {
         height: calc(100vh - 80px);
     }
+
+	.left-side {
+	    transition: width 0.5s;
+	    width: 50%; /* or your desired width */
+	}
+
+	.left-side-close {
+	    transition: width 0.5s;
+	    width: 0;
+	    overflow: hidden;
+	}
 </style>
