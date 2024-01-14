@@ -6,8 +6,8 @@
 <form on:submit|preventDefault={handleSubmit} class="form-bg bg-neutral text-neutral content shadow-md rounded p-4 m-4">
     <!-- story title question -->
     <div class="mb-4">
-        <label class="block text-white text-md font-bold mb-2" for="question1">Specify the title of this story</label>
-        <input value="Eating in restaurant" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="question1" type="text" placeholder="Title of story" name="title">
+        <label class="block text-white text-md font-bold mb-2" for="question1">What is the premise of this story</label>
+        <input value="Eating at a restaurant" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="question1" type="text" placeholder="Title of story" name="title">
     </div>
 
     <!-- story setting question -->

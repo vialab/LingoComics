@@ -24,6 +24,7 @@
 	let scenarioImage = '';
 	let situationImages : string[] = [];
 
+	// reactive declarations
 	const editableStyle =
 		"border: 1px solid #ccc; padding: 4px; background-color: white; cursor: text; border-radius: 3px;";
 
@@ -100,8 +101,6 @@
 			const result = await response.json();
 
 			responseData = result as StoryStruct;
-
-			console.log(responseData);
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -165,6 +164,16 @@
 			console.log(result);
 			scenarioImage = result.data;
 			situationImages = result.situationImages;
+			responseData = { 
+				...responseData, 
+				image: result.data,
+				situations: responseData.situations.map((situation, index) => {
+					return {
+						...situation,
+						image: result.situationImages[index]
+					}
+				})
+			}
 		} catch (error) {
 			console.error(error);
 		} finally {

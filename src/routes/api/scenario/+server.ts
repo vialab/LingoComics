@@ -51,11 +51,17 @@ export const POST = async ({ request }) => {
             // Check if the situation exists
             const situationSnapshot = await getDoc(situationRef);
             if (situationSnapshot.exists()) {
+                // upload situation images
+                const situationImageFile = await uploadImage(situation.image, situationId);
+
                 // Update existing situation
-                await updateDoc(situationRef, { title: situation.title });
+                await updateDoc(situationRef, { title: situation.title, image: `https://storage.googleapis.com/lingoimages/${situationImageFile?.name}` });
             } else {
+                // upload situation images
+                const situationImageFile = await uploadImage(situation.image, situationId);
+
                 // Create new situation
-                await setDoc(situationRef, { id: situationId, title: situation.title });
+                await setDoc(situationRef, { id: situationId, title: situation.title, image: `https://storage.googleapis.com/lingoimages/${situationImageFile?.name}` });
             }
         
             // Process moments

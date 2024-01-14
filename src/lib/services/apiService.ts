@@ -38,7 +38,7 @@ export async function getScenario(scenarioId: string) : Promise<any> {
 export async function generateImages(responseData: StoryStruct | null) {
     try {
         const response = await fetch(`/api/generate/images`, {
-            method: "GET",
+            method: "POST",
             body: JSON.stringify(responseData)
         });
         return await response.json();
