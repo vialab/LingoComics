@@ -11,8 +11,8 @@ export function generateScenarioPrompt(title: string, setting: string, tone: str
 
 export function generateScenarioImagePrompt(scenario: string) {
     return `
-        Generate a comic-style art image for: ${scenario},
-        NO chat bubbles and NO text in the image.
+        Generate a comic-style art image cover art for the scenario: ${scenario},
+        The image should have NO chat bubbles and NO text in the image.
     `;
 }
 
@@ -22,20 +22,23 @@ export function generateSituationsPrompt(situations: number, scenario: string, t
         
         Scenario: '${scenario}'.
 
-        The specifications for the situations are based on the following:
+        The specifications for the situations and the story progression are based on the following:
         - tone: '${tone}'
         - conflict: '${conflict}'
 
-        The title should be concise like the scenario.
+        The title should be concise, max 5 words.
 
         The output should be in the format Title: <title>
     `;
 }
 
-export function generateSituationImagePrompt(situation: string) {
+export function generateSituationImagePrompt(situation: string, scenario: string, moments: string) {
     return `
-        Generate a comic-style art image for: ${situation}.
-        NO chat bubbles and NO text in the image.
+        Given the following piece of text: ${moments}, 
+        summarize the text and generate a comic-style art image cover art that will be the best fit for the situation: ${situation} 
+        that is for the following scenario: ${scenario}.
+
+        Image should have NO chat bubbles and NO text in the image.
     `;
 }
 

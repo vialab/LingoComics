@@ -21,7 +21,7 @@
 <!-- Situations -->
 <ul>
     {#each responseData?.situations as situation, situationIndex}
-        <li class="text-lg font-medium py-2">
+        <li class="text-lg font-medium py-2 indent-2">
             <span
                 style={isEditing ? editableStyle : null}
                 contenteditable={isEditing}
@@ -30,11 +30,14 @@
         </li>
         <!-- Moments -->
         {#each Object.entries(situation.moments) as [momentKey, momentValue], momentIndex}
-            <strong>{momentKey}:</strong>
+            <p class="indent-4">
+                <strong>Moment: {momentIndex + 1}</strong>
+            </p>
             <p
                 style={isEditing ? editableStyle : null}
                 contenteditable={isEditing}
                 on:input={(event) => handleContentChange(event, situationIndex, momentKey)}
+                class="pl-8"
             >{momentValue}</p>
         {/each}
     {/each}

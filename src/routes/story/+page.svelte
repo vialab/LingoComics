@@ -224,7 +224,7 @@
 
 	<!-- right side -->
 	<div class="flex-1 self-start w-full lg:w-2/3 relative right-side">
-		<div class="flex-1 scrollable-content p-4 w-full">
+		<div class="flex-1 scrollable-content w-full p-2">
 			<div class="p-0">
 				<!-- Header -->
 				<FormHeader 
@@ -268,7 +268,6 @@
 	.scrollable-content {
 		overflow-y: auto;
 		max-height: calc(100vh - 160px);
-		padding: 20px;
 	}
     .right-side {
         height: calc(100vh - 80px);
@@ -276,7 +275,7 @@
 
 	.left-side {
 	    transition: width 0.5s;
-	    width: 50%; /* or your desired width */
+	    width: 33%; /* or your desired width */
 	}
 
 	.left-side-close {

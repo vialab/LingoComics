@@ -13,6 +13,12 @@ const storage = new Storage({ keyFilename: GOOGLE_API_KEY });
 const bucketName = 'lingoimages';
 const fileName = 'temp-file.jpg';
 
+type Moment = {
+    moment1: string,
+    moment2: string,
+    moment3: string,
+    moment4: string
+}
 
 export const POST = async ({ request }) => {
     const body = await request.json();
@@ -26,7 +32,8 @@ export const POST = async ({ request }) => {
         // generate situation image
         const situationImages = [];
         for (const situation of situations) {
-            const situationPrompt = generateSituationImagePrompt(situation.title);
+            const { moment1, moment2, moment3, moment4 }: Moment = situation.moments;
+            const situationPrompt = generateSituationImagePrompt(situation.title, scenario, moment1.concat(moment2, moment3, moment4));
             const situationImage = await generateImage(situationPrompt);
             situationImages.push(situationImage);
         }

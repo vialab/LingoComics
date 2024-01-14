@@ -14,7 +14,6 @@ export const POST = async ({ request }) => {
     
     const { scenarioId, scenario, image, situations }: StoryStruct = body;
 
-
     try {
         const scenariosCollectionRef = collection(db, 'scenario');
         const q = query(scenariosCollectionRef, where("scenarioId", "==", scenarioId));
@@ -90,6 +89,11 @@ export const POST = async ({ request }) => {
 
 // upload to google storage bucket
 async function uploadImage(base64String: string, fileName: string) {
+    // return if no base64string
+    if (base64String === undefined) {
+        return null;
+    }
+
     const strippedBase64String = base64String.split(';base64,').pop();
     const imageBuffer = Buffer.from(strippedBase64String, 'base64');
 
