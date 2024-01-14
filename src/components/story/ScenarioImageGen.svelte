@@ -11,3 +11,11 @@
         </div>
     </div>
 {/if}
+
+<style>
+    .scenario-card {
+      background: #fff;
+      box-shadow: 0 2px 2px #000;
+      transition: transform 0.3s ease;
+    }
+</style>

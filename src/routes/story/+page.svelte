@@ -11,6 +11,7 @@
     import FormHeader from "../../components/story/FormHeader.svelte";
     import ScenarioEditor from "../../components/story/ScenarioEditor.svelte";
 	import ScenarioImageGen from "../../components/story/ScenarioImageGen.svelte";
+	import ExitModal from '../../components/story/ExitModal.svelte';
 
 	// initialize all variables
     let isGenerating: boolean = false;
@@ -177,6 +178,11 @@
 	function toggleEditing() {
 		isEditing = !isEditing;
 	}
+
+	// toggle exiting page
+	function toggleExiting() {
+		isExiting = !isExiting;
+	}
 </script>
 
 <div class="flex flex-col lg:flex-row justify-center items-center">
@@ -184,22 +190,13 @@
     <div class="relative left-side">
         <Form handleSubmit={handleSubmit} isGenerating={isGenerating} />
         <button class="btn btn-square m-4 text-xl" style="width: 93%" on:click={exitPage}>Exit</button>
+		<!-- Exit Modal below form -->
 		{#if isExiting}
-			<div class="modal modal-open">
-				<div class="modal-box relative">
-					<h3 class="font-medium text-2xl mb-2">Exit story designer?</h3>
-					{#if currentStep > 0}
-						<p>Unsaved changes will be lost.</p>
-					{/if}
-					<div class="modal-action">
-						<button class="btn" on:click={() => isExiting = !isExiting}>Close</button>
-						<a class="btn" href="/">Exit page</a>
-						{#if currentStep > 0} 
-							<button class="btn" on:click={saveAndExit}>Save and Exit</button>
-						{/if}
-					</div>
-				</div>
-			</div>
+			<ExitModal 
+				currentStep={currentStep} 
+				toggleExiting={toggleExiting} 
+				saveAndExit={saveAndExit} 
+			/>
 		{/if}
     </div>   
 
@@ -246,11 +243,6 @@
 </div>
 
 <style>
-	.scenario-card {
-      background: #fff;
-      box-shadow: 0 2px 2px #000;
-      transition: transform 0.3s ease;
-    }
 	.scrollable-content {
 		overflow-y: auto;
 		max-height: calc(100vh - 160px);
