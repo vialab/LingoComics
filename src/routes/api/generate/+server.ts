@@ -1,6 +1,6 @@
 import { OPENAI_KEY } from "$env/static/private";
 import { OpenAI } from 'openai';
-import { generateMomentPrompt, generateScenarioPrompt, generateSituationsPrompt } from '../prompts.js';
+import { generateMoment, generateMomentPrompt, generateScenarioPrompt, generateSituationPrompt, generateSituationsPrompt } from '../prompts.js';
 import { v4 as uuidv4 } from 'uuid';
 import type { MomentObject } from "../../../utils/types.js";
 
@@ -11,6 +11,7 @@ const model = 'gpt-3.5-turbo';
 
 export const POST = async ({ request }) => {
     const body = await request.json();
+
     const { title, setting, situation, tone, conflict } = body;
     
     try {
@@ -19,15 +20,33 @@ export const POST = async ({ request }) => {
         const scenario = (await gptPrompt(openai, model, scenarioPrompt)).choices[0].message.content;
 
         // situation prompt and response
-        const situationPrompt : string = generateSituationsPrompt(Number(situation), scenario!, tone, conflict);
-        const situationResponse = (await gptPrompt(openai, model, situationPrompt)).choices[0].message.content;
-        const situationParse = situationResponse?.split(/Title \d+: |Title:/);
-        const situations = parseSituation(situationParse!);
+        const totalSituations = Number(situation);
+        let previousSituationTitle : string | undefined = '';
+        const situations = [];
+
+        for (let currentSituation = 1; currentSituation <= totalSituations; currentSituation++) {
+            const situationPrompt = generateSituationPrompt(scenario!, tone, conflict, currentSituation, totalSituations, previousSituationTitle);
+            const situationResponse = (await gptPrompt(openai, model, situationPrompt)).choices[0].message.content;
+            const situationTitle = situationResponse?.split('Title: ')[1].trim();
+
+            situations.push({ title: situationTitle });
+
+            // update for next iteration
+            previousSituationTitle = situationTitle;
+        }
+
+        console.log(situations);
+
+        // const situationPrompt : string = generateSituationsPrompt(Number(situation), scenario!, tone, conflict);
+        // const situationResponse = (await gptPrompt(openai, model, situationPrompt)).choices[0].message.content;
+        // const situationParse = situationResponse?.split(/Title \d+: |Title:/);
+        // const situations = parseSituation(situationParse!);
 
         // generate moment for each situation
-        const momentsPromises = situations.map(situation => {
-            const momentPrompt : string = generateMomentPrompt(scenario!, situation!.title, tone, conflict);
-            return gptPrompt(openai, model, momentPrompt).then(response => response.choices[0].message.content);
+        const momentsPromises = situations.map(async (situation, currentSituation) => {
+            const momentPrompt : string = generateMoment(scenario!, situation?.title, tone, conflict, currentSituation, totalSituations);
+            const response = await gptPrompt(openai, model, momentPrompt);
+            return response.choices[0].message.content;
         });
         const moments = await Promise.all(momentsPromises);
 

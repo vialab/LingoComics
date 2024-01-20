@@ -1,3 +1,5 @@
+import { currentStoryStage } from "$lib/utils/promptService";
+
 export function generateScenarioPrompt(title: string, setting: string, tone: string, conflict: string) {
     return `
         Provide only the title which is as concise as but not the same as 'First day at work', 'Lost in Tokyo', 'First day at school', 'Eating at a restaurant', for an interactive story and based on the following inputs: 
@@ -8,7 +10,6 @@ export function generateScenarioPrompt(title: string, setting: string, tone: str
     `;
 }
 
-
 export function generateScenarioImagePrompt(scenario: string) {
     return `
         Generate a comic-style art image cover art for the scenario: ${scenario},
@@ -16,6 +17,7 @@ export function generateScenarioImagePrompt(scenario: string) {
     `;
 }
 
+// old situation prompt generation
 export function generateSituationsPrompt(situations: number, scenario: string, tone: string, conflict: string) {
     return `
         Based on the following scenario, generate ${situations} concise situations titles that fit within the story's context creating a natural story progression, essentially each situation is an arc of the scenario: 
@@ -28,13 +30,35 @@ export function generateSituationsPrompt(situations: number, scenario: string, t
 
         The title should be concise, max 5 words.
 
+        The situation titles should have a clear story outlined, such as the start of the story, the middle of the story, and the end of the story.
+
         The output should be in the format Title: <title>
+    `;
+}
+
+export function generateSituationPrompt(scenario: string, tone: string, conflict: string, currentSituation: number, totalSituations: number, previousSituation?: string) {
+    // get which stage story is on based on index
+    const stageDescription = currentStoryStage(currentSituation, totalSituations);
+
+    return `
+        Based on the following scenario, generate a concise situation title that fits within the story's context and aligns with the current stage of the story ${stageDescription}:
+
+        Scenario: '${scenario}'.
+        Previous situation: '${previousSituation || 'N/A'}'
+
+        The specification for this situation and the story progression are based on the following:
+        - Tone: '${tone}'
+        - Conflict: '${conflict}'
+
+        The title should be concise, max 5 words.
+
+        The output should be in the format: Title: <title>
     `;
 }
 
 export function generateSituationImagePrompt(situation: string, scenario: string, moments: string) {
     return `
-        Given the following piece of text: ${moments}, 
+        Given the following small paragraph: ${moments}, 
         summarize the text and generate a comic-style art image cover art that will be the best fit for the situation: ${situation} 
         that is for the following scenario: ${scenario}.
 
@@ -57,4 +81,23 @@ export function generateMomentPrompt(scenario: string, situation: string, tone: 
 
         The output should be in the format Moment: <moment>
     `;
+}
+
+export function generateMoment(scenario: string, situation: string, tone: string, conflict: string, currentSituation: number, totalSituations: number) {
+    const stageDescription = currentStoryStage(currentSituation, totalSituations);
+
+    return `
+        For the situation: '${situation}' which is part of the '${stageDescription}' of the story, generate moments that align with the overall scenario:
+
+        Scenario: '${scenario}'
+        Situation: '${situation}'
+
+        The specifications for the moments and their alignment with the story are based on the following:
+        - tone: '${tone}'
+        - conflict: '${conflict}'
+
+        Generate concise description for the 4 key moments in this situation, outlining the progression of events.
+
+        The output should be in the format Moment: <moment>
+    `
 }
