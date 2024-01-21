@@ -1,12 +1,7 @@
 import { GOOGLE_API_KEY, OPENAI_KEY } from '$env/static/private';
-import OpenAI from 'openai';
 import { generateScenarioImagePrompt, generateSituationImagePrompt } from '../../prompts.js';
-import fetch from 'node-fetch';
 import { Storage } from '@google-cloud/storage';
-
-// initialize openai
-const openai = new OpenAI({ apiKey: OPENAI_KEY });
-const model = "dall-e-3";
+import { generateImage } from '$lib/services/gptService.js';
 
 // initialize bucket
 const storage = new Storage({ keyFilename: GOOGLE_API_KEY });
@@ -58,32 +53,6 @@ async function uploadImage(imageBuffer: string) {
 
         await file.makePublic();
         console.log(`${fileName} uploaded to ${bucketName}`);
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-async function generateImage(prompt: string) {
-    try {
-        const response = await openai.images.generate({
-            prompt: prompt,
-            model: model,
-            n: 1,
-            size: '1024x1024'
-        });
-
-        // fetch image from URL
-        const imageUrl = response.data[0].url;
-        const imageResponse = await fetch(imageUrl);
-        const arrayBuffer = await imageResponse.arrayBuffer();
-
-        const imageBuffer = Buffer.from(arrayBuffer);
-
-        // convert the buffer to a base64 string
-        const base64data = imageBuffer.toString('base64');
-
-        // send base64 string as a response
-        return `data:image/png;base64,${base64data}`;
     } catch (error) {
         console.error(error);
     }

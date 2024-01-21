@@ -3,6 +3,7 @@ import { OpenAI } from 'openai';
 import { generateMoment, generateMomentPrompt, generateScenarioPrompt, generateSituationPrompt, generateSituationsPrompt } from '../prompts.js';
 import { v4 as uuidv4 } from 'uuid';
 import type { MomentObject } from "../../../utils/types.js";
+import { gptPrompt } from "$lib/services/gptService.js";
 
 
 // initialize openai
@@ -34,8 +35,6 @@ export const POST = async ({ request }) => {
             // update for next iteration
             previousSituationTitle = situationTitle;
         }
-
-        console.log(situations);
 
         // const situationPrompt : string = generateSituationsPrompt(Number(situation), scenario!, tone, conflict);
         // const situationResponse = (await gptPrompt(openai, model, situationPrompt)).choices[0].message.content;
@@ -78,15 +77,15 @@ export const POST = async ({ request }) => {
     }
 }
 
-async function gptPrompt(openai: OpenAI, model: string, prompt: string) : Promise<OpenAI.Chat.Completions.ChatCompletion> {
-    return await openai.chat.completions.create({
-        model: model,
-        messages: [{
-            'role': 'user',
-            'content': prompt
-        }]
-    });
-}
+// async function gptPrompt(openai: OpenAI, model: string, prompt: string) : Promise<OpenAI.Chat.Completions.ChatCompletion> {
+//     return await openai.chat.completions.create({
+//         model: model,
+//         messages: [{
+//             'role': 'user',
+//             'content': prompt
+//         }]
+//     });
+// }
 
 function parseSituation(segments: string[]) {
     const result = segments.map(segment => {

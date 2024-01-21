@@ -1,19 +1,25 @@
+import { generateCharacterAttributes } from "$lib/services/characterGenerator";
 import { currentStoryStage } from "$lib/utils/promptService";
 
 export function generateScenarioPrompt(title: string, setting: string, tone: string, conflict: string) {
+    // Provide only the title which is as concise as but not the same as 'First day at work', 'Lost in Tokyo', 'First day at school', 'Eating at a restaurant', for an interactive story and based on the following inputs:
     return `
-        Provide only the title which is as concise as but not the same as 'First day at work', 'Lost in Tokyo', 'First day at school', 'Eating at a restaurant', for an interactive story and based on the following inputs: 
+        Provide a small title for a story with the following inputs:
         - title: ${title}
         - setting: ${setting}
         - tone: ${tone}
         - conflict ${conflict}
+        The title should be max 5 words.
     `;
 }
 
 export function generateScenarioImagePrompt(scenario: string) {
+    // generate random character 
+    const characterDescription = generateCharacterAttributes();
+    console.log(characterDescription);
     return `
-        Generate a comic-style art image cover art for the scenario: ${scenario},
-        The image should have NO chat bubbles and NO text in the image.
+        Generate a comic-style art image cover art for the scenario: ${scenario}, and the description for the character is: ${characterDescription}.
+        Provide the gen_id for the image as well.
     `;
 }
 
