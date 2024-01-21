@@ -1,11 +1,6 @@
-let appearance = "";
-let personality = "";
-let background = "";
-let clothing = "";
-
 function randomAge(): number {
     const minAge = 15;
-    const maxAge = 45;
+    const maxAge = 30;
     
     return Math.floor(Math.random() * (maxAge - minAge + 1) + minAge)
 }
@@ -33,7 +28,7 @@ function randomClothingStyle() {
 export function generateCharacterAttributes(): string {
     const character = {
         age: randomAge(),
-        gender: randomAge() === 0 ? 'female' : 'male',
+        gender: randomGender() === 0 ? 'female' : 'male',
         hairColor: randomHairColor(),
         clothingStyle: randomClothingStyle()
     }

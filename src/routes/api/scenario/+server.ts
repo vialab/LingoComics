@@ -95,6 +95,10 @@ async function uploadImage(base64String: string, fileName: string) {
     }
 
     const strippedBase64String = base64String.split(';base64,').pop();
+    if (typeof strippedBase64String !== 'string') {
+        throw new Error('Invalid base64 string');
+    }
+    
     const imageBuffer = Buffer.from(strippedBase64String, 'base64');
 
     const bucket = storage.bucket(bucketName);

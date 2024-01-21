@@ -1,15 +1,24 @@
 import { generateCharacterAttributes } from "$lib/services/characterGenerator";
-import { currentStoryStage } from "$lib/utils/promptService";
+import { currentMomentStage, currentStoryStage } from "$lib/utils/promptService";
+
+export function generateCharacterPrompt(characterDescription: string) {
+    return `
+        Provide a detailed description of a protagonist for a comic-book story that can be used to create an image of the character using DALLE.
+        Character description: ${characterDescription}
+    `;
+}
 
 export function generateScenarioPrompt(title: string, setting: string, tone: string, conflict: string) {
     // Provide only the title which is as concise as but not the same as 'First day at work', 'Lost in Tokyo', 'First day at school', 'Eating at a restaurant', for an interactive story and based on the following inputs:
     return `
-        Provide a small title for a story with the following inputs:
-        - title: ${title}
-        - setting: ${setting}
-        - tone: ${tone}
-        - conflict ${conflict}
-        The title should be max 5 words.
+        Generate a title for an interactive story that is contextually relatable to everyday real-world experiences. The title should reflect common situations people might encounter, such as 'First day at work', 'Lost in a city', or 'First day at school'. Use the following inputs to inform the title, ensuring it aligns with these themes:
+
+        - Suggested Title: ${title}
+        - Setting: ${setting}
+        - Tone: ${tone}
+        - Conflict: ${conflict}
+
+        The title should be concise, no more than 5 words, and should evoke a scenario that is easy to visualize and relate to. Examples of such titles include 'Eating at a restaurant', 'Meeting new neighbors', or 'Exploring a new city'. Avoid overly specific or niche scenarios to maintain broad relatability.
     `;
 }
 
@@ -72,7 +81,7 @@ export function generateSituationImagePrompt(situation: string, scenario: string
     `;
 }
 
-export function generateMomentPrompt(scenario: string, situation: string, tone: string, conflict: string) {
+export function generateMomentsPrompt(scenario: string, situation: string, tone: string, conflict: string) {
     return `
         For the following situation. generate 4 key moments that fit within the story's context creating.
 
@@ -89,21 +98,23 @@ export function generateMomentPrompt(scenario: string, situation: string, tone: 
     `;
 }
 
-export function generateMoment(scenario: string, situation: string, tone: string, conflict: string, currentSituation: number, totalSituations: number) {
-    const stageDescription = currentStoryStage(currentSituation, totalSituations);
+export function generateMomentPrompt(situationTitle: string, scenario: string, tone: string, conflict: string, currentMoment: number, totalMoments: number, currentSituation: number, totalSituations: number, previousSituation?: string, nextSituation?: string) {
+    const stageDescription = currentMomentStage(currentMoment, totalMoments, currentSituation, totalSituations);
 
     return `
-        For the situation: '${situation}' which is part of the '${stageDescription}' of the story, generate moments that align with the overall scenario:
+        For the situation: '${situationTitle}' which is part of the '${stageDescription}' of the story, generate moments that align with the overall scenario:
 
         Scenario: '${scenario}'
-        Situation: '${situation}'
+        Situation: '${situationTitle}'
+        Previous situation: '${previousSituation || 'N/A'}'
+        Next situation: ${nextSituation || 'N/A'}
 
         The specifications for the moments and their alignment with the story are based on the following:
         - tone: '${tone}'
         - conflict: '${conflict}'
 
-        Generate concise description for the 4 key moments in this situation, outlining the progression of events.
+        Generate concise description for moment ${currentMoment} in this situation, outlining the progression of events.
 
-        The output should be in the format Moment: <moment>
-    `
+        The output should be in the format Moment ${currentMoment}: <moment>
+    `;
 }

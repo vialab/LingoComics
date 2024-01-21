@@ -1,12 +1,5 @@
-import { GOOGLE_API_KEY, OPENAI_KEY } from '$env/static/private';
 import { generateScenarioImagePrompt, generateSituationImagePrompt } from '../../prompts.js';
-import { Storage } from '@google-cloud/storage';
 import { generateImage } from '$lib/services/gptService.js';
-
-// initialize bucket
-const storage = new Storage({ keyFilename: GOOGLE_API_KEY });
-const bucketName = 'lingoimages';
-const fileName = 'temp-file.jpg';
 
 type Moment = {
     moment1: string,
@@ -40,20 +33,3 @@ export const POST = async ({ request }) => {
         return new Response(JSON.stringify({ "error": "error occurred when generating images" }), { status: 500 });
     }
 };
-
-// upload to google storgae bucket
-async function uploadImage(imageBuffer: string) {
-    const bucket = storage.bucket(bucketName);
-    const file = bucket.file(fileName);
-
-    try {
-        await file.save(imageBuffer, {
-            metadata: { contentType: 'image/jpeg' }
-        });
-
-        await file.makePublic();
-        console.log(`${fileName} uploaded to ${bucketName}`);
-    } catch (error) {
-        console.error(error);
-    }
-}
