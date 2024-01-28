@@ -1,7 +1,7 @@
 import { OPENAI_KEY } from "$env/static/private";
 import OpenAI from "openai";
 import { generateCharacterAttributes } from "./characterGenerator";
-import { generateCharacterPrompt, generateMomentPrompt, generateScenarioPrompt, generateSituationPrompt, getCharacterPrompt, getScenarioTitlePrompt, summarizeStoryPrompt } from "../../routes/api/prompts";
+import { generateCharacterPrompt, generateMomentPrompt, generateScenarioPrompt, generateSituationPrompt, getCharacterPrompt, getScenarioTitlePrompt, getStorySetting, summarizeStoryPrompt } from "../../routes/api/prompts";
 
 // initialize openai
 const openai = new OpenAI({ apiKey: OPENAI_KEY });
@@ -96,6 +96,17 @@ export async function summarizeStory(story: string) : Promise<string> {
     const summaryPrompt : string = summarizeStoryPrompt(story); 
     const summary : string = (await gptPrompt(openai, chatModel, summaryPrompt)).choices[0].message.content?.trim() as string;
     return summary;
+}
+
+/**
+ * Function that will provide a description of the setting of a given story
+ * @param storySummary 
+ * @returns description of story setting
+ */
+export async function summarizeSetting(storySummary: string) : Promise<string> {
+    const settingPrompt : string = getStorySetting(storySummary);
+    const setting : string = (await gptPrompt(openai, chatModel, settingPrompt)).choices[0].message.content?.trim() as string;
+    return setting;
 }
 
 /**

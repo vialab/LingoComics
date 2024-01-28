@@ -13,6 +13,11 @@ export function summarizeStoryPrompt(story: string) {
     return `Summarize this story: ${story} `
 }
 
+export function getStorySetting(storySummary: string) {
+    return `Given the summary of the story: ${storySummary}, generate a description of what the setting would be.`;
+}
+
+
 export function generateCharacterPrompt(characterDescription: string) {
     return `
         Provide a concise and detailed description of a protagonist for a comic-book story that can be used to create an image of the character using DALLE.
@@ -77,9 +82,10 @@ export function generateMomentPrompt(situationTitle: string, scenario: string, t
     `;
 }
 
-export function generateScenarioImagePrompt(scenario: string, characterDescription: string) {
+export function generateScenarioImagePrompt(scenario: string, characterDescription: string, setting: string) {
     return `
         Summarize the following scenario: ${scenario}.
+        The description of the setting is: ${setting}.
         Create a single comic-style cover image without typography that will capture the essense of the overall scenario, without any text or speech bubbles.
         The artwork should capture the essence of the scenario WITHOUT including any text or words in the image. 
         The scenario should be the focal point of the image with an environment that has the character: ${characterDescription} in it. 
@@ -87,10 +93,11 @@ export function generateScenarioImagePrompt(scenario: string, characterDescripti
     `;
 }
 
-export function generateSituationImagePrompt(situation: string, scenario: string, characterDescription: string) {
+export function generateSituationImagePrompt(situation: string, scenario: string, characterDescription: string, setting: string) {
     return `
         Summarize the following scenario: ${scenario}.
         The situation that happens in the scenario is: ${situation}.
+        The description of the setting is: ${setting}.
         Create a single comic-style cover image without typography that will capture the essense of the overall scenario that relates to the title of the situation, without any text or speech bubbles.
         The artwork should capture the essence of the scenario WITHOUT including any text or words in the image.
         The situation should be the focal point of the image with an environment that has the character: ${characterDescription}.

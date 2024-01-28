@@ -10,17 +10,17 @@ import { generateImage } from '$lib/services/gptService.js';
 
 export const POST = async ({ request }) => {
     const body = await request.json();
-    const { scenario, situations, character } = body;
+    const { scenario, situations, character, setting } = body;
 
     try {
         // generate scenario image
-        const scenarioPrompt = generateScenarioImagePrompt(scenario, character);
+        const scenarioPrompt = generateScenarioImagePrompt(scenario, character, setting);
         const scenarioImage  = await generateImage(scenarioPrompt);
 
         // generate situation image
         const situationImages = [];
         for (const situation of situations) {
-            const situationPrompt = generateSituationImagePrompt(situation.title, scenario, character);
+            const situationPrompt = generateSituationImagePrompt(situation.title, scenario, character, setting);
             const situationImage = await generateImage(situationPrompt);
             situationImages.push(situationImage);
         }

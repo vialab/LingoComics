@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { generateMoments, generateScenario, generateSituations, getScenarioTitle, getCharacterFromScenario, summarizeStory } from "$lib/services/gptService.js";
+import { generateMoments, generateScenario, generateSituations, getScenarioTitle, getCharacterFromScenario, summarizeStory, summarizeSetting } from "$lib/services/gptService.js";
 
 
 // story gen pipeline
@@ -20,6 +20,9 @@ export const POST = async ({ request }) => {
         // summarize story
         const summary : string = await summarizeStory(story);
 
+        // summarize setting of the story
+        const storySetting : string = await summarizeSetting(summary);
+
         // get title of scenario
         const scenario : string = await getScenarioTitle(story);
 
@@ -33,7 +36,7 @@ export const POST = async ({ request }) => {
         const structuredSituations = await generateMoments(situations, story, tone, conflict);
 
         // return response
-        const data = { scenarioId: uuidv4(), story: story, summary: summary, scenario: scenario, character: character, situations: structuredSituations };
+        const data = { scenarioId: uuidv4(), story: story, summary: summary, scenario: scenario, setting: storySetting, character: character, situations: structuredSituations };
 
         return new Response(JSON.stringify(data), { status: 200 });
     } catch (error) {
