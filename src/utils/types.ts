@@ -16,6 +16,7 @@ type Situation = {
 }
 
 export type StoryStruct = {
+    character: string,
     scenarioId: string,
     scenario: string,
     image: string,

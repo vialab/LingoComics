@@ -1,7 +1,7 @@
 import { OPENAI_KEY } from "$env/static/private";
 import OpenAI from "openai";
 import { generateCharacterAttributes } from "./characterGenerator";
-import { generateCharacterPrompt, generateMomentPrompt, generateScenarioPrompt, generateSituationPrompt } from "../../routes/api/prompts";
+import { generateCharacterPrompt, generateMomentPrompt, generateScenarioPrompt, generateSituationPrompt, getCharacterPrompt, getScenarioTitlePrompt, summarizeStoryPrompt } from "../../routes/api/prompts";
 
 // initialize openai
 const openai = new OpenAI({ apiKey: OPENAI_KEY });
@@ -28,10 +28,8 @@ export async function generateImage(prompt: string) {
             prompt: prompt,
             model: imageModel,
             n: 1,
-            size: '1024x1024'
+            size: '1024x1024',
         });
-
-        console.log('image response:', response);
 
         // fetch image from URL
         const imageUrl = response.data[0].url;
@@ -45,10 +43,12 @@ export async function generateImage(prompt: string) {
         const imageBuffer = Buffer.from(arrayBuffer);
 
         // convert the buffer to a base64 string
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const base64data = imageBuffer.toString('base64');
 
         // send base64 string as a response
-        return `data:image/png;base64,${base64data}`;
+        // return `data:image/png;base64,${base64data}`;
+        return response;
     } catch (error) {
         console.error(error);
     }
@@ -63,6 +63,39 @@ export async function generateCharacterDescription() : Promise<string> {
     const characterDescription : string = generateCharacterPrompt(characterAttr);
     const character : string = (await gptPrompt(openai, chatModel, characterDescription)).choices[0].message.content?.trim() as string;
     return character;
+}
+
+/**
+ * Function to get the title of the overall story
+ * @param story 
+ * @returns 
+ */
+export async function getScenarioTitle(story: string) : Promise<string> {
+    const scenarioTitlePrompt : string = getScenarioTitlePrompt(story);
+    const scenario : string = (await gptPrompt(openai, chatModel, scenarioTitlePrompt)).choices[0].message.content?.trim() as string;
+    return scenario;
+}
+
+/**
+ * Function to get the character of the story
+ * @param story 
+ * @returns 
+ */
+export async function getCharacterFromScenario(story: string) : Promise<string> {
+    const characterPrompt : string = getCharacterPrompt(story);
+    const character : string = (await gptPrompt(openai, chatModel, characterPrompt)).choices[0].message.content?.trim() as string;
+    return character;
+}
+
+/**
+ * Function that will summarize the story
+ * @param story 
+ * @returns 
+ */
+export async function summarizeStory(story: string) : Promise<string> {
+    const summaryPrompt : string = summarizeStoryPrompt(story); 
+    const summary : string = (await gptPrompt(openai, chatModel, summaryPrompt)).choices[0].message.content?.trim() as string;
+    return summary;
 }
 
 /**
@@ -107,6 +140,14 @@ export async function generateSituations(scenario: string ,situation: string, to
 }
 
 
+/**
+ * Function to generate moments
+ * @param situations 
+ * @param scenario 
+ * @param tone 
+ * @param conflict 
+ * @returns 
+ */
 export async function generateMoments(situations : Situation[], scenario: string, tone: string, conflict: string) {
     const totalSituations = situations.length;
     const structuredSituations = [];
@@ -133,3 +174,5 @@ export async function generateMoments(situations : Situation[], scenario: string
 
     return structuredSituations;
 }
+
+

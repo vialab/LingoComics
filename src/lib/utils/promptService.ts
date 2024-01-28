@@ -8,7 +8,6 @@ export function currentStoryStage(currentSituation: number, totalSituations: num
     }
 }
 
-
 export function currentMomentStage(momentIndex: number, totalMoments: number, situationIndex: number, totalSituations: number) : string {
     // start of story
     if (situationIndex === 1) {
@@ -30,4 +29,4 @@ export function currentMomentStage(momentIndex: number, totalMoments: number, si
             return 'development of this part of the story';
         }
     }
-}
+} 
