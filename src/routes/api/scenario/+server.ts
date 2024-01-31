@@ -1,6 +1,5 @@
 import { db } from '$lib/firebase/firebase.js';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { collection, addDoc, doc, getDoc, setDoc, query, getDocs, where, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc, query, getDocs, where, updateDoc } from 'firebase/firestore';
 import type { StoryStruct } from '../../../utils/types.js';
 import { Storage } from '@google-cloud/storage';
 import { GOOGLE_API_KEY } from '$env/static/private';
@@ -9,6 +8,7 @@ import { GOOGLE_API_KEY } from '$env/static/private';
 const storage = new Storage({ keyFilename: GOOGLE_API_KEY });
 const bucketName = 'lingoimages';
 
+// This POST request saves story generation items to firestore
 export const POST = async ({ request }) => {
     const body = await request.json();
     
@@ -50,32 +50,36 @@ export const POST = async ({ request }) => {
             // Check if the situation exists
             const situationSnapshot = await getDoc(situationRef);
             if (situationSnapshot.exists()) {
+                console.log("situation exists");
+
                 // upload situation images
                 const situationImageFile = await uploadImage(situation.image, situationId);
 
                 // Update existing situation
-                await updateDoc(situationRef, { title: situation.title, image: `https://storage.googleapis.com/lingoimages/${situationImageFile?.name}` });
+                await updateDoc(situationRef, { title: situation.title, situationSort: situation.situationSort, image: `https://storage.googleapis.com/lingoimages/${situationImageFile?.name}` });
             } else {
+                console.log("situation does not exist");
+
                 // upload situation images
                 const situationImageFile = await uploadImage(situation.image, situationId);
 
                 // Create new situation
-                await setDoc(situationRef, { id: situationId, title: situation.title, image: `https://storage.googleapis.com/lingoimages/${situationImageFile?.name}` });
+                await setDoc(situationRef, { id: situationId,  situationSort: situation.situationSort, title: situation.title, image: `https://storage.googleapis.com/lingoimages/${situationImageFile?.name}` });
             }
-        
+
             // Process moments
-            for (const [key, value] of Object.entries(situation.moments)) {
-                const momentId = key; // Assuming 'key' is a unique identifier for the moment
+            for (let currentMoment = 0; currentMoment < situation.moments.length; currentMoment++) {
+                const momentId = `moment${currentMoment + 1}`;
                 const momentRef = doc(situationRef, 'moments', momentId);
-            
-                // Check if the moment exists
+
+                // check if moment exists
                 const momentSnapshot = await getDoc(momentRef);
                 if (momentSnapshot.exists()) {
-                    // Update existing moment
-                    await updateDoc(momentRef, { description: value });
+                    // update existing moment
+                    await updateDoc(momentRef, { description: situation.moments[currentMoment] });
                 } else {
-                    // Create new moment
-                    await setDoc(momentRef, { id: momentId, description: value });
+                    // create a new moment
+                    await setDoc(momentRef, { id: momentId, description: situation.moments[currentMoment] });
                 }
             }
         }

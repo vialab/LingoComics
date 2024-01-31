@@ -7,7 +7,7 @@
     console.log(responseData);
 </script>
 
-{#if responseData.hasOwnProperty('image') && !responseData.image.includes('undefined') } 
+{#if responseData.hasOwnProperty('image') && !responseData.image.includes("undefined") } 
     <div class="flex gap-2 w-full h-[30rem]">
         <!-- Scenario image -->
         <div class="scenario-card rounded-lg relative w-[10rem] overflow-hidden flex-1">

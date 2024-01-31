@@ -38,6 +38,8 @@ export const POST = async ({ request }) => {
         // return response
         const data = { scenarioId: uuidv4(), story: story, summary: summary, scenario: scenario, setting: storySetting, character: character, situations: structuredSituations };
 
+        console.log(data);
+
         return new Response(JSON.stringify(data), { status: 200 });
     } catch (error) {
         console.error(error);

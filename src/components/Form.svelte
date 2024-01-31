@@ -30,7 +30,7 @@
     <!-- emotions of story -->
     <div class="relative mb-6">
         <label class="block text-white text-md font-bold mb-2" for="question4">What is the emotional tone of this story?</label>
-        <select value="Comedic" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="question4" name="tone">
+        <select value="Don't specify" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="question4" name="tone">
             <option value="" disabled selected hidden class="text-gray-700">Select an option</option>
             <option>Don't specify</option>
             <option>Comedic</option>

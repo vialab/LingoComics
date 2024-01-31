@@ -99,9 +99,19 @@ export function generateSituationImagePrompt(situation: string, scenario: string
         The situation that happens in the scenario is: ${situation}.
         The description of the setting is: ${setting}.
         Create a single comic-style cover image without typography that will capture the essense of the overall scenario that relates to the title of the situation, without any text or speech bubbles.
-        The artwork should capture the essence of the scenario WITHOUT including any text or words in the image.
+        The artwork should capture the essence of the situation WITHOUT including any text or words in the image.
         The situation should be the focal point of the image with an environment that has the character: ${characterDescription}.
         Ensure the image is dynamic and conveys a sense of narrative or action related to the scenario.
+    `;
+}
+
+export function generateMomentImagePrompt(scenario: string, situation: string, moment: string, characterDescription: string, setting: string) {
+    return `
+        Given the summary of the scenario: ${scenario}, and the situation: ${situation}, and the description of the moment: ${moment}.
+        Create a single comic-style image without typography that will capture the essence of the overall moment.
+        The artwork should capture the essence of the moment WITHOUT including any text or words in the image.
+        The description of the moment should be the focal point of the image with an environment that has the character: ${characterDescription}.
+        The description of the setting is: ${setting}.
     `;
 }
 

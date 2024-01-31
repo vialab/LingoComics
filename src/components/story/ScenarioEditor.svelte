@@ -6,6 +6,9 @@
     export let handleScenarioChange : (event: Event) => void;
     export let handleContentChange : (event: Event, situationIndex : number, momentIndex?: string) => void;
     export let editableStyle : string;
+
+    // reactive statement to sort situations
+    $: sortedSituations = responseData?.situations?.slice().sort((a, b) => a.situationSort - b.situationSort);
 </script>
 
 <!-- content -->
@@ -20,7 +23,7 @@
 </h1>
 <!-- Situations -->
 <ul>
-    {#each responseData?.situations as situation, situationIndex}
+    {#each sortedSituations as situation, situationIndex (situation.id)}
         <li class="text-lg font-medium py-2 indent-2">
             <span
                 style={isEditing ? editableStyle : null}

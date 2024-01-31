@@ -44,6 +44,7 @@ export const GET: RequestHandler = async ({ params }) => {
                 id: situationDoc.id,
                 title: situationData.title,
                 image: situationData?.image,
+                situationSort: situationData?.situationSort,
                 moments: moments
             });
         }

@@ -1,4 +1,4 @@
-import { generateScenarioImagePrompt, generateSituationImagePrompt } from '../../prompts.js';
+import { generateMomentImagePrompt, generateScenarioImagePrompt, generateSituationImagePrompt } from '../../prompts.js';
 import { generateImage } from '$lib/services/gptService.js';
 
 // type Moment = {
@@ -17,12 +17,22 @@ export const POST = async ({ request }) => {
         const scenarioPrompt = generateScenarioImagePrompt(scenario, character, setting);
         const scenarioImage  = await generateImage(scenarioPrompt);
 
-        // generate situation image
+        // generate situation images
         const situationImages = [];
+        const momentImages = [];
         for (const situation of situations) {
             const situationPrompt = generateSituationImagePrompt(situation.title, scenario, character, setting);
             const situationImage = await generateImage(situationPrompt);
             situationImages.push(situationImage);
+
+            // generate moment images
+            for (let currentMoment = 0; currentMoment < situation.moments.length; currentMoment++) {
+                console.log(situation.moments[currentMoment]);
+                const momentPrompt = generateMomentImagePrompt(scenario, situation.title, situation.moments[currentMoment], character, setting);
+                const momentImage = await generateImage(momentPrompt);
+                momentImages.push({ title: situation.title, image: momentImage });
+                situationImages.push(momentImages);
+            }
         }
         
         // Send the base64 string as a response

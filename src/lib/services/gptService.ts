@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { OPENAI_KEY } from "$env/static/private";
 import OpenAI from "openai";
 import { generateCharacterAttributes } from "./characterGenerator";
@@ -43,12 +44,11 @@ export async function generateImage(prompt: string) {
         const imageBuffer = Buffer.from(arrayBuffer);
 
         // convert the buffer to a base64 string
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const base64data = imageBuffer.toString('base64');
 
         // send base64 string as a response
         // return `data:image/png;base64,${base64data}`;
-        return response;
+        return response.data[0].url;
     } catch (error) {
         console.error(error);
     }
@@ -142,7 +142,7 @@ export async function generateSituations(scenario: string ,situation: string, to
         const situationResponse = (await gptPrompt(openai, chatModel, situationPrompt)).choices[0].message.content?.trim() as string;
         const situationTitle = situationResponse?.split('Title: ')[1].trim();
 
-        situations.push({ title: situationTitle });
+        situations.push({ id: uuidv4(), title: situationTitle, situationSort: currentSituation });
 
         previousSituationTitle = situationTitle;
     }

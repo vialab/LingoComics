@@ -62,10 +62,10 @@
 
 			const result = await response.json();
 
-			console.log("response from api", result);
-
 			// store story in response
 			responseData = result as StoryStruct;
+
+			console.log("response from api", result, responseData);
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -121,18 +121,19 @@
 		const target = event.target as HTMLSpanElement;
 		const updatedContent = target.textContent || "";
 
-		if (momentIndex !== null) {
-			const moments = responseData!.situations[situationIndex].moments as {
-				[key: string]: string;
-			};
+		// TODO: reconfigure later
+		// if (momentIndex !== null) {
+		// 	const moments = responseData!.situations[situationIndex].moments as {
+		// 		[key: string]: string;
+		// 	};
 
-			if (momentIndex in moments) {
-				moments[momentIndex] = updatedContent;
-			}
-		} else {
-			// Update the title of a situation
-			responseData!.situations[situationIndex].title = updatedContent;
-		}
+		// 	if (momentIndex in moments) {
+		// 		moments[momentIndex] = updatedContent;
+		// 	}
+		// } else {
+		// 	// Update the title of a situation
+		// 	responseData!.situations[situationIndex].title = updatedContent;
+		// }
 	}
 
 	// handle exiting
@@ -158,6 +159,7 @@
 
 	// handle image generation
 	async function handleImageGeneration() {
+		console.log('response data for image gen', responseData);
 		isGeneratingImage = true;
 		try {
 			const result = await generateImages(responseData);

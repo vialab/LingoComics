@@ -12,7 +12,8 @@ type Situation = {
     id: string,
     title: string,
     image: string,
-    moments: MomentObject
+    situationSort: number,
+    moments: string[]
 }
 
 export type StoryStruct = {
