@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { OPENAI_KEY } from "$env/static/private";
 import OpenAI from "openai";
 import { generateCharacterAttributes } from "./characterGenerator";
-import { generateCharacterPrompt, generateMomentPrompt, generateScenarioPrompt, generateSituationPrompt, getCharacterPrompt, getScenarioTitlePrompt, getStorySetting, summarizeStoryPrompt } from "../../routes/api/prompts";
+import { generateCharacterPrompt, generateMomentDescriptionPrompt, generateMomentPrompt, generateScenarioPrompt, generateSituationPrompt, getCharacterPrompt, getScenarioTitlePrompt, getStorySetting, summarizeStoryPrompt } from "../../routes/api/prompts";
 
 // initialize openai
 const openai = new OpenAI({ apiKey: OPENAI_KEY });
@@ -174,7 +174,11 @@ export async function generateMoments(situations : Situation[], scenario: string
             const momentPrompt = generateMomentPrompt(situation.title, scenario, tone, conflict, momentIndex, totalMoments, situationIndex + 1, totalSituations, situations[situationIndex - 1]?.title, situations[situationIndex + 1]?.title)
             const momentResponse = (await gptPrompt(openai, chatModel, momentPrompt)).choices[0].message.content?.trim() as string;
             const momentDescription = momentResponse?.replace(/^\d+\. Moment: |Moment \d+: /, '');
-            moments.push(momentDescription);
+            
+            const momentImageDescriptionPrompt = generateMomentDescriptionPrompt(scenario, situation.title, momentDescription);
+            const momentImageDescriptionResponse = (await gptPrompt(openai, chatModel, momentImageDescriptionPrompt)).choices[0].message.content?.trim() as string;
+
+            moments.push({ momentDescription, momentImageDescriptionResponse });
         }
 
         structuredSituations.push({

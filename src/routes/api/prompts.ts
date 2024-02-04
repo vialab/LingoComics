@@ -6,7 +6,11 @@ export function getScenarioTitlePrompt(story: string) {
 }
 
 export function getCharacterPrompt(story: string) {
-    return `Who is the main character in this story? ${story}. Based on the what you think the character should look like in appearance, generate a description of them that will best fit the story.`;
+    return `
+        Who is the main character in this story? ${story}. 
+        Based on the what you think the character should look like in appearance, generate a description of them that will best fit the story. 
+        Make the description focus on appearance and one that will help an image generation tool.
+    `;
 }
 
 export function summarizeStoryPrompt(story: string) {
@@ -77,9 +81,21 @@ export function generateMomentPrompt(situationTitle: string, scenario: string, t
         - conflict: '${conflict}'
 
         Generate very concise description for moment ${currentMoment} in this situation, outlining the progression of events.
+        The description should include any action that the character should perform so that an image generation model can generate an image based on the description.
 
         The output should be in the format Moment ${currentMoment}: <moment>
     `;
+}
+
+export function generateMomentDescriptionPrompt(story: string, situation: string, moment: string) {
+    return `
+        Analyze this story: ${story}.
+        Then analyze this situation that is part of the story: ${situation}.
+        Then analyze this moment that is part of the situation: ${moment}.
+        Provide a brief description of what an image would look like for the moment, 
+        this description should be detailed enough for an AI image generation tool to generate while also keeping in mind the tokens, 
+        so don't overexceed on the description but the description should encapsulate the key parts of the moment. 
+    `
 }
 
 export function generateScenarioImagePrompt(scenario: string, characterDescription: string, setting: string) {
@@ -107,15 +123,29 @@ export function generateSituationImagePrompt(situation: string, scenario: string
 
 export function generateMomentImagePrompt(scenario: string, situation: string, moment: string, characterDescription: string, setting: string) {
     return `
-        Given the summary of the scenario: ${scenario}, and the situation: ${situation}, and the description of the moment: ${moment}.
-        Create a single comic-style image without typography that will capture the essence of the overall moment.
-        The artwork should capture the essence of the moment WITHOUT including any text or words in the image.
-        The description of the moment should be the focal point of the image with an environment that has the character: ${characterDescription}.
-        The description of the setting is: ${setting}.
+        Create a comic-style image for the moment: "${moment}".
+        This is the character: ${characterDescription}.
+        This is the setting: ${setting}.
+        The highlight of the image should be the action that should be performed in the moment.
     `;
 }
 
 
+/**
+ * 
+ * Given this moment ${moment}.
+        Create a comic-style image WITHOUT typography that will CLEARLY HIGHLIGHT actions that happen in the moment.
+        The character that should be in the image has this description: ${characterDescription}.
+        The character should be in the image performing the action highlighted in the moment.
+        The description of the setting is: ${setting}.
+ * 
+ * Given this moment: ${moment}.
+        Create a comic-style image WITHOUT typography that will capture the essence of the overall moment, put emphasis on the action that the moment should convey in an image.
+        The artwork should capture the essence of the moment WITHOUT including any text or words in the image.
+        The description of the moment should be the focal point of the image with an environment that has the character: ${characterDescription}.
+        The character should be performing the action or main focus point of the moment to get the point across of the current moment they are in.
+        The description of the setting is: ${setting}.
+ */
 // export function generateSituationImagePrompt(situation: string, scenario: string, moments: string) {
 //     return `
 //         Given the following small paragraph: ${moments}, 
