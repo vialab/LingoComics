@@ -13,14 +13,21 @@ type Situation = {
     title: string
 }
 
-export async function gptPrompt(openai: OpenAI, model: string, prompt: string) : Promise<OpenAI.Chat.Completions.ChatCompletion> {
-    return await openai.chat.completions.create({
+export async function gptPrompt(openai: OpenAI, model: string, prompt: string, max_tokens?: number) : Promise<OpenAI.Chat.Completions.ChatCompletion> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const completionsParams: any = {
         model: model,
         messages: [{
             'role': 'user',
             'content': prompt
         }]
-    });
+    };
+
+    if (max_tokens !== undefined) {
+        completionsParams.max_tokens = max_tokens;
+    }
+
+    return await openai.chat.completions.create(completionsParams);
 }
 
 export async function generateImage(prompt: string) {
@@ -48,7 +55,7 @@ export async function generateImage(prompt: string) {
 
         // send base64 string as a response
         // return `data:image/png;base64,${base64data}`;
-        return response.data[0].url;
+        return response;
     } catch (error) {
         console.error(error);
     }
@@ -176,7 +183,7 @@ export async function generateMoments(situations : Situation[], scenario: string
             const momentDescription = momentResponse?.replace(/^\d+\. Moment: |Moment \d+: /, '');
             
             const momentImageDescriptionPrompt = generateMomentDescriptionPrompt(scenario, situation.title, momentDescription);
-            const momentImageDescriptionResponse = (await gptPrompt(openai, chatModel, momentImageDescriptionPrompt)).choices[0].message.content?.trim() as string;
+            const momentImageDescriptionResponse = (await gptPrompt(openai, chatModel, momentImageDescriptionPrompt, 300)).choices[0].message.content?.trim() as string;
 
             moments.push({ momentDescription, momentImageDescriptionResponse });
         }

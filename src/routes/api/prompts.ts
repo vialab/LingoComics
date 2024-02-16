@@ -8,8 +8,15 @@ export function getScenarioTitlePrompt(story: string) {
 export function getCharacterPrompt(story: string) {
     return `
         Who is the main character in this story? ${story}. 
-        Based on the what you think the character should look like in appearance, generate a description of them that will best fit the story. 
+        Based on the what you think the character should look like in appearance, 
+        generate a description of them that will best fit the story. 
         Make the description focus on appearance and one that will help an image generation tool.
+        The description should have the following:
+        - hair color
+        - hair style
+        - eye description
+        - face description
+        - clothing description
     `;
 }
 
@@ -46,6 +53,8 @@ export function generateScenarioPrompt(title: string, setting: string, tone: str
 export function generateSituationPrompt(scenario: string, tone: string, conflict: string, currentSituation: number, totalSituations: number, previousSituation?: string) {
     // get which stage story is on based on index
     const stageDescription = currentStoryStage(currentSituation, totalSituations);
+
+    console.log('stage description: ', stageDescription);
 
     return `
         Based on the following scenario, generate a concise situation title that fits within the story's context and aligns with the current stage of the story ${stageDescription}:
@@ -89,13 +98,27 @@ export function generateMomentPrompt(situationTitle: string, scenario: string, t
 
 export function generateMomentDescriptionPrompt(story: string, situation: string, moment: string) {
     return `
-        Analyze this story: ${story}.
-        Then analyze this situation that is part of the story: ${situation}.
-        Then analyze this moment that is part of the situation: ${moment}.
-        Provide a brief description of what an image would look like for the moment, 
-        this description should be detailed enough for an AI image generation tool to generate while also keeping in mind the tokens, 
-        so don't overexceed on the description but the description should encapsulate the key parts of the moment. 
-    `
+        Create a brief description for the following moment: "${moment}".
+        The description should be descriptive as to summarize the visual aspects of the moment for an image generation tool to generate, 
+        make sure the actions in the moment are a key part of the description.
+    `;
+    // Analyze this story: ${story}.
+    //     Then analyze this situation that is part of the story: ${situation}.
+    //     Then analyze this moment that is part of the situation: ${moment}.
+    //     The character in the story should convey the emotions of the moment that they are in.
+    //     Provide a brief description of what an image would look like for the moment, 
+    //     this description should be detailed enough for an AI image generation tool to generate while also keeping in mind the tokens, 
+    //     so don't overexceed on the description but the description should encapsulate the key parts of the moment. 
+    //     LIMIT 300 tokens.
+
+    // Analyze the story: ${story} to understand its overarching themes and emotions. 
+    // Focus on this particular situation within the story: ${situation}, to grasp the context and emotional undertones. 
+    // Delve into this specific moment: ${moment}, highlighting the pivotal emotions and the atmosphere that define it. 
+    // Consider the character's emotional state and how it is influenced by the surroundings and the situation at hand.
+
+    // Craft a description for an image that captures the essence of this moment, emphasizing the character's emotions, the ambiance, and any significant elements that contribute to the tone. 
+    // Ensure the description is concise yet rich enough to guide an AI in generating an image that reflects the key aspects of the moment, including the emotional depth and the setting, without exceeding 300 tokens. Aim for a balance between character portrayal and the depiction of the moment's mood and context.
+    
 }
 
 export function generateScenarioImagePrompt(scenario: string, characterDescription: string, setting: string) {
@@ -106,6 +129,7 @@ export function generateScenarioImagePrompt(scenario: string, characterDescripti
         The artwork should capture the essence of the scenario WITHOUT including any text or words in the image. 
         The scenario should be the focal point of the image with an environment that has the character: ${characterDescription} in it. 
         Ensure the image is dynamic and conveys a sense of narrative or action related to the scenario.
+        THE IMAGE HAS TO BE COMIC-STYLE.
     `;
 }
 
@@ -118,16 +142,27 @@ export function generateSituationImagePrompt(situation: string, scenario: string
         The artwork should capture the essence of the situation WITHOUT including any text or words in the image.
         The situation should be the focal point of the image with an environment that has the character: ${characterDescription}.
         Ensure the image is dynamic and conveys a sense of narrative or action related to the scenario.
+        THE IMAGE HAS TO BE COMIC-STYLE.
     `;
 }
 
 export function generateMomentImagePrompt(scenario: string, situation: string, moment: string, characterDescription: string, setting: string) {
     return `
-        Create a comic-style image for the moment: "${moment}".
-        This is the character: ${characterDescription}.
-        This is the setting: ${setting}.
-        The highlight of the image should be the action that should be performed in the moment.
+        "Craft a comic-style illustration capturing a pivotal moment: "${moment}". 
+        The scene stars a character described as follows: "${characterDescription}",
+        set against the backdrop of "${setting}". 
+        The focal point of this artwork should be the specific action unfolding during this moment, 
+        imbued with dynamic expressions and movements characteristic of comic book art. Ensure the image embodies the vibrant,
+        bold lines and dramatic shading typical of comic illustrations, with special attention to how the character's emotions 
+        and the setting contribute to the narrative of the action. The composition should be dynamic, emphasizing the action 
+        to engage the viewer, true to the essence of comic-style storytelling."
+        Use the prompt AS-IS. THE IMAGE HAS TO BE COMIC-STYLE.
     `;
+    // Create a comic-style image for the moment: "${moment}".
+    //     This is the character: "${characterDescription}".
+    //     This is the setting: "${setting}".
+    //     The highlight of the image should be the action that should be performed in the moment.
+    //     THE IMAGE HAS TO BE COMIC-STYLE.
 }
 
 
