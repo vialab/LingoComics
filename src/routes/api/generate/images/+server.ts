@@ -27,7 +27,7 @@ export const POST = async ({ request }) => {
 
             // generate moment images
             for (let currentMoment = 0; currentMoment < situation.moments.length; currentMoment++) {
-                console.log(situation.moments[currentMoment]);
+                console.log(`Generating moment: ${currentMoment}.`);
                 const momentPrompt = generateMomentImagePrompt(scenario, situation.title, situation.moments[currentMoment], character, setting);
                 const momentImage = await generateImage(momentPrompt);
                 momentImages.push({ title: situation.title, image: momentImage, moment: situation.moments[currentMoment] });

@@ -6,7 +6,7 @@ import { generateCharacterPrompt, generateMomentDescriptionPrompt, generateMomen
 
 // initialize openai
 const openai = new OpenAI({ apiKey: OPENAI_KEY });
-const chatModel = 'gpt-3.5-turbo';
+const chatModel = 'gpt-4-0125-preview'; //'gpt-3.5-turbo';
 const imageModel = "dall-e-3";
 
 type Situation = {

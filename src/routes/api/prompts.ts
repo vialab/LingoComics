@@ -10,29 +10,39 @@ export function getCharacterPrompt(story: string) {
         Who is the main character in this story? ${story}. 
         Based on the what you think the character should look like in appearance, 
         generate a description of them that will best fit the story. 
-        Make the description focus on appearance and one that will help an image generation tool.
+        Make the description focus only on appearance and one that will help an image generation tool.
         The description should have the following:
         - hair color
         - hair style
         - eye description
         - face description
         - clothing description
+        - ethnicity
+        THE DESCRIPTION MUST BE BRIEF AND TO THE POINT.
     `;
 }
 
 export function summarizeStoryPrompt(story: string) {
-    return `Summarize this story: ${story} `
+    return `Generate a brief description this story: ${story}.`;
 }
 
 export function getStorySetting(storySummary: string) {
-    return `Given the summary of the story: ${storySummary}, generate a description of what the setting would be.`;
+    return `
+        Given the summary of the story: ${storySummary}, 
+        generate a detailed description of the setting, 
+        focusing on sensory details, 
+        the atmosphere, 
+        and key features that define the space. 
+        THE DESCRIPTION MUST BE BRIEF AND TO THE POINT.
+    `;
 }
 
 
 export function generateCharacterPrompt(characterDescription: string) {
     return `
-        Provide a concise and detailed description of a protagonist for a comic-book story that can be used to create an image of the character using DALLE.
-        Character description: ${characterDescription}
+        Provide a concise and detailed description of a protagonist for a 
+        comic-book story that can be used to create an image of the character using DALLE.
+        Character description: ${characterDescription}.
     `;
 }
 
@@ -41,7 +51,7 @@ export function generateScenarioPrompt(title: string, setting: string, tone: str
     return `
         Generate a story that is contextually relatable to everyday real-world experiences. The title should reflect common situations people might encounter, such as 'First day at work', 'Lost in a city', or 'First day at school'. Use the following inputs to inform the title, ensuring it aligns with these themes:
 
-        - Suggested Title: ${title}
+        - Premise: ${title}
         - Setting: ${setting}
         - Tone: ${tone}
         - Conflict: ${conflict}
@@ -123,7 +133,7 @@ export function generateMomentDescriptionPrompt(story: string, situation: string
 
 export function generateScenarioImagePrompt(scenario: string, characterDescription: string, setting: string) {
     return `
-        Summarize the following scenario: ${scenario}.
+        Generate a concise summarization of the following scenario: ${scenario}.
         The description of the setting is: ${setting}.
         Create a single comic-style cover image without typography that will capture the essense of the overall scenario, without any text or speech bubbles.
         The artwork should capture the essence of the scenario WITHOUT including any text or words in the image. 
@@ -135,7 +145,7 @@ export function generateScenarioImagePrompt(scenario: string, characterDescripti
 
 export function generateSituationImagePrompt(situation: string, scenario: string, characterDescription: string, setting: string) {
     return `
-        Summarize the following scenario: ${scenario}.
+        Generate a concise summarization of the following scenario: ${scenario}.
         The situation that happens in the scenario is: ${situation}.
         The description of the setting is: ${setting}.
         Create a single comic-style cover image without typography that will capture the essense of the overall scenario that relates to the title of the situation, without any text or speech bubbles.
