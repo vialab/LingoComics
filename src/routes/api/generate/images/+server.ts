@@ -12,6 +12,8 @@ export const POST = async ({ request }) => {
     const body = await request.json();
     const { scenario, situations, character, setting } = body;
 
+    console.log("image generation response from backend:", body);
+
     try {
         // generate scenario image
         const scenarioPrompt = generateScenarioImagePrompt(scenario, character, setting);

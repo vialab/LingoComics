@@ -12,7 +12,10 @@ const bucketName = 'lingoimages';
 export const POST = async ({ request }) => {
     const body = await request.json();
     
-    const { scenarioId, scenario, image, situations }: StoryStruct = body;
+    const { scenarioId, story, setting, character, scenario, image, situations }: StoryStruct = body;
+
+
+    console.log("saving struct", body);
 
     try {
         const scenariosCollectionRef = collection(db, 'scenario');
@@ -28,7 +31,7 @@ export const POST = async ({ request }) => {
             // upload scenario image
             const scenarioImageFile = await uploadImage(image, scenarioId);
 
-            await updateDoc(scenarioDocRef, { 'title': scenario, 'image': `https://storage.googleapis.com/lingoimages/${scenarioImageFile?.name}` });
+            await updateDoc(scenarioDocRef, { 'title': scenario, 'image': `https://storage.googleapis.com/lingoimages/${scenarioImageFile?.name}`, 'story': story, 'setting': setting, 'character': character });
             console.log("updating document with id:", scenarioDocRef.id);
         // new scenario
         } else {
@@ -38,7 +41,7 @@ export const POST = async ({ request }) => {
             // upload scenario image
             const scenarioImageFile = await uploadImage(image, scenarioId); 
 
-            await setDoc(scenarioDocRef, { scenarioId: scenarioId, 'title': scenario, 'image': `https://storage.googleapis.com/lingoimages/${scenarioImageFile?.name}` });
+            await setDoc(scenarioDocRef, { scenarioId: scenarioId, 'title': scenario, 'image': `https://storage.googleapis.com/lingoimages/${scenarioImageFile?.name}`, 'story': story, 'setting': setting, 'character': character });
             console.log("Document created with ID:", scenarioDocRef.id);
         }
 

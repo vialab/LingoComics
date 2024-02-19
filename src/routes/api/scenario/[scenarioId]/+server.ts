@@ -51,7 +51,10 @@ export const GET: RequestHandler = async ({ params }) => {
 
         const responseData = {
             scenarioId: scenarioId,
-            scenario: scenarioData!.title,
+            scenario: scenarioData?.title,
+            story: scenarioData?.story,
+            character: scenarioData?.character,
+            setting: scenarioData?.setting,
             image: scenarioData?.image,
             situations: situations
         };
