@@ -18,25 +18,26 @@ export const POST = async ({ request }) => {
         const story : string = await generateScenario(title, setting, tone, conflict);
 
         // summarize story
-        const summary : string = await summarizeStory(story);
+        // const summary : string = await summarizeStory(story);
 
         // summarize setting of the story
-        const storySetting : string = await summarizeSetting(summary);
+        // const storySetting : string = await summarizeSetting(summary);
 
         // get title of scenario
-        const scenario : string = await getScenarioTitle(story);
+        // const scenario : string = await getScenarioTitle(story);
 
         // get character of scenario
-        const character : string = await getCharacterFromScenario(story);
+        // const character : string = await getCharacterFromScenario(story);
 
         // generate situations
         const situations = await generateSituations(story, situation, tone, conflict);
 
         // generate moments
-        const structuredSituations = await generateMoments(situations, story, tone, conflict);
+        // const structuredSituations = await generateMoments(situations, story, tone, conflict);
 
         // return response
-        const data = { scenarioId: uuidv4(), story: story, summary: summary, scenario: scenario, setting: storySetting, character: character, situations: structuredSituations };
+        const data = { scenarioId: uuidv4(), story: story, situations: situations};
+        // const data = { scenarioId: uuidv4(), story: story, summary: summary, scenario: scenario, setting: storySetting, character: character, situations: structuredSituations };
 
         return new Response(JSON.stringify(data), { status: 200 });
     } catch (error) {

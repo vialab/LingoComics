@@ -72,10 +72,11 @@ export function generateSituationPrompt(scenario: string, tone: string, conflict
     // get which stage story is on based on index
     const stageDescription = currentStoryStage(currentSituation, totalSituations);
 
-    console.log('stage description: ', stageDescription);
+    console.log('stage description:', stageDescription, previousSituation);
 
     return `
-        Based on the following scenario, generate a concise situation title that fits within the story's context and aligns with the current stage of the story ${stageDescription}:
+        Based on the following scenario, generate a concise situation title that fits within the story's context 
+        and aligns with the CURRENT STAGE/ARC of the story ${stageDescription}.
 
         Scenario: '${scenario}'.
         Previous situation: '${previousSituation || 'N/A'}'
