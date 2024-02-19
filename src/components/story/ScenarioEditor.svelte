@@ -41,7 +41,7 @@
                 contenteditable={isEditing}
                 on:input={(event) => handleContentChange(event, situationIndex, momentKey)}
                 class="pl-8"
-            >{momentValue}</p>
+            >{momentValue.momentSummarization}</p>
         {/each}
     {/each}
 </ul>

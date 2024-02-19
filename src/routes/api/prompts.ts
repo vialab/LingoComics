@@ -26,6 +26,12 @@ export function summarizeStoryPrompt(story: string) {
     return `Generate a brief description this story: ${story}.`;
 }
 
+export function summarizeMoment(moment: string) {
+    return `
+        Summarize the following moment: ${moment}, highlighting the key aspects in 10-15 words or less.
+    `;
+}
+
 export function getStorySetting(storySummary: string) {
     return `
         Given the summary of the story: ${storySummary}, 
@@ -46,6 +52,7 @@ export function generateCharacterPrompt(characterDescription: string) {
     `;
 }
 
+// prompt for generating the actual story
 export function generateScenarioPrompt(title: string, setting: string, tone: string, conflict: string) {
     // Provide only the title which is as concise as but not the same as 'First day at work', 'Lost in Tokyo', 'First day at school', 'Eating at a restaurant', for an interactive story and based on the following inputs:
     return `
@@ -60,6 +67,7 @@ export function generateScenarioPrompt(title: string, setting: string, tone: str
     `;
 }
 
+// prompt for generating situation
 export function generateSituationPrompt(scenario: string, tone: string, conflict: string, currentSituation: number, totalSituations: number, previousSituation?: string) {
     // get which stage story is on based on index
     const stageDescription = currentStoryStage(currentSituation, totalSituations);
@@ -84,6 +92,7 @@ export function generateSituationPrompt(scenario: string, tone: string, conflict
     `;
 }
 
+// prompt for generating moments
 export function generateMomentPrompt(situationTitle: string, scenario: string, tone: string, conflict: string, currentMoment: number, totalMoments: number, currentSituation: number, totalSituations: number, previousSituation?: string, nextSituation?: string) {
     const stageDescription = currentMomentStage(currentMoment, totalMoments, currentSituation, totalSituations);
 

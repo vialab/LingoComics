@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { OPENAI_KEY } from "$env/static/private";
 import OpenAI from "openai";
 import { generateCharacterAttributes } from "./characterGenerator";
-import { generateCharacterPrompt, generateMomentDescriptionPrompt, generateMomentPrompt, generateScenarioPrompt, generateSituationPrompt, getCharacterPrompt, getScenarioTitlePrompt, getStorySetting, summarizeStoryPrompt } from "../../routes/api/prompts";
+import { generateCharacterPrompt, generateMomentDescriptionPrompt, generateMomentPrompt, generateScenarioPrompt, generateSituationPrompt, getCharacterPrompt, getScenarioTitlePrompt, getStorySetting, summarizeMoment, summarizeStoryPrompt } from "../../routes/api/prompts";
 
 // initialize openai
 const openai = new OpenAI({ apiKey: OPENAI_KEY });
@@ -182,10 +182,16 @@ export async function generateMoments(situations : Situation[], scenario: string
             const momentResponse = (await gptPrompt(openai, chatModel, momentPrompt)).choices[0].message.content?.trim() as string;
             const momentDescription = momentResponse?.replace(/^\d+\. Moment: |Moment \d+: /, '');
             
+            // generate image description for DALLE
             const momentImageDescriptionPrompt = generateMomentDescriptionPrompt(scenario, situation.title, momentDescription);
             const momentImageDescriptionResponse = (await gptPrompt(openai, chatModel, momentImageDescriptionPrompt, 300)).choices[0].message.content?.trim() as string;
 
-            moments.push({ momentDescription, momentImageDescriptionResponse });
+            // generate summarized description for moment
+            const momentSummarizationPrompt = summarizeMoment(momentDescription);
+            const momentSummarization = (await gptPrompt(openai, chatModel, momentSummarizationPrompt)).choices[0].message.content?.trim() as string;
+
+
+            moments.push({ momentSummarization, momentDescription, momentImageDescriptionResponse });
         }
 
         structuredSituations.push({
