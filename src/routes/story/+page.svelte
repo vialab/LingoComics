@@ -65,7 +65,7 @@
 			// store story in response
 			responseData = result as StoryStruct;
 
-			console.log("response from api", result, responseData);
+			// console.log("response from api", result, responseData);
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -96,11 +96,7 @@
 				method: "GET",
 			});
 
-			console.log("scenarioID", scenarioId);
-
 			const result = await response.json();
-
-			console.log('result', result);
 
 			responseData = result as StoryStruct;
 		} catch (error) {
@@ -161,11 +157,11 @@
 
 	// handle image generation
 	async function handleImageGeneration() {
-		console.log('response data for image gen', responseData);
+		// console.log('response data for image gen', responseData);
 		isGeneratingImage = true;
 		try {
 			const result = await generateImages(responseData);
-			console.log(result);
+			console.log('image gen result', result);
 			scenarioImage = result.data;
 			situationImages = result.situationImages;
 			responseData = { 
@@ -178,6 +174,7 @@
 					}
 				})
 			}
+
 		} catch (error) {
 			console.error(error);
 		} finally {

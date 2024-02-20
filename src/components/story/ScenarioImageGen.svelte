@@ -22,7 +22,7 @@
         moments.set([]);
     }
 
-    console.log(responseData);
+    // console.log(responseData);
 </script>
 <!-- /*&& !responseData.image.includes("undefined")*/ -->
 {#if $selectedSituation }
@@ -35,6 +35,7 @@
                 <h2 class="text-white text-xl">Situation: { $selectedSituation.title }</h2>
             </div>
         </div>
+
     </div>
 
     <!-- Go back button -->
