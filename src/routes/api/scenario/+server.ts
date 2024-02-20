@@ -12,7 +12,7 @@ const bucketName = 'lingoimages';
 export const POST = async ({ request }) => {
     const body = await request.json();
     
-    const { scenarioId, story, setting, character, scenario, image, situations }: StoryStruct = body;
+    const { scenarioId, story, setting, character, scenario, image, situations, summary }: StoryStruct = body;
 
 
     console.log("saving struct", body);
@@ -31,7 +31,7 @@ export const POST = async ({ request }) => {
             // upload scenario image
             const scenarioImageFile = await uploadImage(image, scenarioId);
 
-            await updateDoc(scenarioDocRef, { 'title': scenario, 'image': `https://storage.googleapis.com/lingoimages/${scenarioImageFile?.name}`, 'story': story, 'setting': setting, 'character': character });
+            await updateDoc(scenarioDocRef, { 'title': scenario, 'image': `https://storage.googleapis.com/lingoimages/${scenarioImageFile?.name}`, 'story': story, 'setting': setting, 'character': character, 'summary': summary });
             console.log("updating document with id:", scenarioDocRef.id);
         // new scenario
         } else {
@@ -41,7 +41,7 @@ export const POST = async ({ request }) => {
             // upload scenario image
             const scenarioImageFile = await uploadImage(image, scenarioId); 
 
-            await setDoc(scenarioDocRef, { scenarioId: scenarioId, 'title': scenario, 'image': `https://storage.googleapis.com/lingoimages/${scenarioImageFile?.name}`, 'story': story, 'setting': setting, 'character': character });
+            await setDoc(scenarioDocRef, { scenarioId: scenarioId, 'title': scenario, 'image': `https://storage.googleapis.com/lingoimages/${scenarioImageFile?.name}`, 'story': story, 'setting': setting, 'character': character, 'summary': summary });
             console.log("Document created with ID:", scenarioDocRef.id);
         }
 
@@ -75,12 +75,20 @@ export const POST = async ({ request }) => {
                 const momentId = `moment${currentMoment + 1}`;
                 const momentRef = doc(situationRef, 'moments', momentId);
 
+                console.log('current moment', situation.moments[currentMoment]);
+
                 // check if moment exists
                 const momentSnapshot = await getDoc(momentRef);
                 if (momentSnapshot.exists()) {
+
+                    // upload moment images
+
                     // update existing moment
                     await updateDoc(momentRef, { description: situation.moments[currentMoment] });
                 } else {
+
+                    // upload moment images
+
                     // create a new moment
                     await setDoc(momentRef, { id: momentId, description: situation.moments[currentMoment] });
                 }

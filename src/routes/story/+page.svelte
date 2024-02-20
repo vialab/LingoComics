@@ -98,6 +98,8 @@
 
 			const result = await response.json();
 
+			console.log("result from storage:", result);
+
 			responseData = result as StoryStruct;
 		} catch (error) {
 			console.error(error);

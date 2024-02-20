@@ -1,5 +1,6 @@
 import { generateMomentImagePrompt, generateScenarioImagePrompt, generateSituationImagePrompt } from '../../prompts.js';
 import { generateImage } from '$lib/services/gptService.js';
+import type { Moment } from '../../../scenario/data.js';
 
 // type Moment = {
 //     moment1: string,
@@ -10,33 +11,37 @@ import { generateImage } from '$lib/services/gptService.js';
 
 export const POST = async ({ request }) => {
     const body = await request.json();
-    const { scenario, situations, character, setting } = body;
+    const { /*scenario,*/ situations, character, setting, summary } = body;
+
+    // NOTE -> DUE TO MODIFICATIONS SUMMARY IS NOW SCENARIO, SCENARIO IS ONLY THE TITLE WHILE SUMMARY IS THE SCENARIO DESCRIPTION
 
     try {
         // generate scenario image
-        const scenarioPrompt = generateScenarioImagePrompt(scenario, character, setting);
+        const scenarioPrompt = generateScenarioImagePrompt(summary, character, setting);
         const scenarioImage  = await generateImage(scenarioPrompt);
 
         // generate situation images
         const situationImages = [];
-        const momentImages = [];
+        
         for (const situation of situations) {
-            const situationPrompt = generateSituationImagePrompt(situation.title, scenario, character, setting);
+            const situationPrompt = generateSituationImagePrompt(situation.title, summary, character, setting);
             const situationImage = await generateImage(situationPrompt);
-            situationImages.push(situationImage);
+            // situationImages.push(situationImage);
 
             // console.log(situation.moments);
 
             // convert moment objects into array of moment objects
-            const momentsArray = Object.values(situation.moments);
+            const momentsArray : Moment[] = Object.values(situation.moments);
 
             // generate moment images
+            const momentImages = [];
             for (const moment of momentsArray) {
-                // console.log(`Generating moment: ${moment}`);
-                const momentPrompt = generateMomentImagePrompt(scenario, situation.title, moment.momentImageDescriptionResponse, character, setting);
+                console.log(`Generating moment: ${moment.momentDescription}`);
+                const momentPrompt = generateMomentImagePrompt(summary, situation.title, moment.momentImageDescriptionResponse, character, setting);
                 const momentImage = await generateImage(momentPrompt);
                 momentImages.push({ title: situation.title, image: momentImage, moment: moment.momentDescription });
             }
+            situationImages.push({ situationImage, momentImages });
 
             // for (let currentMoment = 0; currentMoment < situation.moments.length; currentMoment++) {
             //     console.log(`Generating moment: ${currentMoment}.`);

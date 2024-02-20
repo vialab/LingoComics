@@ -55,6 +55,7 @@ export const GET: RequestHandler = async ({ params }) => {
             story: scenarioData?.story,
             character: scenarioData?.character,
             setting: scenarioData?.setting,
+            summary: scenarioData?.summary,
             image: scenarioData?.image,
             situations: situations
         };

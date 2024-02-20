@@ -55,7 +55,7 @@ export async function generateImage(prompt: string) {
 
         // send base64 string as a response
         return `data:image/png;base64,${base64data}`;
-        // return response;
+        // return response.data[0].url;
     } catch (error) {
         console.error(error);
     }

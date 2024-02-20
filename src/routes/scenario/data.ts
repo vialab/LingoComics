@@ -15,5 +15,7 @@ export type Situation = {
 export type Moment = {
     id: number,
     image: string,
-    textOptions: Array<string>
+    textOptions: Array<string>,
+    momentImageDescriptionResponse: string,
+    momentDescription: string
 };

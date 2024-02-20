@@ -22,6 +22,7 @@ export type StoryStruct = {
     character: string,
     scenarioId: string,
     scenario: string,
+    summary: string,
     image: string,
     situations: Situation[],
     moments: string
