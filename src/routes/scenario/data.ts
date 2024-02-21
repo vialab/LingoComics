@@ -17,5 +17,6 @@ export type Moment = {
     image: string,
     textOptions: Array<string>,
     momentImageDescriptionResponse: string,
-    momentDescription: string
+    momentDescription: string,
+    momentSummarization: string
 };

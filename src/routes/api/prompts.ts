@@ -12,6 +12,7 @@ export function getCharacterPrompt(story: string) {
         generate a description of them that will best fit the story. 
         Make the description focus only on appearance and one that will help an image generation tool.
         The description should have the following:
+        - male or female
         - hair color
         - hair style
         - eye description
@@ -64,6 +65,7 @@ export function generateScenarioPrompt(title: string, setting: string, tone: str
         - Conflict: ${conflict}
 
         The story should evoke a scenario that is easy to visualize and relate to. Examples of such titles include 'Eating at a restaurant', 'Meeting new neighbors', or 'Exploring a new city'. Avoid overly specific or niche scenarios to maintain broad relatability.
+        The story should be relatable for example, a person in a story struggling to order a coffee, or talking to a stranger, or being lost in a city.
     `;
 }
 
@@ -175,7 +177,8 @@ export function generateMomentImagePrompt(scenario: string, situation: string, m
         imbued with dynamic expressions and movements characteristic of comic book art. Ensure the image embodies the vibrant,
         bold lines and dramatic shading typical of comic illustrations, with special attention to how the character's emotions 
         and the setting contribute to the narrative of the action. The composition should be dynamic, emphasizing the action 
-        to engage the viewer, true to the essence of comic-style storytelling."
+        to engage the viewer, true to the essence of comic-style storytelling.
+        The character should be performing action if it makes sense to the moment, and should be showing emotion as part of the moment.
         Use the prompt AS-IS. THE IMAGE HAS TO BE COMIC-STYLE.
     `;
     // Create a comic-style image for the moment: "${moment}".

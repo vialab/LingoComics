@@ -11,6 +11,8 @@ import { generateMoments, generateScenario, generateSituations, getScenarioTitle
 export const POST = async ({ request }) => {
     const body = await request.json();
 
+    console.log('image gen body:', body);
+
     const { title, setting, situation, tone, conflict } = body;
 
     try {

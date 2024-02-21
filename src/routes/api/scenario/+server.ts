@@ -97,6 +97,7 @@ export const POST = async ({ request }) => {
                     if (situation.image === undefined) {
                         momentImageFile = 'undefined';
                     } else {
+                        console.log('current MOMENT:', situation.image.momentImages[currentMoment]);
                         momentImageFile = await uploadImage(situation.image.momentImages[currentMoment].image, momentId);
                     }
 

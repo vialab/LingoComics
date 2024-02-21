@@ -11,6 +11,7 @@ import type { Moment } from '../../../scenario/data.js';
 
 export const POST = async ({ request }) => {
     const body = await request.json();
+
     const { /*scenario,*/ situations, character, setting, summary } = body;
 
     // NOTE -> DUE TO MODIFICATIONS SUMMARY IS NOW SCENARIO, SCENARIO IS ONLY THE TITLE WHILE SUMMARY IS THE SCENARIO DESCRIPTION
@@ -36,7 +37,7 @@ export const POST = async ({ request }) => {
             // generate moment images
             const momentImages = [];
             for (const moment of momentsArray) {
-                console.log(`Generating moment: ${moment.momentDescription}`);
+                console.log(`Generating moment: ${moment.momentSummarization}`);
                 const momentPrompt = generateMomentImagePrompt(summary, situation.title, moment.momentImageDescriptionResponse, character, setting);
                 const momentImage = await generateImage(momentPrompt);
                 momentImages.push({ title: situation.title, image: momentImage, moment: moment.momentDescription });

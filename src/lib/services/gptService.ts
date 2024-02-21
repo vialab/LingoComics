@@ -6,7 +6,7 @@ import { generateCharacterPrompt, generateMomentDescriptionPrompt, generateMomen
 
 // initialize openai
 const openai = new OpenAI({ apiKey: OPENAI_KEY });
-const chatModel = 'gpt-3.5-turbo'; //'gpt-4-0125-preview'; //'gpt-3.5-turbo';
+const chatModel = 'gpt-4-0125-preview'; //'gpt-3.5-turbo';
 const imageModel = "dall-e-3";
 
 type Situation = {
@@ -54,8 +54,8 @@ export async function generateImage(prompt: string) {
         const base64data = imageBuffer.toString('base64');
 
         // send base64 string as a response
-        return `data:image/png;base64,${base64data}`;
-        // return response.data[0].url;
+        // return `data:image/png;base64,${base64data}`;
+        return response.data[0].url;
     } catch (error) {
         console.error(error);
     }
