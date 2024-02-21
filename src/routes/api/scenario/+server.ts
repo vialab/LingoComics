@@ -15,7 +15,8 @@ export const POST = async ({ request }) => {
     const { scenarioId, story, setting, character, scenario, image, situations, summary }: StoryStruct = body;
 
 
-    console.log("saving struct", body);
+    // console.log("saving struct 1", situations[0].image);
+    // console.log("saving struct 2", situations[0].image.momentImages[0].image.slice(0, 10));
 
     try {
         const scenariosCollectionRef = collection(db, 'scenario');
@@ -52,19 +53,26 @@ export const POST = async ({ request }) => {
         
             // Check if the situation exists
             const situationSnapshot = await getDoc(situationRef);
+            console.log('saving situation', situation);
+
             if (situationSnapshot.exists()) {
                 console.log("situation exists");
 
                 // upload situation images
-                const situationImageFile = await uploadImage(situation.image, situationId);
+                const situationImageFile = await uploadImage(situation.image.situationImage, situationId);
 
                 // Update existing situation
                 await updateDoc(situationRef, { title: situation.title, situationSort: situation.situationSort, image: `https://storage.googleapis.com/lingoimages/${situationImageFile?.name}` });
             } else {
                 console.log("situation does not exist");
 
+                let situationImageFile = '';
                 // upload situation images
-                const situationImageFile = await uploadImage(situation.image, situationId);
+                if (situation.image === undefined) {
+                    situationImageFile = 'undefined';
+                } else {
+                    situationImageFile = await uploadImage(situation.image.situationImage, situationId);
+                }
 
                 // Create new situation
                 await setDoc(situationRef, { id: situationId,  situationSort: situation.situationSort, title: situation.title, image: `https://storage.googleapis.com/lingoimages/${situationImageFile?.name}` });
@@ -75,22 +83,25 @@ export const POST = async ({ request }) => {
                 const momentId = `moment${currentMoment + 1}`;
                 const momentRef = doc(situationRef, 'moments', momentId);
 
-                console.log('current moment', situation.moments[currentMoment]);
-
                 // check if moment exists
                 const momentSnapshot = await getDoc(momentRef);
                 if (momentSnapshot.exists()) {
-
                     // upload moment images
+                    const momentImageFile = await uploadImage(situation.image.momentImages[currentMoment].image, momentId);
 
                     // update existing moment
-                    await updateDoc(momentRef, { description: situation.moments[currentMoment] });
+                    await updateDoc(momentRef, { description: situation.moments[currentMoment], image: `https://storage.googleapis.com/lingoimages/${momentImageFile?.name}` });
                 } else {
-
+                    let momentImageFile = '';
                     // upload moment images
+                    if (situation.image === undefined) {
+                        momentImageFile = 'undefined';
+                    } else {
+                        momentImageFile = await uploadImage(situation.image.momentImages[currentMoment].image, momentId);
+                    }
 
                     // create a new moment
-                    await setDoc(momentRef, { id: momentId, description: situation.moments[currentMoment] });
+                    await setDoc(momentRef, { id: momentId, description: situation.moments[currentMoment], image: `https://storage.googleapis.com/lingoimages/${momentImageFile?.name}` });
                 }
             }
         }

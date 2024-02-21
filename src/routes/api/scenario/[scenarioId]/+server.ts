@@ -37,6 +37,7 @@ export const GET: RequestHandler = async ({ params }) => {
             momentsSnapshot.forEach(momentDoc => {
                 const momentData = momentDoc.data();
                 moments[momentDoc.id] = momentData.description;
+                moments[momentDoc.id].image = momentData.image;
             });
 
 
@@ -45,7 +46,7 @@ export const GET: RequestHandler = async ({ params }) => {
                 title: situationData.title,
                 image: situationData?.image,
                 situationSort: situationData?.situationSort,
-                moments: moments
+                moments: Object.values(moments)
             });
         }
 

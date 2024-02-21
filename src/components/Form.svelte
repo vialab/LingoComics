@@ -19,7 +19,7 @@
     <!-- story of story -->
     <div class="mb-6">
         <label class="block text-white text-md font-bold mb-2" for="question3">How many situations happen in the story?</label>
-        <input value={3} class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+        <input value={1} class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
             id="question3" 
             type="number" 
             placeholder="Situations in story" 

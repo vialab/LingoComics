@@ -10,6 +10,8 @@ export async function saveStory(scenarioImage: string, situationImages: string[]
         });
     }
 
+    console.log('situation images:', responseData);
+
     // call the api scenario
     try {
         const response = await fetch("/api/scenario", {
@@ -23,7 +25,7 @@ export async function saveStory(scenarioImage: string, situationImages: string[]
 }
 
 // fetch scenario from firestore
-export async function getScenario(scenarioId: string) : Promise<any> {
+export async function getScenario(scenarioId: string) : Promise<void> {
     try {
         const response = await fetch(`/api/scenario/${scenarioId}`, {
             method: "GET",  

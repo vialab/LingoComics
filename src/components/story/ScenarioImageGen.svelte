@@ -14,6 +14,7 @@
     // function to handle situation selection
     function selectSituation(situation) {
         selectedSituation.set(situation);
+        console.log(situation);
         // moments.set(situation.moments);
     }
 
@@ -30,7 +31,7 @@
     <div class="flex gap-2 w-full h-[30rem]">
         <!-- Situation image -->
         <div class="scenario-card rounded-lg relative w-[10rem] overflow-hidden flex-1">
-            <img src="{$selectedSituation.image.situationImage}" alt="selected situation" class="w-full h-full object-cover" />
+            <img src="{$selectedSituation.image}" alt="selected situation" class="w-full h-full object-cover" />
             <div class="image-overlay absolute inset-0"></div>
             <div class="p-4 absolute bottom-0 left-0 right-0">
                 <h2 class="text-white text-xl">Situation: { $selectedSituation.title }</h2>
@@ -39,7 +40,7 @@
 
         <!-- 2x2 grid for moments -->
         <div class="grid grid-cols-2 gap-2 w-1/2">
-            {#each $selectedSituation.image.momentImages as moment}
+            {#each $selectedSituation.moments as moment}
                 <div class="scenario-card relative overflow-hidden w-full">
                     <img class="border rounded-lg w-full h-full object-cover" src={moment.image} alt={moment.title}  />
                     <div class="image-overlay absolute inset-0"></div>
@@ -66,7 +67,7 @@
         <div class="flex flex-col gap-2 w-1/2">
             {#each responseData.situations as situation, situationIndex}
                 <div class="scenario-card relative overflow-hidden w-full" on:click={() => selectSituation(situation)} tabindex="0" role="button" on:keydown={(e) => e.key === 'Enter'}>
-                    <img class="border h-[9.7rem] object-cover rounded-lg w-full" src={situation.image.situationImage} alt={situation.title} />
+                    <img class="border h-[9.7rem] object-cover rounded-lg w-full" src={situation.image} alt={situation.title} />
                     <div class="image-overlay absolute inset-0"></div>
                     <div class="p-4 absolute bottom-0 left-0 right-0">
                         <h3 class="text-white text-xl">{ situation.title }</h3>
