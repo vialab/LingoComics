@@ -20,6 +20,7 @@ export function getCharacterPrompt(story: string) {
         - clothing description
         - ethnicity
         THE DESCRIPTION MUST BE BRIEF AND TO THE POINT.
+        Be descriptive about the description.
     `;
 }
 
