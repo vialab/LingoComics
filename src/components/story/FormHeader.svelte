@@ -3,13 +3,13 @@
     import type { StoryStruct } from "../../utils/types";
     import Modal from "../Modal.svelte";
 
-    export let responseData : StoryStruct | null;
-    export let isSaving  : boolean;
-    export let isEditing : boolean;
-    export let existingScenarios : Scenario[];
-    export let handleSaveStory : () => Promise<void>;
-    export let toggleEditing : () => void;
-    export let fetchScenario : (scenarioId : string) => Promise<void>
+    export let responseData : StoryStruct | null = null;
+    export let isSaving : boolean = false;
+    export let isEditing : boolean = false;
+    export let existingScenarios : Scenario[] = [];
+    export let handleSaveStory : () => Promise<void> = async() => {};
+    export let toggleEditing : () => void = () => {};
+    export let fetchScenario : (scenarioId : string) => Promise<void> = async() => {};
 </script>
 
 <div class="mx-auto pb-3 h-auto absolute top-0 left-0 right-0 bg-white p-3 w-full">

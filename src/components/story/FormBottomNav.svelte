@@ -43,9 +43,11 @@
     {/if}
 
     <ul class="steps w-5/6">
-        <li class="step {currentStep > 0 ? 'step-primary' : ''}">Generate story</li>
-        <li class="step {currentStep > 1 ? 'step-primary' : ''}" transition:fade={{ delay: 250, duration: 300 }}>Generate images</li>
-        <li class="step {currentStep > 2 ? 'step-primary' : ''}">Finish</li>
+        <li class="step {currentStep > 0 ? 'step-primary' : ''}">Character</li>
+        <li class="step {currentStep > 1 ? 'step-primary' : ''}" transition:fade={{ delay: 250, duration: 300 }}>Setting</li>
+        <li class="step {currentStep > 2 ? 'step-primary' : ''}">Story</li>
+        <li class="step {currentStep > 3 ? 'step-primary' : ''}">Images</li>
+        <li class="step {currentStep > 4 ? 'step-primary' : ''}">Finish</li>
     </ul>
 
     <!-- display after the first step is achieved -->
