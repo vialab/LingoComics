@@ -1,9 +1,13 @@
 <script lang="ts">
+    import { generateImages } from "$lib/services/apiService";
 	import Form from "../../components/Form.svelte";
 	import Loading from "../../components/Loading.svelte";
 	import Spacer from "../../components/Spacer.svelte";
+    import EditText from "../../components/story/EditText.svelte";
 	import FormBottomNav from "../../components/story/FormBottomNav.svelte";
 	import FormHeader from "../../components/story/FormHeader.svelte";
+    import ScenarioEditor from "../../components/story/ScenarioEditor.svelte";
+    import ScenarioImageGen from "../../components/story/ScenarioImageGen.svelte";
 	import type { StoryStruct } from "../../utils/types";
 	import Icon from '@iconify/svelte';
 
@@ -11,8 +15,12 @@
 	let isGenerating: boolean = false;
 	let drawerOpen: boolean = true;
 	let isFinish: boolean = false;
+	let isEditing: boolean = false;
 	let currentStep: number = 0;
-	let responseData: StoryStruct;
+	let storyData: StoryStruct;
+
+	let scenarioImage = '';
+	let situationImages : string[] = [];
 
 	// handle form submit
 	async function handleSubmit(event: Event) {
@@ -39,6 +47,9 @@
 			const result = await response.json();
 			
 			console.log('result from generation', result);
+
+			// store 
+			storyData = result;
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -47,10 +58,41 @@
 		}
 	}
 
+	// handle image generation
+	async function handleImageGeneration() {
+		isGenerating = true;
+		try {
+			const result = await generateImages(storyData);
+
+			scenarioImage = result.data;
+			situationImages = result.situationImages;
+			storyData = { 
+				...storyData, 
+				image: result.data,
+				situations: storyData.situations.map((situation, index) => {
+					return {
+						...situation,
+						image: result.situationImages[index]
+					}
+				})
+			}
+		} catch (error) {
+			console.error(error);
+		} finally {
+			isGenerating = false;
+		}
+	}
+
 	// handle step change for progress
 	function handleStepChange(event: CustomEvent) {
 		currentStep = event.detail.currentStep;
 	}
+
+	// handle scenario change
+	function handleScenarioChange(event: Event) {}
+
+	// handle content change
+	function handleContentChange(event: Event) {}
 
 </script>
 
@@ -92,7 +134,22 @@
 					<Loading />
 				<!-- show character -->
 				{:else if currentStep === 1}
-					
+					<EditText title="Character description" editText={storyData?.character} />
+				<!-- show setting -->
+				{:else if currentStep === 2}
+					<EditText title="Setting description" editText={storyData?.setting} />
+				<!-- story content -->
+				{:else if currentStep === 3}
+					<ScenarioEditor 
+						responseData={storyData}  
+						isEditing={isEditing}
+						handleScenarioChange={handleScenarioChange}
+						handleContentChange={handleContentChange}
+						editableStyle={"border: 1px solid #ccc; padding: 4px; background-color: white; cursor: text; border-radius: 3px;"}
+					/>
+				<!-- image generation -->
+				{:else if currentStep === 4}
+					<ScenarioImageGen responseData={storyData} handleImageGeneration={handleImageGeneration} />
 				{/if}
 			</div>
 

@@ -7,6 +7,8 @@
     export let currentStep : number;
     export let isFinish : boolean;
 
+    const _lastStep: number = 4;
+
     // dispatcher event
     const dispatch = createEventDispatcher();
 
@@ -28,9 +30,9 @@
 
     // finish or next btn function
     function nextOrFinish() {
-        if (currentStep < 2) {
-            updateStep(2);
-        } else if (currentStep > 2) {
+        if (currentStep < _lastStep) {
+            updateStep(currentStep + 1);
+        } else if (currentStep > _lastStep) {
             isFinish = !isFinish;
             dispatch('finish', { isFinish });
         }
@@ -52,7 +54,7 @@
 
     <!-- display after the first step is achieved -->
     {#if currentStep > 0}
-        <button class="mr-5 px-5 py-2 custom-btn-bg-2 text-xl rounded" on:click={nextOrFinish}>{ currentStep === 2 ? 'Finish' : 'Next' }</button>
+        <button class="mr-5 px-5 py-2 custom-btn-bg-2 text-xl rounded" on:click={nextOrFinish}>{ currentStep === _lastStep ? 'Finish' : 'Next' }</button>
     {/if}
 </div>
 
