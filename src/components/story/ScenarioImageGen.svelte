@@ -8,11 +8,11 @@
 
 
     // reactive state for selected situation and its moments
-    let selectedSituation = writable(null);
+    let selectedSituation = writable<Situation | null>(null);
     let moments = writable([]);
 
     // function to handle situation selection
-    function selectSituation(situation) {
+    function selectSituation(situation: Situation) {
         selectedSituation.set(situation);
         console.log('selected situation:', situation);
         // moments.set(situation.moments);

@@ -11,9 +11,24 @@ export type MomentObject = {
 type Situation = {
     id: string,
     title: string,
-    image: string,
+    image: { situationImage: string, momentImages: MomentImage[] },
     situationSort: number,
-    moments: string[]
+    moments: Array<Moment>
+}
+
+export type Moment = {
+    id: number,
+    image: string,
+    textOptions: Array<string>,
+    momentImageDescriptionResponse: string,
+    momentDescription: string,
+    momentSummarization: string
+};
+
+type MomentImage = {
+    image: string,
+    title: string,
+    moment: string
 }
 
 export type StoryStruct = {

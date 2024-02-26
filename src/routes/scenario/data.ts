@@ -6,10 +6,16 @@ export type Scenario = {
 }
 
 export type Situation = {
-    id: number,
-    image: string;
+    id: string,
+    image: { situationImage: string, momentImages: MomentImage[] };
     title: string;
-    moments: Array<Moment>
+    moments: Array<Moment>;
+}
+
+type MomentImage = {
+    image: string,
+    title: string,
+    moment: string
 }
 
 export type Moment = {

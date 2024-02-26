@@ -64,6 +64,8 @@
 		try {
 			const result = await generateImages(storyData);
 
+			console.log('image gen result', result);
+
 			scenarioImage = result.data;
 			situationImages = result.situationImages;
 			storyData = { 
@@ -94,6 +96,10 @@
 	// handle content change
 	function handleContentChange(event: Event) {}
 
+	// handle edit change on edit text
+	function handleEditChange(event: CustomEvent<{ editText: string}>, propertyKey: string) {
+		storyData = { ...storyData, [propertyKey]: event.detail.editText }
+	}
 </script>
 
 
@@ -134,10 +140,10 @@
 					<Loading />
 				<!-- show character -->
 				{:else if currentStep === 1}
-					<EditText title="Character description" editText={storyData?.character} />
+					<EditText title="Character description" editText={storyData?.character} on:change={(event) => handleEditChange(event, 'character')} />
 				<!-- show setting -->
 				{:else if currentStep === 2}
-					<EditText title="Setting description" editText={storyData?.setting} />
+					<EditText title="Setting description" editText={storyData?.setting} on:change={(event) => handleEditChange(event, 'setting')} />
 				<!-- story content -->
 				{:else if currentStep === 3}
 					<ScenarioEditor 

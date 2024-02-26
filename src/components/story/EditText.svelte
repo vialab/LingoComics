@@ -1,11 +1,19 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
+
     export let title: string | null = null;
     export let editText: string | null = null;
     let isEditable = false;
 
+    const dispatch = createEventDispatcher();
+
     // toggle between toggeable state
     function toggleEdit() {
         isEditable = !isEditable;
+        // dispatch event when confirming the edit
+        if (!isEditable) {
+            dispatch('change', { editText });
+        }
     }
 </script>
 
