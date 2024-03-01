@@ -1,8 +1,11 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
+    import type { StoryStruct } from "../../utils/types";
 
     export let title: string | null = null;
     export let editText: string | null = null;
+    export let story: StoryStruct | null = null;
+    export let updateType: string | null = null;
     let isEditable = false;
 
     const dispatch = createEventDispatcher();
@@ -13,6 +16,27 @@
         // dispatch event when confirming the edit
         if (!isEditable) {
             dispatch('change', { editText });
+            updateStoryMetadata();
+        }
+    }
+
+    // call /api/generate/update
+    async function updateStoryMetadata() {
+        try {
+            console.log("story updating:", updateType, editText, story);
+            const body = { updateType, editText, story };
+            const response = await fetch('/api/generate/update', {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+
+            // const data = await response.json();
+            // console.log('Update successful', data);
+        } catch (error) {
+            console.error('Update failed', error);
         }
     }
 </script>

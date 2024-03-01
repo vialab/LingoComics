@@ -12,6 +12,7 @@ export function getCharacterPrompt(story: string) {
         generate a description of them that will best fit the story. 
         Make the description focus only on appearance and one that will help an image generation tool.
         The description should have the following:
+        - name of character
         - male or female
         - hair color
         - hair style
@@ -20,7 +21,7 @@ export function getCharacterPrompt(story: string) {
         - clothing description
         - ethnicity
         THE DESCRIPTION MUST BE BRIEF AND TO THE POINT.
-        Be descriptive about the description.
+        Be descriptive about the description and return in the list format specified.
     `;
 }
 

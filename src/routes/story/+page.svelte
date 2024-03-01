@@ -131,7 +131,7 @@
 			</div>
 
 			<!-- spacer -->
-			<Spacer height={50} />
+			<Spacer height={60} />
 
 			<!-- content body -->
 			<div>
@@ -140,7 +140,7 @@
 					<Loading />
 				<!-- show character -->
 				{:else if currentStep === 1}
-					<EditText title="Character description" editText={storyData?.character} on:change={(event) => handleEditChange(event, 'character')} />
+					<EditText title="Character description" editText={storyData?.character} story={storyData} updateType="character" on:change={(event) => handleEditChange(event, 'character')} />
 				<!-- show setting -->
 				{:else if currentStep === 2}
 					<EditText title="Setting description" editText={storyData?.setting} on:change={(event) => handleEditChange(event, 'setting')} />

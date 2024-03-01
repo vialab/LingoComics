@@ -47,12 +47,12 @@
                 </div>
             {/each}
         </div> 
-
     </div>
 
     <!-- Go back button -->
     <button on:click={goBack}>Go Back</button>
 {:else if responseData.hasOwnProperty('image') && responseData.image && typeof responseData.image === 'string' && !responseData.image.includes("undefined")}    
+    <button class="btn w-full" on:click={handleImageGeneration}>Regenerate images</button>
     <div class="flex gap-2 w-full h-[30rem]">
         <!-- Scenario image -->
         <div class="scenario-card rounded-lg relative w-[10rem] overflow-hidden flex-1">
@@ -99,10 +99,12 @@
     }
 </style>
 
-<!-- <div class="w-1/2 h-full flex flex-col m-2 justify-between pl-2">
+<!-- 
+<div class="w-1/2 h-full flex flex-col m-2 justify-between pl-2">
     {#each responseData.situations as img}
         <div class="h-1/3">
             <img class="scenario-card w-full h-full object-cover rounded-lg" src={img.image} alt={img.title} />
         </div>
     {/each}
-</div> -->
+</div> 
+-->
