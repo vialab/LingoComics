@@ -100,6 +100,12 @@
 	function handleEditChange(event: CustomEvent<{ editText: string}>, propertyKey: string) {
 		storyData = { ...storyData, [propertyKey]: event.detail.editText }
 	}
+
+	// handle story updates
+	function handleStoryUpdate(event: CustomEvent<{ story: StoryStruct}>) {
+		console.log("updated story content:", event.detail.story);
+		storyData = event.detail.story;
+	}
 </script>
 
 
@@ -140,10 +146,10 @@
 					<Loading />
 				<!-- show character -->
 				{:else if currentStep === 1}
-					<EditText title="Character description" editText={storyData?.character} story={storyData} updateType="character" on:change={(event) => handleEditChange(event, 'character')} />
+					<EditText title="Character description" editText={storyData?.character} story={storyData} updateType="character" on:change={(event) => handleEditChange(event, 'character')} on:update={handleStoryUpdate} />
 				<!-- show setting -->
 				{:else if currentStep === 2}
-					<EditText title="Setting description" editText={storyData?.setting} on:change={(event) => handleEditChange(event, 'setting')} />
+					<EditText title="Setting description" editText={storyData?.setting} on:change={(event) => handleEditChange(event, 'setting')} on:update={handleStoryUpdate} />
 				<!-- story content -->
 				{:else if currentStep === 3}
 					<ScenarioEditor 

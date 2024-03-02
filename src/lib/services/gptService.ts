@@ -3,15 +3,21 @@ import { OPENAI_KEY } from "$env/static/private";
 import OpenAI from "openai";
 import { generateCharacterAttributes } from "./characterGenerator";
 import { generateCharacterPrompt, generateMomentDescriptionPrompt, generateMomentPrompt, generateScenarioPrompt, generateSituationPrompt, getCharacterPrompt, getScenarioTitlePrompt, getStorySetting, summarizeMoment, summarizeStoryPrompt } from "../../routes/api/prompts";
+import { updateMomentDescriptionContextPrompt, updateMomentImageContextPrompt, updateStoryContextPrompt } from '../../routes/api/generate/update/update-prompts';
 
 // initialize openai
 const openai = new OpenAI({ apiKey: OPENAI_KEY });
 const chatModel = 'gpt-4-0125-preview'; //'gpt-3.5-turbo';
+const chatModel2 = 'gpt-3.5-turbo';
 const imageModel = "dall-e-3";
 
 type Situation = {
-    title: string
-}
+    id?: string,
+    title: string,
+    situationSort?: number,
+    moments?: any
+};
+
 
 export async function gptPrompt(openai: OpenAI, model: string, prompt: string, max_tokens?: number) : Promise<OpenAI.Chat.Completions.ChatCompletion> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -130,6 +136,19 @@ export async function generateScenario(title : string, setting : string, tone : 
     return scenario;
 }
 
+/**
+ * Updates story with the 'updatedContext' for the 'updateType'
+ * @param story 
+ * @param updatedContent 
+ * @param updateType 
+ * @returns 
+ */
+export async function updateScenario(story : string, updatedContent : string, updateType : string) {
+    const storyUpdatePrompt : string = updateStoryContextPrompt(story, updatedContent, updateType);
+    const scenario = (await gptPrompt(openai, chatModel2, storyUpdatePrompt)).choices[0].message.content?.trim() as string;
+    return scenario;
+}
+
 
 /**
  * Function to generate situation titles for given scenario
@@ -154,6 +173,41 @@ export async function generateSituations(scenario: string ,situation: string, to
         previousSituationTitle = situationTitle;
     }
 
+    return situations;
+}
+
+
+/**
+ * Update moments with updated content
+ * @param story 
+ * @param situations 
+ * @param updatedContent 
+ * @param updateType 
+ * @returns 
+ */
+export async function updateMoments(story: string, situations: Situation[], updatedContent: string, updateType: string) {
+    for (let situation of situations) {
+        for (let moment of situation.moments) {
+            // update moment description
+            const momentDescriptionPrompt = updateMomentDescriptionContextPrompt(story, moment.momentDescription, updatedContent, updateType);
+            const updatedMomentDescription = (await gptPrompt(openai, chatModel2, momentDescriptionPrompt)).choices[0].message.content?.trim() as string;
+
+            // update moment image description
+            const momentImageUpdatePrompt = updateMomentImageContextPrompt(story, moment.momentImageDescription, updatedContent, updateType);
+            const updatedMomentImageDescription = (await gptPrompt(openai, chatModel2, momentImageUpdatePrompt)).choices[0].message.content?.trim() as string;
+            
+            // update moment summarization
+            const momentSummarizationPrompt = summarizeMoment(updatedMomentDescription);
+            const updatedMomentSummarization = (await gptPrompt(openai, chatModel2, momentSummarizationPrompt)).choices[0].message.content?.trim() as string;
+
+            console.log("moment:", updatedMomentSummarization);
+
+            // update moment image description
+            moment.momentDescription = updatedMomentDescription;
+            moment.momentImageDescriptionResponse = updatedMomentImageDescription;
+            moment.momentSummarization = updatedMomentSummarization;
+        }
+    }
     return situations;
 }
 

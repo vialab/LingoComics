@@ -33,8 +33,11 @@
                 body: JSON.stringify(body)
             });
 
-            // const data = await response.json();
-            // console.log('Update successful', data);
+            const updatedStory = await response.json();
+            console.log('Update successful', updatedStory);
+            story = updatedStory.story;
+            // dispatch event with updated story
+            dispatch('update', { story: updatedStory.story });
         } catch (error) {
             console.error('Update failed', error);
         }
