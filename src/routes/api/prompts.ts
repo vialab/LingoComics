@@ -181,6 +181,7 @@ export function generateMomentImagePrompt(scenario: string, situation: string, m
         and the setting contribute to the narrative of the action. The composition should be dynamic, emphasizing the action 
         to engage the viewer, true to the essence of comic-style storytelling.
         The character should be performing action if it makes sense to the moment, and should be showing emotion as part of the moment.
+        Specify the camera angle which the scene is viewed at as well.
         Use the prompt AS-IS. THE IMAGE HAS TO BE COMIC-STYLE.
     `;
     // Create a comic-style image for the moment: "${moment}".
