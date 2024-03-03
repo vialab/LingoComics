@@ -6,6 +6,7 @@
     export let editText: string | null = null;
     export let story: StoryStruct | null = null;
     export let updateType: string | null = null;
+    let isLoading = false;
     let isEditable = false;
 
     const dispatch = createEventDispatcher();
@@ -22,6 +23,7 @@
 
     // call /api/generate/update
     async function updateStoryMetadata() {
+        isLoading = true;
         try {
             console.log("story updating:", updateType, editText, story);
             const body = { updateType, editText, story };
@@ -40,19 +42,27 @@
             dispatch('update', { story: updatedStory.story });
         } catch (error) {
             console.error('Update failed', error);
+        } finally {
+            isLoading = false;
         }
     }
 </script>
 
-<div>
-    <h1 class="text-2xl text-bold">{title}</h1>
-    {#if isEditable}
-        <textarea bind:value={editText} class="editable-text" />
-    {:else}
-        <p>{editText}</p>
-    {/if}
-    <button class="btn rounded" on:click={toggleEdit}>{isEditable ? 'Confirm' : 'Edit'}</button>
-</div>
+{#if isLoading}
+    <h1>Loading...</h1>
+{:else}
+    <div>
+        <h1 class="text-2xl text-bold">{title}</h1>
+        {#if isEditable}
+            <textarea bind:value={editText} class="editable-text" />
+        {:else}
+            <p>{editText}</p>
+        {/if}
+        <button class="btn rounded" on:click={toggleEdit}>{isEditable ? 'Confirm' : 'Edit'}</button>
+    </div>
+{/if}
+
+
 
 <style>
     .editable-text {

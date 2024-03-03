@@ -1,5 +1,6 @@
 <script lang="ts">
     import { generateImages } from "$lib/services/apiService";
+    import { update } from "firebase/database";
 	import Form from "../../components/Form.svelte";
 	import Loading from "../../components/Loading.svelte";
 	import Spacer from "../../components/Spacer.svelte";
@@ -91,7 +92,12 @@
 	}
 
 	// handle scenario change
-	function handleScenarioChange(event: Event) {}
+	function handleScenarioChange(event: Event) {
+		const target = event.target as HTMLSpanElement;
+		const updatedContent = target.textContent || "";
+
+		storyData.scenario = updatedContent;
+	}
 
 	// handle content change (moment)
 	function handleContentChange(event: Event, situationIndex: number, momentIndex: string | null = null) {
