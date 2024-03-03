@@ -11,6 +11,7 @@
     import ScenarioImageGen from "../../components/story/ScenarioImageGen.svelte";
 	import type { StoryStruct } from "../../utils/types";
 	import Icon from '@iconify/svelte';
+    import CollapseButton from "../../components/story/CollapseButton.svelte";
 
 	// initialize all variables
 	let isGenerating: boolean = false;
@@ -121,6 +122,11 @@
 		console.log("updated story content:", event.detail.story);
 		storyData = event.detail.story;
 	}
+
+	// handle drawer toggle
+	function handleDrawer(event: CustomEvent<{ drawerOpen: boolean}>) {
+		drawerOpen = event.detail.drawerOpen;
+	}
 </script>
 
 
@@ -131,7 +137,8 @@
 	</div>
 
 	<!-- collapse button -->
-	<div class="self-start relative right-side relative">
+	<CollapseButton on:change={(event) => handleDrawer(event)} />
+	<!-- <div class="self-start relative right-side relative">
 		<div class="flex h-screen justify-center items-center">
 			<button class="" on:click={() => drawerOpen = !drawerOpen}>
 				{#if drawerOpen}
@@ -141,7 +148,7 @@
 				{/if}
 			</button>
 		</div>
-	</div>
+	</div> -->
 
 	<!-- right side -->
 	<div class="flex-1 self-start w-full lg:w-2/3 relative right-side">
