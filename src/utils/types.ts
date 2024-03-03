@@ -42,3 +42,15 @@ export type StoryStruct = {
     situations: Situation[],
     moments: string
 }
+
+export const emptyStoryStruct: StoryStruct = {
+    story: '',
+    setting: '',
+    character: '',
+    scenarioId: '',
+    scenario: '',
+    summary: '',
+    image: '',
+    situations: [],
+    moments: ''
+}

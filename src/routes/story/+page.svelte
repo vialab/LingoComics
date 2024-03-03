@@ -8,7 +8,7 @@
 	import FormHeader from "../../components/story/FormHeader.svelte";
     import ScenarioEditor from "../../components/story/ScenarioEditor.svelte";
     import ScenarioImageGen from "../../components/story/ScenarioImageGen.svelte";
-	import type { FirestoreData, StoryStruct } from "../../utils/types";
+	import { emptyStoryStruct, type FirestoreData, type StoryStruct } from "../../utils/types";
     import CollapseButton from "../../components/story/CollapseButton.svelte";
 	
 
@@ -156,6 +156,14 @@
 	function handleDrawer(event: CustomEvent<{ drawerOpen: boolean}>) {
 		drawerOpen = event.detail.drawerOpen;
 	}
+
+	// handle clear story
+	function handleClearStory(event: CustomEvent<{ clear: boolean }>) {
+		if (event.detail.clear) {
+			currentStep = 0;
+			storyData = emptyStoryStruct;
+		}
+	}
 </script>
 
 
@@ -173,7 +181,7 @@
 		<div class="flex-1 scrollable-content w-full p-2">
 			<!-- content header -->
 			<div class="p-0">
-				<FormHeader existingScenarios={existingScenarios} fetchScenario={fetchStory} />
+				<FormHeader on:click={handleClearStory} responseData={storyData} existingScenarios={existingScenarios} fetchScenario={fetchStory} />
 			</div>
 
 			<!-- spacer -->
