@@ -40,7 +40,7 @@
 </script>
 
 <div class="flex justify-between absolute bottom-0 w-full p-2">
-    {#if currentStep > 0}
+    {#if currentStep > 1}
         <button class="mr-5 px-5 py-2 custom-btn-bg-2 text-xl rounded" on:click={lastStep}>Back</button>
     {/if}
 
