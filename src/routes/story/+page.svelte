@@ -122,6 +122,7 @@
 		const updatedContent = target.textContent || "";
 
 		storyData.scenario = updatedContent;
+		saveStory(storyData);
 	}
 
 	// handle content change (moment)
@@ -134,17 +135,20 @@
 		storyData.situations[situationIndex].moments[momentIdx].momentSummarization = updatedContent;
 
 		console.log("Updated content:", updatedContent, situationIndex, momentIndex);
+		saveStory(storyData);
 	}
 
 	// handle edit change on edit text
 	function handleEditChange(event: CustomEvent<{ editText: string}>, propertyKey: string) {
-		storyData = { ...storyData, [propertyKey]: event.detail.editText }
+		storyData = { ...storyData, [propertyKey]: event.detail.editText };
+		saveStory(storyData);
 	}
 
 	// handle story updates
 	function handleStoryUpdate(event: CustomEvent<{ story: StoryStruct}>) {
 		console.log("updated story content:", event.detail.story);
 		storyData = event.detail.story;
+		saveStory(storyData);
 	}
 
 	// handle drawer toggle

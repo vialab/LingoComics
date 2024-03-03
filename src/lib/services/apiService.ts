@@ -10,6 +10,8 @@ export async function saveStory(story: StoryStruct) {
             },
             body: JSON.stringify({ story })
         });
+
+        console.log("story saved");
     } catch (error) {
         console.error("error saving story", error);
     }

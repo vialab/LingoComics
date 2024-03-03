@@ -1,6 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import type { StoryStruct } from "../../utils/types";
+    import { saveStory } from "$lib/services/apiService";
 
     export let title: string | null = null;
     export let editText: string | null = null;
