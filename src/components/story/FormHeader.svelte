@@ -1,15 +1,16 @@
 <script lang="ts">
-    import type { Scenario } from "../../routes/scenario/data";
     import type { StoryStruct } from "../../utils/types";
     import Modal from "../Modal.svelte";
+    import { createEventDispatcher } from "svelte";
 
     export let responseData : StoryStruct | null = null;
     export let isSaving : boolean = false;
     export let isEditing : boolean = false;
-    export let existingScenarios : Scenario[] = [];
+    export let existingScenarios : StoryStruct[] = [];
     export let handleSaveStory : () => Promise<void> = async() => {};
     export let toggleEditing : () => void = () => {};
     export let fetchScenario : (scenarioId : string) => Promise<void> = async() => {};
+    
 </script>
 
 <div class="mx-auto pb-3 h-auto absolute top-0 left-0 right-0 bg-white p-3 w-full">

@@ -6,62 +6,18 @@ import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 export const GET: RequestHandler = async ({ params }) => {
     const { scenarioId } = params;
 
+    const storyCollectionRef = collection(db, 'scenario');
+    const docRef = doc(storyCollectionRef, scenarioId);
     try {
-        // get collection reference for 'scenario'
-        const scenarioCollectionRef = collection(db, 'scenario');
-        const scenarioDocRef = doc(scenarioCollectionRef, scenarioId);
+        const docSnapshot = await getDoc(docRef);
 
-        // get the document data
-        const scenarioSnapshot = await getDoc(scenarioDocRef);
-        const scenarioData = scenarioSnapshot.data();
-
-        // return if scenario does not exist
-        if (!scenarioSnapshot.exists()) {
-            return new Response(JSON.stringify({ "data": "Scenario not found" }), { status: 404 });
+        if (docSnapshot.exists()) {
+            const storyData = docSnapshot.data();
+            return new Response(JSON.stringify({ story: storyData }), { status: 200 });
+        } else {
+            // story does not exist
+            return new Response(JSON.stringify({ error: `No story with id ${scenarioId}` }));
         }
-
-        // get situation collection
-        const situationsCollectionRef = collection(scenarioDocRef, 'situations');
-        const situationsSnapshot = await getDocs(situationsCollectionRef);
-
-        // parse situations
-        const situations = [];
-        for (const situationDoc of situationsSnapshot.docs) {
-            const situationData = situationDoc.data();
-
-            // get moment collection
-            const momentsCollectionRef = collection(situationDoc.ref, 'moments');
-            const momentsSnapshot = await getDocs(momentsCollectionRef);
-
-            const moments : MomentObject = {};
-            momentsSnapshot.forEach(momentDoc => {
-                const momentData = momentDoc.data();
-                moments[momentDoc.id] = momentData.description;
-                moments[momentDoc.id].image = momentData.image;
-            });
-
-
-            situations.push({
-                id: situationDoc.id,
-                title: situationData.title,
-                image: situationData?.image,
-                situationSort: situationData?.situationSort,
-                moments: Object.values(moments)
-            });
-        }
-
-        const responseData = {
-            scenarioId: scenarioId,
-            scenario: scenarioData?.title,
-            story: scenarioData?.story,
-            character: scenarioData?.character,
-            setting: scenarioData?.setting,
-            summary: scenarioData?.summary,
-            image: scenarioData?.image,
-            situations: situations
-        };
-
-        return new Response(JSON.stringify(responseData), { status: 200 });    
     } catch (error) {
         return new Response(JSON.stringify({ "error": "error retrieving story" }), { status: 500 });
     }    

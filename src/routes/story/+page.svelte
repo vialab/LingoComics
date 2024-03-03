@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { generateImages } from "$lib/services/apiService";
-    import { update } from "firebase/database";
+    import { generateImages, saveStory } from "$lib/services/apiService";
 	import Form from "../../components/Form.svelte";
 	import Loading from "../../components/Loading.svelte";
 	import Spacer from "../../components/Spacer.svelte";
@@ -9,9 +8,9 @@
 	import FormHeader from "../../components/story/FormHeader.svelte";
     import ScenarioEditor from "../../components/story/ScenarioEditor.svelte";
     import ScenarioImageGen from "../../components/story/ScenarioImageGen.svelte";
-	import type { StoryStruct } from "../../utils/types";
-	import Icon from '@iconify/svelte';
+	import type { FirestoreData, StoryStruct } from "../../utils/types";
     import CollapseButton from "../../components/story/CollapseButton.svelte";
+	
 
 	// initialize all variables
 	let isGenerating: boolean = false;
@@ -23,6 +22,10 @@
 
 	let scenarioImage = '';
 	let situationImages : string[] = [];
+
+	// get loaded data
+	export let data: FirestoreData;
+	let existingScenarios = data.scenarios;
 
 	// handle form submit
 	async function handleSubmit(event: Event) {
@@ -57,6 +60,7 @@
 		} finally {
 			isGenerating = false;
 			currentStep = 1;
+			await saveStory(storyData);
 		}
 	}
 
@@ -86,6 +90,26 @@
 			isGenerating = false;
 		}
 	}
+
+	// fetch story function
+	export async function fetchStory(scenarioId: string) {
+	    try {
+	        const response = await fetch(`/api/scenario/${scenarioId}`, {
+	            method: "GET",
+	            headers: {
+	                "Content-Type": "application/json"
+	            }
+	        });
+
+	        const data = await response.json();
+			storyData = data.story;
+	    } catch (error) {
+	        console.error("error fetching story:", error);
+	    } finally {
+			currentStep = 1;
+		}
+	}
+
 
 	// handle step change for progress
 	function handleStepChange(event: CustomEvent) {
@@ -138,28 +162,17 @@
 
 	<!-- collapse button -->
 	<CollapseButton on:change={(event) => handleDrawer(event)} />
-	<!-- <div class="self-start relative right-side relative">
-		<div class="flex h-screen justify-center items-center">
-			<button class="" on:click={() => drawerOpen = !drawerOpen}>
-				{#if drawerOpen}
-					<Icon icon="mingcute:left-fill" height={30}/>
-				{:else}
-					<Icon icon="mingcute:right-fill" height={30}/>
-				{/if}
-			</button>
-		</div>
-	</div> -->
 
 	<!-- right side -->
 	<div class="flex-1 self-start w-full lg:w-2/3 relative right-side">
 		<div class="flex-1 scrollable-content w-full p-2">
 			<!-- content header -->
 			<div class="p-0">
-				<FormHeader />
+				<FormHeader existingScenarios={existingScenarios} fetchScenario={fetchStory} />
 			</div>
 
 			<!-- spacer -->
-			<Spacer height={60} />
+			<Spacer height={70} />
 
 			<!-- content body -->
 			<div>

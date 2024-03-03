@@ -24,7 +24,7 @@
         moments.set([]);
     }
 
-    console.log('image display:', responseData);
+    // console.log('image display:', responseData);
 </script>
 <!-- /*&& !responseData.image.includes("undefined")*/ -->
 {#if $selectedSituation }
