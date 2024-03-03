@@ -181,7 +181,7 @@
 		<div class="flex-1 scrollable-content w-full p-2">
 			<!-- content header -->
 			<div class="p-0">
-				<FormHeader on:click={handleClearStory} responseData={storyData} existingScenarios={existingScenarios} fetchScenario={fetchStory} />
+				<FormHeader currentStep={currentStep} on:click={handleClearStory} responseData={storyData} existingScenarios={existingScenarios} fetchScenario={fetchStory} />
 			</div>
 
 			<!-- spacer -->
