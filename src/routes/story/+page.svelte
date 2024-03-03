@@ -88,6 +88,7 @@
 			console.error(error);
 		} finally {
 			isGenerating = false;
+			await saveStory(storyData);
 		}
 	}
 
@@ -188,7 +189,7 @@
 					<EditText title="Character description" editText={storyData?.character} story={storyData} updateType="character" on:change={(event) => handleEditChange(event, 'character')} on:update={handleStoryUpdate} />
 				<!-- show setting -->
 				{:else if currentStep === 2}
-					<EditText title="Setting description" editText={storyData?.setting} on:change={(event) => handleEditChange(event, 'setting')} on:update={handleStoryUpdate} />
+					<EditText title="Setting description" editText={storyData?.setting} updateType="setting" on:change={(event) => handleEditChange(event, 'setting')} on:update={handleStoryUpdate} />
 				<!-- story content -->
 				{:else if currentStep === 3}
 					<ScenarioEditor 

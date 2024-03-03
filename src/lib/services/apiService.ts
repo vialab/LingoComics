@@ -1,4 +1,9 @@
+// import { GOOGLE_API_KEY } from "$env/static/private";
 import type { StoryStruct } from "../../utils/types";
+
+// initialize bucket
+// const storage = new Storage({ keyFilename: GOOGLE_API_KEY });
+// const bucketName = 'lingoimages';
 
 // save story function
 export async function saveStory(story: StoryStruct) {
@@ -82,3 +87,33 @@ export async function generateImages(responseData: StoryStruct | null) {
         console.error(error);
     }
 }
+
+// upload to google storage bucket
+// export async function uploadImage(base64String: string, fileName: string) {
+//     // return if no base64string
+//     if (base64String === undefined) {
+//         return null;
+//     }
+
+//     const strippedBase64String = base64String.split(';base64,').pop();
+//     if (typeof strippedBase64String !== 'string') {
+//         throw new Error('Invalid base64 string');
+//     }
+
+//     const imageBuffer = Buffer.from(strippedBase64String, 'base64');
+
+//     const bucket = storage.bucket(bucketName);
+//     const file = bucket.file(fileName);
+
+//     try {
+//         await file.save(imageBuffer, {
+//             metadata: { contentType: 'image/png' }
+//         });
+
+//         await file.makePublic();
+
+//         return file;
+//     } catch (error) {
+//         console.error('error uploading image', error);   
+//     }
+// }

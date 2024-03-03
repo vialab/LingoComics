@@ -1,9 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
-import { OPENAI_KEY } from "$env/static/private";
+import { OPENAI_KEY, GOOGLE_API_KEY } from "$env/static/private";
+import { Storage } from '@google-cloud/storage';
 import OpenAI from "openai";
 import { generateCharacterAttributes } from "./characterGenerator";
 import { generateCharacterPrompt, generateMomentDescriptionPrompt, generateMomentPrompt, generateScenarioPrompt, generateSituationPrompt, getCharacterPrompt, getScenarioTitlePrompt, getStorySetting, summarizeMoment, summarizeStoryPrompt } from "../../routes/api/prompts";
 import { updateMomentDescriptionContextPrompt, updateMomentImageContextPrompt, updateStoryContextPrompt } from '../../routes/api/generate/update/update-prompts';
+
+// initialize bucket
+const storage = new Storage({ keyFilename: GOOGLE_API_KEY });
+const bucketName = 'lingoimages';
 
 // initialize openai
 const openai = new OpenAI({ apiKey: OPENAI_KEY });
@@ -59,8 +64,13 @@ export async function generateImage(prompt: string) {
         // convert the buffer to a base64 string
         const base64data = imageBuffer.toString('base64');
 
+        let imageBase64String = `data:image/png;base64,${base64data}`;
+
+        // upload image and send file to frontend?
+        const imageFile = await uploadImage(imageBase64String, uuidv4());
+        
         // send base64 string as a response
-        return `data:image/png;base64,${base64data}`;
+        return `https://storage.googleapis.com/lingoimages/${imageFile?.name}`;
         // return response.data[0].url;
     } catch (error) {
         console.error(error);
@@ -262,4 +272,34 @@ export async function generateMomentImageDescription(moment: string) {
     const momentImageDescriptionPrompt = generateMomentDescriptionPrompt("", "", moment);
     const momentImageDescription = (await gptPrompt(openai, chatModel, momentImageDescriptionPrompt, 300)).choices[0].message.content?.trim() as string;
     return momentImageDescription;
+}
+
+
+export async function uploadImage(base64String: string, fileName: string) {
+    // return if no base64string
+    if (base64String === undefined) {
+        return null;
+    }
+
+    const strippedBase64String = base64String.split(';base64,').pop();
+    if (typeof strippedBase64String !== 'string') {
+        throw new Error('Invalid base64 string');
+    }
+
+    const imageBuffer = Buffer.from(strippedBase64String, 'base64');
+
+    const bucket = storage.bucket(bucketName);
+    const file = bucket.file(fileName);
+
+    try {
+        await file.save(imageBuffer, {
+            metadata: { contentType: 'image/png' }
+        });
+
+        await file.makePublic();
+
+        return file;
+    } catch (error) {
+        console.error('error uploading image', error);   
+    }
 }
