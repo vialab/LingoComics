@@ -258,3 +258,8 @@ export async function generateMoments(situations : Situation[], scenario: string
 }
 
 
+export async function generateMomentImageDescription(moment: string) {
+    const momentImageDescriptionPrompt = generateMomentDescriptionPrompt("", "", moment);
+    const momentImageDescription = (await gptPrompt(openai, chatModel, momentImageDescriptionPrompt, 300)).choices[0].message.content?.trim() as string;
+    return momentImageDescription;
+}

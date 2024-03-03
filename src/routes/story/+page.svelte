@@ -93,8 +93,17 @@
 	// handle scenario change
 	function handleScenarioChange(event: Event) {}
 
-	// handle content change
-	function handleContentChange(event: Event) {}
+	// handle content change (moment)
+	function handleContentChange(event: Event, situationIndex: number, momentIndex: string | null = null) {
+		const target = event.target as HTMLSpanElement;
+		const updatedContent = target.textContent || "";
+		let momentIdx = Number(momentIndex);
+
+		// update moment
+		storyData.situations[situationIndex].moments[momentIdx].momentSummarization = updatedContent;
+
+		console.log("Updated content:", updatedContent, situationIndex, momentIndex);
+	}
 
 	// handle edit change on edit text
 	function handleEditChange(event: CustomEvent<{ editText: string}>, propertyKey: string) {
@@ -159,6 +168,7 @@
 						handleContentChange={handleContentChange}
 						editableStyle={"border: 1px solid #ccc; padding: 4px; background-color: white; cursor: text; border-radius: 3px;"}
 					/>
+					<button class="btn rounded" on:click={() => isEditing = !isEditing}>Edit</button>
 				<!-- image generation -->
 				{:else if currentStep === 4}
 					<ScenarioImageGen responseData={storyData} handleImageGeneration={handleImageGeneration} />

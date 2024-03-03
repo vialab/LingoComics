@@ -1,5 +1,5 @@
-import { generateMomentImagePrompt, generateScenarioImagePrompt, generateSituationImagePrompt } from '../../prompts.js';
-import { generateImage } from '$lib/services/gptService.js';
+import { generateMomentDescriptionPrompt, generateMomentImagePrompt, generateScenarioImagePrompt, generateSituationImagePrompt } from '../../prompts.js';
+import { generateImage, generateMomentImageDescription, gptPrompt } from '$lib/services/gptService.js';
 import type { Moment } from '../../../scenario/data.js';
 
 // type Moment = {
@@ -37,19 +37,16 @@ export const POST = async ({ request }) => {
             // generate moment images
             const momentImages = [];
             for (const moment of momentsArray) {
-                console.log(`Generating moment: ${moment.momentSummarization}`);
-                const momentPrompt = generateMomentImagePrompt(summary, situation.title, moment.momentImageDescriptionResponse, character, setting);
+                console.log(`Generating image for moment: ${moment.momentSummarization}`);
+                
+                // regenerate moment image description (to account for changes in the frontend)
+                const momentImageDescription = await generateMomentImageDescription(moment.momentSummarization);
+                
+                const momentPrompt = generateMomentImagePrompt(summary, situation.title, momentImageDescription, character, setting);
                 const momentImage = await generateImage(momentPrompt);
                 momentImages.push({ title: situation.title, image: momentImage, moment: moment.momentDescription });
             }
             situationImages.push({ situationImage, momentImages });
-
-            // for (let currentMoment = 0; currentMoment < situation.moments.length; currentMoment++) {
-            //     console.log(`Generating moment: ${currentMoment}.`);
-            //     const momentPrompt = generateMomentImagePrompt(scenario, situation.title, situation.moments[currentMoment], character, setting);
-            //     const momentImage = await generateImage(momentPrompt);
-            //     momentImages.push({ title: situation.title, image: momentImage, moment: situation.moments[currentMoment] });
-            // }
         }
         
         // Send the base64 string as a response

@@ -120,9 +120,10 @@ export function generateMomentPrompt(situationTitle: string, scenario: string, t
     `;
 }
 
+// used for image description
 export function generateMomentDescriptionPrompt(story: string, situation: string, moment: string) {
     return `
-        Create a brief description for the following moment: "${moment}".
+        Create a brief image description for the following moment: "${moment}".
         The description should be descriptive as to summarize the visual aspects of the moment for an image generation tool to generate, 
         make sure the actions in the moment are a key part of the description.
     `;
