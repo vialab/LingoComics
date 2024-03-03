@@ -70,8 +70,6 @@
 		try {
 			const result = await generateImages(storyData);
 
-			console.log('image gen result', result);
-
 			scenarioImage = result.data;
 			situationImages = result.situationImages;
 			storyData = { 
@@ -84,6 +82,8 @@
 					}
 				})
 			}
+
+			console.log("updated story data:", storyData);
 		} catch (error) {
 			console.error(error);
 		} finally {

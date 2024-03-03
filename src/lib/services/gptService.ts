@@ -60,8 +60,8 @@ export async function generateImage(prompt: string) {
         const base64data = imageBuffer.toString('base64');
 
         // send base64 string as a response
-        // return `data:image/png;base64,${base64data}`;
-        return response.data[0].url;
+        return `data:image/png;base64,${base64data}`;
+        // return response.data[0].url;
     } catch (error) {
         console.error(error);
     }
