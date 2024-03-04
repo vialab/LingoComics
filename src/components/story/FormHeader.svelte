@@ -6,11 +6,7 @@
     const dispatch = createEventDispatcher();
 
     export let responseData : StoryStruct | null = null;
-    export let isSaving : boolean = false;
-    export let isEditing : boolean = false;
     export let existingScenarios : StoryStruct[] = [];
-    export let handleSaveStory : () => Promise<void> = async() => {};
-    export let toggleEditing : () => void = () => {};
     export let fetchScenario : (scenarioId : string) => Promise<void> = async() => {};
     export let currentStep: number = 0;
 
@@ -18,7 +14,6 @@
     function handleClear() {
         dispatch('click', { clear: true });
     }
-
 </script>
 
 <div class="mx-auto pb-3 h-auto absolute top-0 left-0 right-0 bg-white p-3 w-full">

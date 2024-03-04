@@ -9,10 +9,10 @@
 
     // Transform the images to be adherent to Scenario type
     function transformToScenario(data: FirestoreData): Array<Scenario> {
-        return data.scenarios.map(item => ({
-            id: parseInt(item.id),
-            image: item.image,
-            title: item.title,
+        return data.scenarios.map(scenario => ({
+            id: parseInt(scenario.scenarioId),
+            image: scenario.image,
+            title: scenario.scenario,
             situation: [] as Array<Situation>
         }));
     };
@@ -33,11 +33,11 @@
         <div class="grid grid-cols-5 gap-4 w-full max-w-6xl">
             {#each filteredScenarios.slice(0, 5) as scenario}
               <!-- Scenario card with a fixed aspect ratio for images -->
-                <a href="/scenario/{scenario.id}" class="scenario-card flex-none sm:w-1/2 md:w-full lg:w-full xl:w-48 h-[30rem] overflow-hidden rounded-lg bg-black relative">
-                    <img src={scenario.image} alt={scenario.title} class="w-full h-full object-cover absolute top-0 left-0" />
+                <a href="/scenario/{scenario.scenarioId}" class="scenario-card flex-none sm:w-1/2 md:w-full lg:w-full xl:w-48 h-[30rem] overflow-hidden rounded-lg bg-black relative">
+                    <img src={scenario.image} alt={scenario.scenario} class="w-full h-full object-cover absolute top-0 left-0" />
                     <div class="absolute inset-0" style="background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.7) 90%);"></div>
                     <div class="p-4 absolute bottom-0 left-0 right-0">
-                        <h2 class="text-white">{scenario.title}</h2>
+                        <h2 class="text-white">{scenario.scenario}</h2>
                     </div>
                     <span class="fold"></span>
                 </a>
@@ -53,11 +53,11 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-full max-w-6xl">
             {#each data.scenarios as scenario}
               <!-- Scenario card with a fixed aspect ratio for images -->
-                <a href="/scenario/{scenario.id}" class="scenario-card flex-none sm:w-1/2 md:w-full lg:w-full xl:w-48 h-[10rem] overflow-hidden rounded-lg bg-black relative">
-                    <img src={scenario.image} alt={scenario.title} class="w-full h-full object-cover absolute top-0 left-0" />
+                <a href="/scenario/{scenario.scenarioId}" class="scenario-card flex-none sm:w-1/2 md:w-full lg:w-full xl:w-48 h-[10rem] overflow-hidden rounded-lg bg-black relative">
+                    <img src={scenario.image} alt={scenario.scenario} class="w-full h-full object-cover absolute top-0 left-0" />
                     <div class="absolute inset-0" style="background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.7) 90%);"></div>
                     <div class="p-4 absolute bottom-0 left-0 right-0">
-                        <h2 class="text-white">{scenario.title}</h2>
+                        <h2 class="text-white">{scenario.scenario.replaceAll('"', '')}</h2>
                     </div>
                     <span class="fold"></span>
                 </a>

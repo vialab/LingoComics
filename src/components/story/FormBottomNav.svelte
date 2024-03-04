@@ -5,7 +5,7 @@
 
     // current step for scenario designer
     export let currentStep : number;
-    export let isFinish : boolean;
+    export let finishModalOpen : boolean;
 
     const _lastStep: number = 4;
 
@@ -32,9 +32,10 @@
     function nextOrFinish() {
         if (currentStep < _lastStep) {
             updateStep(currentStep + 1);
-        } else if (currentStep > _lastStep) {
-            isFinish = !isFinish;
-            dispatch('finish', { isFinish });
+        } else if (currentStep >= _lastStep) {
+            // finish story creation
+            finishModalOpen = true;
+            dispatch('finish', { finishModalOpen });
         }
     }
 </script>

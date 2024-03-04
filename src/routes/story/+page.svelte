@@ -10,12 +10,15 @@
     import ScenarioImageGen from "../../components/story/ScenarioImageGen.svelte";
 	import { emptyStoryStruct, type FirestoreData, type StoryStruct } from "../../utils/types";
     import CollapseButton from "../../components/story/CollapseButton.svelte";
+    import FinishModal from "../../components/story/FinishModal.svelte";
+    import ToastNotification from "../../components/story/ToastNotification.svelte";
 	
 
 	// initialize all variables
 	let isGenerating: boolean = false;
 	let drawerOpen: boolean = true;
 	let isFinish: boolean = false;
+	let finishModalOpen: boolean = false;
 	let isEditing: boolean = false;
 	let currentStep: number = 0;
 	let storyData: StoryStruct;
@@ -164,6 +167,19 @@
 			storyData = emptyStoryStruct;
 		}
 	}
+
+	// handle modal toggle for finishing story creation
+	function handleFinishStoryCreation(event: CustomEvent<{ finishModalOpen: boolean }>) {
+		console.log("is finish", finishModalOpen);
+		finishModalOpen = event.detail.finishModalOpen;
+	}
+
+	// handle finish story creation
+	function handleStoryFinish(event: CustomEvent<{ finishStoryCreation: boolean }>) {
+		console.log("is finish", isFinish);
+
+		isFinish = event.detail.finishStoryCreation;
+	}
 </script>
 
 
@@ -191,7 +207,7 @@
 			<div>
 				<!-- show loading if generating -->
 				{#if isGenerating}
-					<Loading />
+					<span class="loading loading-dots loading-lg"></span>
 				<!-- show character -->
 				{:else if currentStep === 1}
 					<EditText title="Character description" editText={storyData?.character} story={storyData} updateType="character" on:change={(event) => handleEditChange(event, 'character')} on:update={handleStoryUpdate} />
@@ -215,7 +231,14 @@
 			</div>
 
 			<!-- progress meter -->
-			<FormBottomNav bind:isFinish currentStep={currentStep} on:stepchange={handleStepChange} />
+			<FormBottomNav on:finish={handleFinishStoryCreation} bind:finishModalOpen currentStep={currentStep} on:stepchange={handleStepChange} />
+		
+			<!-- Show modal when finishing -->
+			<FinishModal on:toggle={handleFinishStoryCreation} on:finish={handleStoryFinish} isFinishModalOpen={finishModalOpen} />
+			
+			{#if isFinish} 
+				<ToastNotification toastTimer={2000} />
+			{/if}
 		</div>
 	</div>
 </div>

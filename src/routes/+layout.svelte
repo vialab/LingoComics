@@ -63,7 +63,7 @@
 		</ul>
 	</div>
 	<div class="navbar-end">
-		<ProfileIcon />
+		<!-- <ProfileIcon /> -->
 	</div>
 </nav>
 
