@@ -2,10 +2,12 @@
     import { writable } from 'svelte/store';
     import type { StoryStruct } from "../../utils/types";
 	import type { Situation } from '../../routes/scenario/data';
+	import ConfirmModal from './ConfirmModal.svelte';
 
     export let responseData : StoryStruct;
     export let handleImageGeneration : () => Promise<void>;
 
+    let modalOpen: boolean = false;
 
     // reactive state for selected situation and its moments
     let selectedSituation = writable<Situation | null>(null);
@@ -52,7 +54,9 @@
     <!-- Go back button -->
     <button on:click={goBack}>Go Back</button>
 {:else if responseData.hasOwnProperty('image') && responseData.image && typeof responseData.image === 'string' && !responseData.image.includes("undefined")}    
-    <button class="btn w-full" on:click={handleImageGeneration}>Regenerate images</button>
+    <!-- regenerate image button -->
+    <button class="btn w-full mb-2" on:click={() => modalOpen = true}>Regenerate images</button>
+    
     <div class="flex gap-2 w-full h-[30rem]">
         <!-- Scenario image -->
         <div class="scenario-card rounded-lg relative w-[10rem] overflow-hidden flex-1">
@@ -78,6 +82,10 @@
     </div>
 {:else}
     <button class="btn w-full" on:click={handleImageGeneration}>Generate images</button>
+{/if}
+
+{#if modalOpen}
+    <ConfirmModal numImages={1 + responseData.situations.length + (responseData.situations.length * 4)} on:close={() => modalOpen = false} on:runImageGeneration={handleImageGeneration} />
 {/if}
 
 <style>
