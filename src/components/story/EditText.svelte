@@ -50,7 +50,7 @@
 </script>
 
 {#if isLoading}
-    <h1>Loading...</h1>
+    <span class="loading loading-dots loading-lg"></span>
 {:else}
     <div>
         <h1 class="text-2xl text-bold">{title}</h1>

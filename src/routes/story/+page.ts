@@ -1,5 +1,5 @@
 import { db } from "$lib/firebase/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, where } from "firebase/firestore";
 
 export async function load() {
     try {

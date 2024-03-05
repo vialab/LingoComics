@@ -170,15 +170,16 @@
 
 	// handle modal toggle for finishing story creation
 	function handleFinishStoryCreation(event: CustomEvent<{ finishModalOpen: boolean }>) {
-		console.log("is finish", finishModalOpen);
 		finishModalOpen = event.detail.finishModalOpen;
 	}
 
 	// handle finish story creation
 	function handleStoryFinish(event: CustomEvent<{ finishStoryCreation: boolean }>) {
-		console.log("is finish", isFinish);
-
 		isFinish = event.detail.finishStoryCreation;
+
+		// set storyData to have flag of is finish
+		storyData.isFinish = true;
+		saveStory(storyData);
 	}
 </script>
 

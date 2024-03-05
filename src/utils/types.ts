@@ -40,7 +40,8 @@ export type StoryStruct = {
     summary: string,
     image: string,
     situations: Situation[],
-    moments: string
+    moments: string,
+    isFinish: boolean
 }
 
 export const emptyStoryStruct: StoryStruct = {
@@ -52,5 +53,6 @@ export const emptyStoryStruct: StoryStruct = {
     summary: '',
     image: '',
     situations: [],
-    moments: ''
+    moments: '',
+    isFinish: false,
 }
