@@ -15,3 +15,6 @@ COPY . .
 
 # build svelte app
 RUN npm run build
+
+# expose port 4713
+EXPOSE 4173
