@@ -2,10 +2,11 @@ import { db } from '$lib/firebase/firebase.js';
 import { collection, doc, getDoc, setDoc, query, getDocs, where, updateDoc } from 'firebase/firestore';
 import type { StoryStruct } from '../../../utils/types.js';
 import { Storage } from '@google-cloud/storage';
-import { GOOGLE_API_KEY } from '$env/static/private';
+// import { GOOGLE_API_KEY } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
 // initiailize bucket
-const storage = new Storage({ keyFilename: GOOGLE_API_KEY });
+const storage = new Storage({ keyFilename: env.GOOGLE_API_KEY });
 const bucketName = 'lingoimages';
 
 // This POST request saves story generation items to firestore
