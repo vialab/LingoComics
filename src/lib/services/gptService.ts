@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import { OPENAI_KEY, GOOGLE_API_KEY } from "$env/static/private";
+// import { OPENAI_KEY, GOOGLE_API_KEY } from "$env/dynamic/private";
+import { env } from '$env/dynamic/private';
 import { Storage } from '@google-cloud/storage';
 import OpenAI from "openai";
 import { generateCharacterAttributes } from "./characterGenerator";
@@ -7,11 +8,11 @@ import { generateCharacterPrompt, generateMomentDescriptionPrompt, generateMomen
 import { updateMomentDescriptionContextPrompt, updateMomentImageContextPrompt, updateStoryContextPrompt } from '../../routes/api/generate/update/update-prompts';
 
 // initialize bucket
-const storage = new Storage({ keyFilename: GOOGLE_API_KEY });
+const storage = new Storage({ keyFilename: env.GOOGLE_API_KEY });
 const bucketName = 'lingoimages';
 
 // initialize openai
-const openai = new OpenAI({ apiKey: OPENAI_KEY });
+const openai = new OpenAI({ apiKey: env.OPENAI_KEY });
 const chatModel = 'gpt-4-0125-preview'; //'gpt-3.5-turbo';
 const chatModel2 = 'gpt-3.5-turbo';
 const imageModel = "dall-e-3";
