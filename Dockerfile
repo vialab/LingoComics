@@ -10,6 +10,9 @@ COPY package*.json ./
 # install dependencies
 RUN npm install
 
+# sync
+RUN npm run prepare
+
 # copy app's source code
 COPY . .
 
