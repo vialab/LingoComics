@@ -64,7 +64,7 @@ export async function generateImage(prompt: string) {
         // convert the buffer to a base64 string
         const base64data = imageBuffer.toString('base64');
 
-        let imageBase64String = `data:image/png;base64,${base64data}`;
+        const imageBase64String = `data:image/png;base64,${base64data}`;
 
         // upload image and send file to frontend?
         const imageFile = await uploadImage(imageBase64String, uuidv4());
@@ -196,8 +196,8 @@ export async function generateSituations(scenario: string ,situation: string, to
  * @returns 
  */
 export async function updateMoments(story: string, situations: Situation[], updatedContent: string, updateType: string) {
-    for (let situation of situations) {
-        for (let moment of situation.moments) {
+    for (const situation of situations) {
+        for (const moment of situation.moments) {
             // update moment description
             const momentDescriptionPrompt = updateMomentDescriptionContextPrompt(story, moment.momentDescription, updatedContent, updateType);
             const updatedMomentDescription = (await gptPrompt(openai, chatModel2, momentDescriptionPrompt)).choices[0].message.content?.trim() as string;
