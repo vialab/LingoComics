@@ -12,7 +12,7 @@ const storage = new Storage({ keyFilename: env.GOOGLE_API_KEY });
 const bucketName = 'lingoimages';
 
 // initialize openai
-const openai = new OpenAI({ apiKey: env.OPENAI_KEY });
+const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 const chatModel = 'gpt-4-0125-preview'; //'gpt-3.5-turbo';
 const chatModel2 = 'gpt-3.5-turbo';
 const imageModel = "dall-e-3";
