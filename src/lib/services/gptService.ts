@@ -21,8 +21,15 @@ type Situation = {
     id?: string,
     title: string,
     situationSort?: number,
-    moments?: any
+    moments: Moment[]
 };
+
+type Moment = {
+    momentImageDescriptionResponse: string,
+    momentImageDescription: string,
+    momentDescription: string,
+    momentSummarization: string
+}
 
 
 export async function gptPrompt(openai: OpenAI, model: string, prompt: string, max_tokens?: number) : Promise<OpenAI.Chat.Completions.ChatCompletion> {
