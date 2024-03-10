@@ -1,5 +1,3 @@
-import type { Scenario } from "../routes/scenario/data";
-
 export type FirestoreData = {
     scenarios: Array<StoryStruct>;
 };

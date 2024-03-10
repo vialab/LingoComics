@@ -1,7 +1,6 @@
 import { db } from "$lib/firebase/firebase";
 import type { RequestHandler } from "@sveltejs/kit";
-import type { MomentObject } from "../../../../utils/types";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc } from "firebase/firestore";
 
 export const GET: RequestHandler = async ({ params }) => {
     const { scenarioId } = params;
