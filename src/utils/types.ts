@@ -6,7 +6,7 @@ export type MomentObject = {
     [key: string]: string;
 }
 
-type Situation = {
+export type Situation = {
     id: string,
     title: string,
     image: { situationImage: string, momentImages: MomentImage[] },
