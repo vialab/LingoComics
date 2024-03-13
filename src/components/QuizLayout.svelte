@@ -1,7 +1,9 @@
 <script lang="ts">
-	import type { Situation } from "../utils/types";
+	import type { Moment, Situation } from "../utils/types";
+    import { touchDraggable } from "$lib/utils/dnd";
 
     export let currentSituation : Situation;
+
 </script>
 
 <div class="scenario-page">
@@ -10,7 +12,7 @@
         <div class="w-full lg:w-2/3 items-center justify-center">
             <div class="grid grid-cols-2 gap-3 w-[550px] bg-gray-100 px-5 py-5">
                 {#each currentSituation.image.momentImages as moment}
-                    <img src={moment.image} alt={moment.title || ""} />
+                    <img draggable="true" src={moment.image} alt={moment.title || ""} />
                 {/each}
             </div>
         </div>
@@ -21,7 +23,11 @@
                 <h1 class="text-2xl ">Options</h1>
                 <ul class="max-h-96 flex flex-col gap-5 p-3 overflow-auto">
                     {#each currentSituation.moments as moment}
-                        <li class="bg-white rounded-lg p-3 rounded-lg">{ moment.momentSummarization }</li>
+                        <li 
+                            use:touchDraggable
+                            class="bg-white rounded-lg p-3 rounded-lg"
+                        >{ moment.momentSummarization }
+                        </li>
                     {/each}
                 </ul>
             </div>

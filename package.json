@@ -37,6 +37,7 @@
 		"firebase": "^10.7.1",
 		"node-fetch": "^3.3.2",
 		"openai": "^4.24.1",
+		"svelte-drag-drop-touch": "^0.1.9",
 		"uuid": "^9.0.1"
 	}
 }
