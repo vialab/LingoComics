@@ -1,6 +1,6 @@
-import type { DragPair } from "../../utils/types";
+import type { TouchDraggableOptions } from "../../utils/types";
 
-export function touchDraggable(node: HTMLElement, { addPair }: { addPair: (pair: DragPair) => void}) {
+export function touchDraggable(node: HTMLElement, options: TouchDraggableOptions) {
     let highlightedElement : HTMLElement | null = null;
     const originalWidth : number = node.offsetWidth;
     const originalBackgroundColor : string = node.style.backgroundColor;
@@ -30,7 +30,7 @@ export function touchDraggable(node: HTMLElement, { addPair }: { addPair: (pair:
         node.style.left = `${newX}px`;
         node.style.top = `${newY}px`;
 
-        // determine the element currently under the drag
+        // determine the element currently under the drag (for highlighting)
         const currentDropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
         if (currentDropTarget && currentDropTarget.tagName === 'IMG') {
             if (highlightedElement !== currentDropTarget) {
@@ -59,15 +59,16 @@ export function touchDraggable(node: HTMLElement, { addPair }: { addPair: (pair:
         const dropTarget = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
         if (!(dropTarget && dropTarget.tagName === 'IMG')) {
             // reset <li> to <ul> (default position)
-            setTimeout(() => {
-                resetDraggableStyles();
-            }, 0);
+            resetDraggableStyles();
+
+            // removes pair to be sent to parent
+            options.removePair({ draggable: node, target: dropTarget as HTMLElement });
         } else {
             // check if correct match
             draggableStyleOnSnap(dropTarget);
 
-            
-            addPair({ draggable: node, target: dropTarget });
+            // adds pair to be sent to parent
+            options.addPair({ draggable: node, target: dropTarget as HTMLElement });
         }
     }
 

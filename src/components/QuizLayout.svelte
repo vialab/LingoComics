@@ -1,23 +1,50 @@
 <script lang="ts">
 	import type { DragPair, Moment, Situation } from "../utils/types";
     import { touchDraggable } from "$lib/utils/dnd";
+	import { onMount } from "svelte";
+	import { shuffle } from "$lib/utils/helper";
 
     export let currentSituation : Situation;
 
     let dragPairs: DragPair[] = [];
 
+    onMount(() => {
+        currentSituation.moments = shuffle([...currentSituation.moments]);
+    })
+
     // function to add a pair
     function addPair(pair: DragPair) {
         dragPairs.push(pair);
+        console.log(dragPairs);
     }
 
+    // function to remove a pair
+    function removePair(pairToRemove: DragPair) {
+        dragPairs = dragPairs.filter(pair => pair.draggable !== pairToRemove.draggable && pair.target !== pairToRemove.target);
+        console.log(dragPairs);
+    }
+
+    // check if the answers are correct
     function checkAnswers() {
         dragPairs.forEach(({ draggable, target }) => {
             const correctMatch = draggable.dataset.id === target.dataset.id;
-            draggable.style.border = correctMatch ? '3px solid green': '3px solid red';
-            target.style.border = correctMatch ? '3px solid green': '3px solid red';
+            draggable.style.border = correctMatch ? '3px solid green' : '3px solid red';
+            target.style.border = correctMatch ? '3px solid green' : '3px solid red';
+        });
+        resetIncorrectPairs();
+    }
+
+
+    function resetIncorrectPairs() {
+        dragPairs.forEach((pair) => {
+            const correctMatch = pair.draggable.dataset.id === pair.target.dataset.id;
+            if (!correctMatch) {
+                pair.draggable.style.position = '';
+                removePair(pair);
+            }
         })
     }
+
 </script>
 
 <div class="scenario-page">
@@ -38,13 +65,13 @@
                 <ul class="max-h-96 flex flex-col gap-5 p-3 overflow-auto">
                     {#each currentSituation.moments as moment}
                         <li 
-                            use:touchDraggable={{ addPair }}
+                            use:touchDraggable={{ addPair, removePair }}
                             data-id={moment.momentId}
                             class="bg-white rounded-lg p-3 rounded-lg"
                         >{ moment.momentSummarization }
                         </li>
                     {/each}
-                    <button class="btn custom-btn-bg" id="checkMatches" on:click={checkAnswers}>Check answers</button>
+                    <button class="btn custom-btn-bg" id="checkMatches" on:click={checkAnswers} >Check answers</button>
                 </ul>
             </div>
         </div>

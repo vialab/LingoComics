@@ -1,7 +1,13 @@
 export interface DragPair {
     draggable: HTMLElement,
     target: HTMLElement
-};
+}
+
+export interface TouchDraggableOptions {
+    addPair: (pair: DragPair) => void;
+    removePair: (pair: DragPair) => void;
+    resetIncorrectPairs?: () => void;
+}
 
 export type FirestoreData = {
     scenarios: Array<StoryStruct>;
