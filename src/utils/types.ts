@@ -1,3 +1,8 @@
+export interface DragPair {
+    draggable: HTMLElement,
+    target: HTMLElement
+};
+
 export type FirestoreData = {
     scenarios: Array<StoryStruct>;
 };
@@ -15,7 +20,7 @@ export type Situation = {
 }
 
 export type Moment = {
-    id: number,
+    momentId: string,
     image: string,
     textOptions: Array<string>,
     momentImageDescriptionResponse: string,
@@ -24,6 +29,7 @@ export type Moment = {
 };
 
 type MomentImage = {
+    momentId: string,
     image: string,
     title: string,
     moment: string

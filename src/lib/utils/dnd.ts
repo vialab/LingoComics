@@ -1,4 +1,6 @@
-export function touchDraggable(node: HTMLElement) {
+import type { DragPair } from "../../utils/types";
+
+export function touchDraggable(node: HTMLElement, { addPair }: { addPair: (pair: DragPair) => void}) {
     let highlightedElement : HTMLElement | null = null;
     const originalWidth : number = node.offsetWidth;
     const originalBackgroundColor : string = node.style.backgroundColor;
@@ -56,11 +58,16 @@ export function touchDraggable(node: HTMLElement) {
         // image tag drop target
         const dropTarget = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
         if (!(dropTarget && dropTarget.tagName === 'IMG')) {
+            // reset <li> to <ul> (default position)
             setTimeout(() => {
                 resetDraggableStyles();
             }, 0);
         } else {
+            // check if correct match
             draggableStyleOnSnap(dropTarget);
+
+            
+            addPair({ draggable: node, target: dropTarget });
         }
     }
 
@@ -84,7 +91,7 @@ export function touchDraggable(node: HTMLElement) {
         node.style.backgroundColor = '#fffffff1';
         node.style.borderRadius = '0';
         node.style.border = '2px solid black';
-        node.style.width = `${originalWidth - 15}px`;
+        if (highlightedElement) node.style.width = `${highlightedElement?.offsetWidth - 5}px`;
         if (highlightedElement) highlightedElement.style.border = '';
     }
 
