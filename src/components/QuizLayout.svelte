@@ -88,16 +88,20 @@
         allCorrectAnswers = false;
         dispatch('nextSituation');
     }
+
+    function handleSituationChange(situationIndex: number) {
+        dispatch('changeSituation', situationIndex);
+    }
 </script>
 
 <div class="scenario-page">
-    <div class="flex flex-col lg:flex-row justify-center items-center max-w-7xl mx-auto p-8 h-auto">
+    <div class="flex flex-col lg:flex-row justify-center items-center max-w-7xl mx-auto p-3 h-auto">
         <!-- left side -->
-        <div class="w-full lg:w-2/3 flex flex-col items-center justify-center">
+        <div class="w-full lg:w-2/3 flex items-center justify-center">
             
-            <div class="join flex flex-row gap-3 mb-5">
+            <div class="join flex flex-col gap-3 mr-5">
                 {#each { length: allSituationLength} as _, i}
-                    <div class="radio {i < currentSituation.situationSort ? 'bg-black' : ''}" tabindex="0" role="button" on:keydown={(e) => e.key === 'Enter'} aria-label="1"></div>   
+                    <div class="radio {i < currentSituation.situationSort ? 'bg-black' : ''}" on:click={() => handleSituationChange(i)} tabindex="0" role="button" on:keydown={(e) => e.key === 'Enter'} aria-label="1"></div>   
                 {/each}
             </div>
 

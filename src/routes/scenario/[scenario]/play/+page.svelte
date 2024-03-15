@@ -18,6 +18,10 @@
     function handleNextSituation() {
         currentSituationIndex += 1;
     }
+    
+    function handleSituationChange(event: Event) {
+        currentSituationIndex = event.detail;
+    }
 </script>
 
 
@@ -32,7 +36,7 @@
     </Header>
 
     <!-- main content -->
-    <QuizLayout currentSituation={currentSituation} allSituationLength={allSituationsLength} on:nextSituation={handleNextSituation} />
+    <QuizLayout currentSituation={currentSituation} allSituationLength={allSituationsLength} on:nextSituation={handleNextSituation} on:changeSituation={handleSituationChange} />
 </div>
 
 
