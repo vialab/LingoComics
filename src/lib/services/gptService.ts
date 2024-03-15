@@ -255,8 +255,8 @@ export async function generateMoments(situations : Situation[], scenario: string
             const momentSummarizationPrompt = summarizeMoment(momentDescription);
             const momentSummarization = (await gptPrompt(openai, chatModel, momentSummarizationPrompt)).choices[0].message.content?.trim() as string;
 
-
-            moments.push({ momentSummarization, momentDescription, momentImageDescriptionResponse });
+            // push structure with uuid for quiz
+            moments.push({ momentId: uuidv4(), momentSummarization, momentDescription, momentImageDescriptionResponse });
         }
 
         structuredSituations.push({
