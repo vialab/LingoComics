@@ -19,8 +19,8 @@
 {#if showToast}
     <div class="toast toast-top toast-end">
         <div class="alert">
-            <span>{text}</span>
             <div class="progress-overlay"></div>
+            <span class="text-black">{text}</span>
         </div>
     </div>
 {/if}
@@ -35,7 +35,7 @@
         left: 0;
         width: 0%;
         height: 60px; /* Adjust height as needed */
-        background-color: #26658f78; /* Or any color you prefer */
+        background-color: #FF8A8078; /* Or any color you prefer */
         animation: fillProgress 2s linear forwards; /* Animation duration matches the timeout */
     }
 
