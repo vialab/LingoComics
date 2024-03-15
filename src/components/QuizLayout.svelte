@@ -3,10 +3,15 @@
     import { touchDraggable } from "$lib/utils/dnd";
 	import { onMount } from "svelte";
 	import { shuffle } from "$lib/utils/helper";
+    import Page from "../routes/+page.svelte";
+    import { goto } from "$app/navigation";
+    import ToastNotification from "./story/ToastNotification.svelte";
 
     export let currentSituation : Situation;
 
     let dragPairs: DragPair[] = [];
+    let allCorrectAnswers: boolean = false;
+    let completedQuiz: boolean = false;
 
     onMount(() => {
         currentSituation.moments = shuffle([...currentSituation.moments]);
@@ -29,15 +34,29 @@
 
     // check if the answers are correct
     function checkAnswers() {
+        let allCorrect = true;
+
         dragPairs.forEach(({ draggable, target }) => {
             const correctMatch = draggable.dataset.id === target.dataset.id;
             draggable.style.border = correctMatch ? '3px solid green' : '3px solid red';
             target.style.border = correctMatch ? '3px solid green' : '3px solid red';
+
+            // if any in correct match then all correct is false
+            if (!correctMatch) allCorrect = false;
         });
-        resetIncorrectPairs();
+        
+        if (allCorrect) {
+            console.log("all pairs are correct");
+            allCorrectAnswers = allCorrect;
+        } else {
+            console.log("some are incorrect");
+
+            // reset incorrect pairs to original position
+            resetIncorrectPairs();
+        }
     }
 
-
+    // reset incorrect image and option pairs
     function resetIncorrectPairs() {
         dragPairs.forEach((pair) => {
             const correctMatch = pair.draggable.dataset.id === pair.target.dataset.id;
@@ -48,6 +67,12 @@
         })
     }
 
+    // function to complete quiz
+    function completeQuiz() {
+        console.log("Saving quiz");
+        console.log("Saved to achievements");
+        completedQuiz = true;
+    }
 </script>
 
 <div class="scenario-page">
@@ -74,10 +99,19 @@
                         >{ moment.momentSummarization }
                         </li>
                     {/each}
-                    <button class="btn custom-btn-bg" id="checkMatches" on:click={checkAnswers} >Check answers</button>
+                    {#if allCorrectAnswers}
+                        <button class="btn custom-btn-bg" id="checkMatches" on:click={completeQuiz}>Complete</button>
+                    {:else}
+                        <button class="btn custom-btn-bg" id="checkMatches" on:click={checkAnswers}>Check answers</button>
+                    {/if}
+                    
                 </ul>
             </div>
         </div>
+
+        {#if completedQuiz}
+            <ToastNotification navigateTo="/scenario" text="Your quiz results have been saved in your Achievements" toastTimer={2000} />
+        {/if}
     </div>
 </div>
 

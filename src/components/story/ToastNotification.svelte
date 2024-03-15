@@ -3,13 +3,15 @@
     import { goto } from "$app/navigation";
 
     export let toastTimer: number = 2000;
+    export let text: string = "";
+    export let navigateTo: string = "";
 
     let showToast = true;
 
     onMount(() => {
         setTimeout(() => {
             showToast = false;
-            goto('/scenario')
+            goto(navigateTo)
         }, toastTimer)
     });
 </script>
@@ -17,7 +19,7 @@
 {#if showToast}
     <div class="toast toast-top toast-end">
         <div class="alert">
-            <span>Story has been successfully created and can be viewed in the Scenario page</span>
+            <span>{text}</span>
             <div class="progress-overlay"></div>
         </div>
     </div>

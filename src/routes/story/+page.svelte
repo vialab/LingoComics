@@ -238,7 +238,7 @@
 			<FinishModal on:toggle={handleFinishStoryCreation} on:finish={handleStoryFinish} isFinishModalOpen={finishModalOpen} />
 			
 			{#if isFinish} 
-				<ToastNotification toastTimer={2000} />
+				<ToastNotification navigateTo="/scenario" text="Story has been successfully created and can be viewed in the Scenario page" toastTimer={2000} />
 			{/if}
 		</div>
 	</div>
