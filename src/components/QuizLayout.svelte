@@ -80,6 +80,8 @@
         dragPairs.forEach((pair) => {
             pair.draggable.style.position = '';
             pair.draggable.style.border = '';
+            pair.draggable.style.width = '';
+            pair.draggable.style.borderRadius = '';
             pair.target.style.border = '';
         });
         dragPairs = [];
@@ -91,7 +93,14 @@
 <div class="scenario-page">
     <div class="flex flex-col lg:flex-row justify-center items-center max-w-7xl mx-auto p-8 h-auto">
         <!-- left side -->
-        <div class="w-full lg:w-2/3 items-center justify-center">
+        <div class="w-full lg:w-2/3 flex flex-col items-center justify-center">
+            
+            <div class="join flex flex-row gap-3 mb-5">
+                {#each { length: allSituationLength} as _, i}
+                    <div class="radio {i < currentSituation.situationSort ? 'bg-black' : ''}" tabindex="0" role="button" on:keydown={(e) => e.key === 'Enter'} aria-label="1"></div>   
+                {/each}
+            </div>
+
             <div class="grid grid-cols-2 gap-3 w-[550px] bg-gray-100 px-5 py-5">
                 {#each currentSituation.image.momentImages as moment}
                     <img src={moment.image} alt={moment.title || ""}  data-id={moment.momentId} />
