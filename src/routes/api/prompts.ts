@@ -31,7 +31,7 @@ export function summarizeStoryPrompt(story: string) {
 
 export function summarizeMoment(moment: string) {
     return `
-        Summarize the following moment: ${moment}, highlighting the key aspects in 6-7 words or less. The summarization should highlight a distinct action if the moment describes one.
+        Summarize the following moment: ${moment}, highlighting the key aspects in 8-10 words or less. The summarization should highlight a distinct action if the moment describes one.
     `;
 }
 

@@ -7,6 +7,7 @@ export interface TouchDraggableOptions {
     addPair: (pair: DragPair) => void;
     removePair: (pair: DragPair) => void;
     resetIncorrectPairs?: () => void;
+    resetFunction?: () => void;
 }
 
 export type FirestoreData = {

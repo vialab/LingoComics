@@ -1,13 +1,15 @@
 <script lang="ts">
-	import type { DragPair, Moment, Situation } from "../utils/types";
+    import type { DragPair, Situation } from "../utils/types";
     import { touchDraggable } from "$lib/utils/dnd";
 	import { onMount } from "svelte";
 	import { shuffle } from "$lib/utils/helper";
-    import Page from "../routes/+page.svelte";
-    import { goto } from "$app/navigation";
     import ToastNotification from "./story/ToastNotification.svelte";
+    import { createEventDispatcher } from "svelte";
 
     export let currentSituation : Situation;
+    export let allSituationLength : number;
+
+    const dispatch = createEventDispatcher();
 
     let dragPairs: DragPair[] = [];
     let allCorrectAnswers: boolean = false;
@@ -69,9 +71,19 @@
 
     // function to complete quiz
     function completeQuiz() {
-        console.log("Saving quiz");
-        console.log("Saved to achievements");
         completedQuiz = true;
+    }
+
+    // go to next situation and reset any variables needing reset
+    function handleNextSituation() {
+        dragPairs.forEach((pair) => {
+            pair.draggable.style.position = '';
+            pair.draggable.style.border = '';
+            pair.target.style.border = '';
+        });
+        dragPairs = [];
+        allCorrectAnswers = false;
+        dispatch('nextSituation');
     }
 </script>
 
@@ -99,8 +111,10 @@
                         >{ moment.momentSummarization }
                         </li>
                     {/each}
-                    {#if allCorrectAnswers}
+                    {#if allCorrectAnswers && allSituationLength === currentSituation.situationSort}
                         <button class="btn custom-btn-bg" id="checkMatches" on:click={completeQuiz}>Complete</button>
+                    {:else if allCorrectAnswers}
+                        <button class="btn custom-btn-bg" on:click={handleNextSituation}>Next situation</button>
                     {:else}
                         <button class="btn custom-btn-bg" id="checkMatches" on:click={checkAnswers}>Check answers</button>
                     {/if}

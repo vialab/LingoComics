@@ -108,6 +108,8 @@ export function touchDraggable(node: HTMLElement, options: TouchDraggableOptions
         if (highlightedElement) highlightedElement.style.border = '';
     }
 
+    
+
     // handle touch start
     node.addEventListener('touchstart', handleTouchStart);
 

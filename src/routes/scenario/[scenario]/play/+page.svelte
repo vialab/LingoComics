@@ -1,8 +1,5 @@
 <script lang="ts">
-    import { page } from "$app/stores";
-    import { fade } from "svelte/transition";
     import Header from "../../../../components/Header.svelte";
-    import type { Moment, Scenario, Situation } from "../../data";
     import QuizLayout from "../../../../components/QuizLayout.svelte";
 	import type { StoryStruct } from "../../../../utils/types";
 	import BackButton from "../../../../components/scenarios/BackButton.svelte";
@@ -13,9 +10,14 @@
     // variables
     let scenario : StoryStruct = (data.scenario as { story: StoryStruct }).story;
     let currentSituationIndex : number = 0;
-    let currentSituation = scenario.situations[currentSituationIndex];
+    let allSituationsLength: number = scenario.situations.length;
+    
+    // current situation is reactive
+    $: currentSituation = scenario.situations[currentSituationIndex];
 
-    console.log('playing: scenario', scenario.situations[currentSituationIndex].moments);    
+    function handleNextSituation() {
+        currentSituationIndex += 1;
+    }
 </script>
 
 
@@ -23,14 +25,14 @@
     <!-- header elements -->
     <Header>
         <BackButton slot="back"  route="/scenario/{scenario.scenarioId}"/>
-        <h1 slot="title" class="flex-1 text-center text-3xl pb-2 w-full title">{ scenario.scenario.replaceAll('"', '') }</h1>
+        <h1 slot="title" class="flex-1 text-center text-3xl pb-2 w-full title">{ scenario.situations[currentSituationIndex].title }</h1>
         <svelte:fragment slot="info">
             <p class="flex-1"></p>
         </svelte:fragment>
     </Header>
 
     <!-- main content -->
-    <QuizLayout currentSituation={currentSituation} />
+    <QuizLayout currentSituation={currentSituation} allSituationLength={allSituationsLength} on:nextSituation={handleNextSituation} />
 </div>
 
 
