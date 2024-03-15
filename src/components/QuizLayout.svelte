@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { DragPair, Situation } from "../utils/types";
-    import { touchDraggable } from "$lib/utils/dnd";
+    import { touchDraggable } from "$lib/utils/dnd-touch";
+    import { mouseDraggable } from '$lib/utils/dnd';
 	import { onMount } from "svelte";
 	import { shuffle } from "$lib/utils/helper";
     import ToastNotification from "./story/ToastNotification.svelte";
@@ -106,6 +107,7 @@
                     {#each currentSituation.moments as moment}
                         <li 
                             use:touchDraggable={{ addPair, removePair }}
+                            use:mouseDraggable={{ addPair, removePair }}
                             data-id={moment.momentId}
                             class="bg-white rounded-lg p-3 rounded-lg"
                         >{ moment.momentSummarization }
@@ -138,5 +140,8 @@
     ul {
         max-height: 475px;
         transition: all 0.5s ease;
+    }
+    li:hover {
+        cursor: grab;
     }
 </style>
