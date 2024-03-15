@@ -2,9 +2,15 @@ import type { TouchDraggableOptions } from "../../utils/types";
 
 export function touchDraggable(node: HTMLElement, options: TouchDraggableOptions) {
     let highlightedElement : HTMLElement | null = null;
+    
+    const originalX : string = node.style.left;
+    const originalY : string = node.style.top;
+
     const originalWidth : number = node.offsetWidth;
     const originalBackgroundColor : string = node.style.backgroundColor;
     const originalBorderRadius : string = node.style.borderRadius;
+
+    node.style.transition = 'all 0.5s ease';
 
     // handle the event when the user starts touching
     function handleTouchStart() {
@@ -22,6 +28,9 @@ export function touchDraggable(node: HTMLElement, options: TouchDraggableOptions
     // handle the event when the user is dragging the element
     function handleTouchMove(event: TouchEvent) {
         event.preventDefault();
+
+        // no transition when moving
+        node.style.transition = '';
 
         const touch = event.touches[0];
         const newX = touch.clientX;
@@ -52,6 +61,7 @@ export function touchDraggable(node: HTMLElement, options: TouchDraggableOptions
 
     // handle the event when the touch ends
     function handleTouchEnd(event: TouchEvent) {
+        node.style.transition = 'all 0.5s ease';
         node.removeEventListener('touchmove', handleTouchMove);
         node.removeEventListener('touchend', handleTouchEnd);
 
@@ -75,6 +85,8 @@ export function touchDraggable(node: HTMLElement, options: TouchDraggableOptions
     // reset draggable nodes styling
     function resetDraggableStyles() {
         node.style.position = '';
+        node.style.left = `${originalX}px`;
+        node.style.top = `${originalY}px`;
         node.style.zIndex = '';
 
         node.style.backgroundColor = originalBackgroundColor;

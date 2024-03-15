@@ -14,14 +14,17 @@
 
     // function to add a pair
     function addPair(pair: DragPair) {
-        dragPairs.push(pair);
-        console.log(dragPairs);
+        const existingPairs = dragPairs.findIndex(p => p.draggable === pair.draggable);
+        if (existingPairs !== -1) {
+            dragPairs[existingPairs] = pair;
+        } else {
+            dragPairs.push(pair);
+        }
     }
 
     // function to remove a pair
     function removePair(pairToRemove: DragPair) {
         dragPairs = dragPairs.filter(pair => pair.draggable !== pairToRemove.draggable && pair.target !== pairToRemove.target);
-        console.log(dragPairs);
     }
 
     // check if the answers are correct
@@ -59,10 +62,10 @@
         </div>
 
         <!-- right side -->
-        <div class="w-full lg:w-1/3">
-            <div class="bg-gray-100 rounded-lg p-5">
+        <div class="w-full lg:w-1/3 h-full flex flex-col">
+            <div class="bg-gray-100 rounded-lg p-5 flex flex-col flex-grow">
                 <h1 class="text-2xl ">Options</h1>
-                <ul class="max-h-96 flex flex-col gap-5 p-3 overflow-auto">
+                <ul class="flex flex-col gap-5 p-3 overflow-auto flex-grow">
                     {#each currentSituation.moments as moment}
                         <li 
                             use:touchDraggable={{ addPair, removePair }}
@@ -82,5 +85,10 @@
     .scenario-page {
         overflow-y: scroll;
         height: calc(100vh - 80px);
+    }
+
+    ul {
+        max-height: 475px;
+        transition: all 0.5s ease;
     }
 </style>
