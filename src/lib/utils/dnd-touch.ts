@@ -78,17 +78,14 @@ export function touchDraggable(node: HTMLElement, options: TouchDraggableOptions
         // check if pair exists
         let dragPairs = get(dragAssociationPairs);
         let pairExists = dragPairs.some(pair => pair.target.dataset.id === (dropTarget as HTMLElement).dataset.id);
-        // let pairExists2 = dragPairs.some(pair => pair.target.dataset.id === node.dataset.id);
+        let pairExists2 = dragPairs.some(pair => pair.target.dataset.id === node.dataset.id);
 
         if (pairExists) {
             let swapNode = dragPairs.find(pair => pair.target.dataset.id === (dropTarget as HTMLElement).dataset.id);
-
             if (swapNode) {
-                console.log("drag on pairs", lastPairX, lastPairY, swapNode.draggable.style.left, swapNode.draggable.style.top);
                 node.style.left = lastPairX;
                 node.style.top = lastPairY;
             }
-            
         } else if (dropTarget && dropTarget.tagName === 'IMG') {
             // check if correct match
             draggableStyleOnSnap(dropTarget);

@@ -11,6 +11,8 @@
     export let currentSituation : Situation;
     export let allSituationLength : number;
 
+    console.log(currentSituation);
+
     const dispatch = createEventDispatcher();
 
     let allCorrectAnswers: boolean = false;
@@ -29,7 +31,6 @@
         } else {
             $dragAssociationPairs.push(pair);
         }
-        console.log($dragAssociationPairs);
 
     }
 
@@ -39,7 +40,6 @@
         dragAssociationPairs.update(items => {
             return items.filter(pair => pair.draggable !== pairToRemove.draggable && pair.target !== pairToRemove.target);
         });
-        console.log($dragAssociationPairs);
     }
 
     // check if the answers are correct
@@ -56,11 +56,8 @@
         });
         
         if (allCorrect) {
-            console.log("all pairs are correct");
             allCorrectAnswers = allCorrect;
         } else {
-            console.log("some are incorrect");
-
             // reset incorrect pairs to original position
             resetIncorrectPairs();
         }
@@ -99,6 +96,33 @@
         dispatch('nextSituation');
     }
 
+    function escapeRegExp(string: string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escapes special characters
+    }
+
+    function highlightKeywords(summary: string, keywords: Record<string, string>): string {
+        let highlightedSummary = summary;
+        const highlightClasses = ['highlight-1', 'highlight-2', 'highlight-3', 'highlight-4', 'highlight-5'];
+        let colorIndex = 0;
+        if (keywords) {
+            Object.keys(keywords).forEach(keyword => {
+                const escapedKeyword = escapeRegExp(keyword);
+                const regex = new RegExp(`\\b${escapedKeyword}\\b`, 'gi');
+                const highlightClass = highlightClasses[colorIndex % highlightClasses.length];
+                highlightedSummary = highlightedSummary.replace(regex, `<span class="highlight ${highlightClass}">$&</span>`);
+                colorIndex += 1;
+            });
+        }
+        return highlightedSummary;
+    }
+
+    function handleParentClick(event: Event) {
+        const element : HTMLElement = event.target as HTMLElement;
+        if (element.classList.contains('highlight')) {
+            console.log("keyword: clicked: ", element.textContent);
+        }
+    }
+
     // handle next situation change
     function handleSituationChange(situationIndex: number) {
         dispatch('changeSituation', situationIndex);
@@ -106,6 +130,7 @@
 </script>
 
 <div class="scenario-page">
+    <p class="text-center italic">Drag each option from the right and drop it onto the image that you believe matches its description best</p>
     <div class="flex flex-col lg:flex-row justify-center items-center max-w-7xl mx-auto p-3 h-auto">
         <!-- left side -->
         <div class="w-full lg:w-2/3 flex items-center justify-center">
@@ -126,16 +151,21 @@
         <!-- right side -->
         <div class="w-full lg:w-1/3 h-full flex flex-col">
             <div class="bg-gray-100 rounded-lg p-5 flex flex-col flex-grow">
-                <h1 class="text-2xl ">Options</h1>
+                <!-- <h1 class="text-2xl ">Options</h1> -->
                 <ul class="flex flex-col gap-5 p-3 overflow-auto flex-grow">
                     {#each currentSituation.moments as moment}
-                        <li 
+                        <div
+                            on:click={handleParentClick}
                             use:touchDraggable={{ addPair, removePair }}
                             use:mouseDraggable={{ addPair, removePair }}
                             data-id={moment.momentId}
                             class="bg-white rounded-lg p-3 rounded-lg"
-                        >{ moment.momentSummarization }
-                        </li>
+                            tabindex="0" 
+                            role="button" 
+                            on:keydown={(e) => e.key === 'Enter'}
+                        >
+                            {@html highlightKeywords(moment.momentSummarization, moment.keywords ?? {}) }
+                        </div>
                     {/each}
                     {#if allCorrectAnswers && allSituationLength === currentSituation.situationSort}
                         <button class="btn custom-btn-bg" id="checkMatches" on:click={completeQuiz}>Complete</button>
@@ -167,4 +197,26 @@
     li:hover {
         cursor: grab;
     }
+    :global(.highlight) {
+        padding: 3px;
+        border-radius: 5px;
+        margin: 1px;
+        z-index: 2000;
+    }
+    :global(.highlight-1) {
+        background-color: #69DDFF;
+    }
+    :global(.highlight-2) {
+        background-color: #96CDFF;
+    }
+    :global(.highlight-3) {
+        background-color: #D8E1FF;
+    }
+    :global(.highlight-4) {
+        background-color: #DBBADD;
+    }
+    :global(.highlight-5) {
+        background-color: #BE92A2;
+    }
+
 </style>

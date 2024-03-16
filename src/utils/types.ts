@@ -30,6 +30,7 @@ export type Situation = {
 export type Moment = {
     momentId: string,
     image: string,
+    keywords: Record<string, string>,
     textOptions: Array<string>,
     momentImageDescriptionResponse: string,
     momentDescription: string,
