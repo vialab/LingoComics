@@ -6,7 +6,6 @@
 	import { shuffle } from "$lib/utils/helper";
     import ToastNotification from "./story/ToastNotification.svelte";
     import { createEventDispatcher } from "svelte";
-    import { writable } from "svelte/store";
     import { dragAssociationPairs } from "$lib/stores/dragStore";
 
     export let currentSituation : Situation;
@@ -100,6 +99,7 @@
         dispatch('nextSituation');
     }
 
+    // handle next situation change
     function handleSituationChange(situationIndex: number) {
         dispatch('changeSituation', situationIndex);
     }
@@ -144,7 +144,6 @@
                     {:else}
                         <button class="btn custom-btn-bg" id="checkMatches" on:click={checkAnswers}>Check answers</button>
                     {/if}
-                    
                 </ul>
             </div>
         </div>
