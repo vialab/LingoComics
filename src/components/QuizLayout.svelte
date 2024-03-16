@@ -6,13 +6,14 @@
 	import { shuffle } from "$lib/utils/helper";
     import ToastNotification from "./story/ToastNotification.svelte";
     import { createEventDispatcher } from "svelte";
+    import { writable } from "svelte/store";
+    import { dragAssociationPairs } from "$lib/stores/dragStore";
 
     export let currentSituation : Situation;
     export let allSituationLength : number;
 
     const dispatch = createEventDispatcher();
 
-    let dragPairs: DragPair[] = [];
     let allCorrectAnswers: boolean = false;
     let completedQuiz: boolean = false;
 
@@ -22,29 +23,36 @@
 
     // function to add a pair
     function addPair(pair: DragPair) {
-        const existingPairs = dragPairs.findIndex(p => p.draggable === pair.draggable);
+        const existingPairs = $dragAssociationPairs.findIndex(p => p.draggable === pair.draggable);
+
         if (existingPairs !== -1) {
-            dragPairs[existingPairs] = pair;
+            $dragAssociationPairs[existingPairs] = pair;
         } else {
-            dragPairs.push(pair);
+            $dragAssociationPairs.push(pair);
         }
+        console.log($dragAssociationPairs);
+
     }
 
     // function to remove a pair
     function removePair(pairToRemove: DragPair) {
-        dragPairs = dragPairs.filter(pair => pair.draggable !== pairToRemove.draggable && pair.target !== pairToRemove.target);
+        // update svelte store
+        dragAssociationPairs.update(items => {
+            return items.filter(pair => pair.draggable !== pairToRemove.draggable && pair.target !== pairToRemove.target);
+        });
+        console.log($dragAssociationPairs);
     }
 
     // check if the answers are correct
     function checkAnswers() {
         let allCorrect = true;
 
-        dragPairs.forEach(({ draggable, target }) => {
+        $dragAssociationPairs.forEach(({ draggable, target }) => {
             const correctMatch = draggable.dataset.id === target.dataset.id;
             draggable.style.border = correctMatch ? '3px solid green' : '3px solid red';
             target.style.border = correctMatch ? '3px solid green' : '3px solid red';
 
-            // if any in correct match then all correct is false
+            // if any incorrct match then all correct is false
             if (!correctMatch) allCorrect = false;
         });
         
@@ -57,34 +65,37 @@
             // reset incorrect pairs to original position
             resetIncorrectPairs();
         }
+
     }
 
     // reset incorrect image and option pairs
     function resetIncorrectPairs() {
-        dragPairs.forEach((pair) => {
+        $dragAssociationPairs.forEach((pair) => {
             const correctMatch = pair.draggable.dataset.id === pair.target.dataset.id;
             if (!correctMatch) {
                 pair.draggable.style.position = '';
                 removePair(pair);
             }
-        })
+        });
     }
 
     // function to complete quiz
     function completeQuiz() {
         completedQuiz = true;
+        // clear writable when quiz ends
+        $dragAssociationPairs = [];
     }
 
     // go to next situation and reset any variables needing reset
     function handleNextSituation() {
-        dragPairs.forEach((pair) => {
+        $dragAssociationPairs.forEach((pair) => {
             pair.draggable.style.position = '';
             pair.draggable.style.border = '';
             pair.draggable.style.width = '';
             pair.draggable.style.borderRadius = '';
             pair.target.style.border = '';
         });
-        dragPairs = [];
+        $dragAssociationPairs = [];
         allCorrectAnswers = false;
         dispatch('nextSituation');
     }

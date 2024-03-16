@@ -19,7 +19,7 @@
         currentSituationIndex += 1;
     }
     
-    function handleSituationChange(event: Event) {
+    function handleSituationChange(event: CustomEvent) {
         currentSituationIndex = event.detail;
     }
 </script>
