@@ -122,16 +122,16 @@
 
 <div class="scenario-page">
     <p class="text-center italic">Drag each option from the right and drop it onto the image that you believe matches its description best</p>
-    <div class="flex flex-col lg:flex-row justify-center items-center max-w-7xl mx-auto p-3 h-auto">
+    <div class="flex flex-col lg:flex-row justify-center items-center max-w-7xl mx-auto p-3 h-auto gap-3">
         {#if showModal}
             <Modal moment={selectedMoment} on:close={() => showModal = false} />
         {/if}
 
         <!-- left side -->
-        <div class="w-full lg:w-2/3 flex items-center justify-center">
+        <div class="w-full left-side flex items-center justify-center">
             <PaginationButton situationLength={allSituationLength} currentSituationNumber={currentSituation.situationSort} handleSituationChange={handleSituationChange} />
 
-            <div class="grid grid-cols-2 gap-3 w-[550px] bg-gray-100 px-5 py-5">
+            <div class="grid grid-cols-2 gap-3 w-[550px] bg-gray-100 px-5 py-5 rounded-lg">
                 {#each currentSituation.image.momentImages as moment}
                     <img src={moment.image} alt={moment.title || ""}  data-id={moment.momentId} />
                 {/each}
@@ -139,7 +139,7 @@
         </div>
 
         <!-- right side -->
-        <div class="w-full lg:w-1/3 h-full flex flex-col">
+        <div class="w-full right-side h-full flex flex-col">
             <div class="bg-gray-100 rounded-lg p-3 flex flex-col flex-grow">
                 <!-- <h1 class="text-2xl ">Options</h1> -->
                 <ul class="flex flex-col gap-5 p-3 overflow-auto flex-grow">
@@ -176,6 +176,13 @@
 </div>
 
 <style>
+    .left-side {
+        width: 60%;
+    }
+    .right-side {
+        width: 40%;
+        height: 542px;
+    }
     .scenario-page {
         overflow-y: scroll;
         height: calc(100vh - 80px);
