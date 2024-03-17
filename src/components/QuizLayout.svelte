@@ -10,6 +10,7 @@
     import PaginationButton from "./scenarios/PaginationButton.svelte";
     import Modal from "./scenarios/Modal.svelte";
     import { highlightKeywords } from "$lib/utils/highlight-keywords";
+    import Loading from "./Loading.svelte";
 
     export let currentSituation : Situation;
     export let allSituationLength : number;
