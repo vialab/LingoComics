@@ -170,12 +170,12 @@
                 <!-- <h1 class="text-2xl ">Options</h1> -->
                 <ul class="flex flex-col gap-5 p-3 overflow-auto flex-grow">
                     {#each currentSituation.moments as moment}
-                        <div class="flex flex-row draggable">
+                        <div class="flex flex-row w-full">
                             <div
                                 use:touchDraggable={{ addPair, removePair, isDragging }}
                                 use:mouseDraggable={{ addPair, removePair, isDragging }}
                                 data-id={moment.momentId}
-                                class="bg-white rounded-lg p-3"
+                                class="bg-white rounded-lg p-3 draggable"
                             >
                                 {@html highlightKeywords(moment.momentSummarization, moment.keywords ?? {}) }
                             </div>  
@@ -222,6 +222,9 @@
     ul {
         max-height: 475px;
         transition: all 0.5s ease;
+    }
+    .draggable {
+        width: 80%;
     }
     .draggable:hover {
         cursor: grab;

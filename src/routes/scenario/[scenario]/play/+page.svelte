@@ -31,7 +31,9 @@
     <Header>
         <BackButton slot="back"  route="/scenario/{scenario.scenarioId}"/>
         <h1 slot="title" class="flex-1 text-center text-3xl pb-2 w-full title">{ scenario.situations[currentSituationIndex].title }</h1>
-        <Dropdown slot="info" />
+        <svelte:fragment slot="info">
+            <p class="flex-1"></p>
+        </svelte:fragment>
     </Header>
 
     <!-- main content -->
