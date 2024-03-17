@@ -10,8 +10,8 @@
     import PaginationButton from "./scenarios/PaginationButton.svelte";
     import Modal from "./scenarios/Modal.svelte";
     import { highlightKeywords } from "$lib/utils/highlight-keywords";
-    import Loading from "./Loading.svelte";
-
+    import { selectedLanguage } from "$lib/stores/languageStore";
+    
     export let currentSituation : Situation;
     export let allSituationLength : number;
 
@@ -28,7 +28,9 @@
 
     onMount(() => {
         currentSituation.moments = shuffle([...currentSituation.moments]);
-    })
+    });
+
+    $: () => console.log($selectedLanguage);
 
     // function to add a pair
     function addPair(pair: DragPair) {
@@ -178,10 +180,10 @@
                                 {@html highlightKeywords(moment.momentSummarization, moment.keywords ?? {}) }
                             </div>  
                             <div class="flex flex-col gap-3 ml-3">
-                                <div class="flex justify-center items-center bg-white rounded-lg p-3" on:click={handleParentClick(moment)} tabindex="0" role="button" on:keydown={(e) => e.key === 'Enter'}>
+                                <div class="util-btn flex justify-center items-center bg-white rounded-lg p-3" on:click={handleParentClick(moment)} tabindex="0" role="button" on:keydown={(e) => e.key === 'Enter'}>
                                     Expand
                                 </div>
-                                <div class="flex justify-center items-center bg-white rounded-lg p-3" on:click={handleTextToSpeech(moment)} tabindex="0" role="button" on:keydown={(e) => e.key === 'Enter'}>
+                                <div class="util-btn flex justify-center items-center bg-white rounded-lg p-3" on:click={handleTextToSpeech(moment)} tabindex="0" role="button" on:keydown={(e) => e.key === 'Enter'}>
                                     Speech
                                     <audio bind:this={audioElement} src={audio}></audio>
                                 </div>
@@ -223,6 +225,9 @@
     }
     .draggable:hover {
         cursor: grab;
+    }
+    .util-btn {
+        transition: all 0.5s ease;
     }
     :global(.highlight) {
         padding: 3px;

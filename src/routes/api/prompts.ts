@@ -200,6 +200,12 @@ export function getKeywordPrompts(moment: string) {
     `;
 }
 
+export function translateTextPrompt(text: string, language: string) {
+    return `
+        Translate this text: ${text} to ${language}.
+        Only give the translation.
+    `;
+}
 
 /**
  * 

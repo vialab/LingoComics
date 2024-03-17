@@ -26,11 +26,10 @@
             <p class="mb-5">{@html highlightKeywords(moment.momentSummarization, moment.keywords ?? {})}</p>
 
             {#each Object.entries(moment.keywords)  as [word, description], i}
-                
-                <h3 class="text-xl">
+                <h3 class="text-xl mt-4">
                     <span class="highlight {highlightClasses[i % highlightClasses.length]}">{word.charAt(0).toUpperCase() + word.slice(1)}</span> 
                 </h3>
-                <p class="pb-2">{description.charAt(0).toUpperCase() + description.slice(1)}</p>
+                <p class="pb-2 mt-2">{description.charAt(0).toUpperCase() + description.slice(1)}</p>
                 <hr />
             {/each}
             <div class="modal-action">
