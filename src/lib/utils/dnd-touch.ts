@@ -17,7 +17,7 @@ export function touchDraggable(node: HTMLElement, options: TouchDraggableOptions
     const originalBorderRadius : string = node.style.borderRadius;
 
     node.style.transition = 'all 0.5s ease';
-
+    
     // handle the event when the user starts touching
     function handleTouchStart() {
         // lastImageElement?.classList.remove("pair");

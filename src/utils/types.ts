@@ -6,6 +6,7 @@ export interface DragPair {
 export interface TouchDraggableOptions {
     addPair: (pair: DragPair) => void;
     removePair: (pair: DragPair) => void;
+    isDragging: boolean;
     handleSwap?: (pair1: DragPair, pair2: DragPair) => void;
     resetIncorrectPairs?: () => void;
     resetFunction?: () => void;
