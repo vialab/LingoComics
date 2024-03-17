@@ -17,6 +17,8 @@
     let isDragging: boolean = true;
     let showModal: boolean = false;
     let selectedMoment : Moment;
+    let audio : string = '';
+    let audioElement : HTMLAudioElement;
 
     const dispatch = createEventDispatcher();
 
@@ -118,6 +120,27 @@
         dispatch('changeSituation', situationIndex);
     }
 
+    function handleTextToSpeech(moment: Moment) {
+        return async function(event: Event) {
+            try {
+                const response = await fetch(`/api/tts`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': "application/json"
+                    },
+                    body: JSON.stringify({ text: moment.momentSummarization })
+                });
+                const data = await response.json();
+                audio = data.audio;
+                if (audioElement) {
+                    audioElement.src = audio;
+                    await audioElement.play();
+                }
+            } catch (error) {
+                console.error("Error calling text-to-speech API:", error);
+            }
+        }
+    }
 </script>
 
 <div class="scenario-page">
@@ -153,8 +176,14 @@
                             >
                                 {@html highlightKeywords(moment.momentSummarization, moment.keywords ?? {}) }
                             </div>  
-                            <div class="flex justify-center items-center bg-white rounded-lg p-3" on:click={handleParentClick(moment)} tabindex="0" role="button" on:keydown={(e) => e.key === 'Enter'}>
-                                Expand
+                            <div class="flex flex-col gap-3 ml-3">
+                                <div class="flex justify-center items-center bg-white rounded-lg p-3" on:click={handleParentClick(moment)} tabindex="0" role="button" on:keydown={(e) => e.key === 'Enter'}>
+                                    Expand
+                                </div>
+                                <div class="flex justify-center items-center bg-white rounded-lg p-3" on:click={handleTextToSpeech(moment)} tabindex="0" role="button" on:keydown={(e) => e.key === 'Enter'}>
+                                    Speech
+                                    <audio bind:this={audioElement} src={audio}></audio>
+                                </div>
                             </div>
                         </div>
                     {/each}
@@ -186,9 +215,6 @@
     .scenario-page {
         overflow-y: scroll;
         height: calc(100vh - 80px);
-    }
-    .row-btns {
-        width: 46%;
     }
     ul {
         max-height: 475px;

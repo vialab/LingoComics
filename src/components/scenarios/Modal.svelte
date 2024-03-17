@@ -1,12 +1,9 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import type { Moment } from "../../utils/types";
-    import BackButton from "./BackButton.svelte";
     import { highlightKeywords } from "$lib/utils/highlight-keywords";
     export let moment : Moment;
     
-    console.log(moment);
-
     let showModal = true;
 
     const dispatch = createEventDispatcher();
