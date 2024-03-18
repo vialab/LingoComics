@@ -20,6 +20,9 @@
     let selectedMoment : Moment;
     let audio : string = '';
     let audioElement : HTMLAudioElement;
+    
+    // game points
+    let points = 0;
 
     const dispatch = createEventDispatcher();
 
@@ -67,6 +70,8 @@
         
         if (allCorrect) {
             allCorrectAnswers = allCorrect;
+            points += 100;
+            dispatch('updatePoints', { points });
         } else {
             // reset incorrect pairs to original position
             resetIncorrectPairs();
@@ -157,7 +162,7 @@
         <div class="w-full left-side flex items-center justify-center">
             <PaginationButton situationLength={allSituationLength} currentSituationNumber={currentSituation.situationSort} handleSituationChange={handleSituationChange} />
 
-            <div class="grid grid-cols-2 gap-3 w-[550px] bg-gray-100 px-5 py-5 rounded-lg">
+            <div class="grid grid-cols-2 gap-3 w-[500px] bg-gray-100 px-5 py-5 rounded-lg">
                 {#each currentSituation.image.momentImages as moment}
                     <img src={moment.image} alt={moment.title || ""}  data-id={moment.momentId} />
                 {/each}
@@ -170,7 +175,7 @@
                 <!-- <h1 class="text-2xl ">Options</h1> -->
                 <ul class="flex flex-col gap-5 p-3 overflow-auto flex-grow">
                     {#each currentSituation.moments as moment}
-                        <div class="flex flex-row w-full">
+                        <div class="flex flex-row w-full text-sm">
                             <div
                                 use:touchDraggable={{ addPair, removePair, isDragging }}
                                 use:mouseDraggable={{ addPair, removePair, isDragging }}
@@ -213,7 +218,7 @@
     }
     .right-side {
         width: 40%;
-        height: 542px;
+        height: 502px;
     }
     .scenario-page {
         overflow-y: scroll;

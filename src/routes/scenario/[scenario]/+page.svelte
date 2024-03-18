@@ -23,5 +23,5 @@
         </svelte:fragment> 
     </Header>
 
-    <ScenarioCard image={scenario.image} scenario={scenario.scenario} scenarioId={scenario.scenarioId} />
+    <ScenarioCard image={scenario.image} image2={scenario.situations[0].image.situationImage} scenario={scenario.scenario} scenarioId={scenario.scenarioId} />
 </div>

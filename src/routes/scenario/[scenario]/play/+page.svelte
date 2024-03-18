@@ -8,6 +8,8 @@
     // get data from +page.ts
     export let data;
 
+    let points : number = 0;
+
     // variables
     let scenario : StoryStruct = (data.scenario as { story: StoryStruct }).story;
     let currentSituationIndex : number = 0;
@@ -23,6 +25,10 @@
     function handleSituationChange(event: CustomEvent) {
         currentSituationIndex = event.detail;
     }
+
+    function handlePoints(event: CustomEvent) {
+        points = event.detail.points;
+    }
 </script>
 
 
@@ -31,13 +37,19 @@
     <Header>
         <BackButton slot="back"  route="/scenario/{scenario.scenarioId}"/>
         <h1 slot="title" class="flex-1 text-center text-3xl pb-2 w-full title">{ scenario.situations[currentSituationIndex].title }</h1>
-        <svelte:fragment slot="info">
-            <p class="flex-1"></p>
-        </svelte:fragment>
+        <div slot="info" class="flex flex-1 h-full justify-center items-center">
+            <p class="text-xl text-bold">Points: { points }</p>
+        </div>
     </Header>
 
     <!-- main content -->
-    <QuizLayout currentSituation={currentSituation} allSituationLength={allSituationsLength} on:nextSituation={handleNextSituation} on:changeSituation={handleSituationChange} />
+    <QuizLayout 
+        currentSituation={currentSituation} 
+        allSituationLength={allSituationsLength} 
+        on:nextSituation={handleNextSituation} 
+        on:changeSituation={handleSituationChange} 
+        on:updatePoints={handlePoints}
+    />
 </div>
 
 
