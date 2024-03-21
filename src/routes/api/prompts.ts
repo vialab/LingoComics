@@ -232,6 +232,25 @@ export function generateOptions(text: string) {
     `
 }
 
+export function generateContinueNarrativePrompt(previousOption: string, selectedOption: string) {
+    return `
+        Generate a small length sentence for: ${selectedOption}.
+        Make the tone of the sentence be in a narrative perspective so as to set up a scene for the same story in the sentence.
+        The last narrative for the story was: ${previousOption}, so make the new small length narrative option adhere to the new option.
+    `;
+}
+
+export function generateNewImagePrompt(characterDescription: string, setting: string, storyTitle: string, narrative: string) {
+    return `
+        Generate a comic-style image for the story: "${storyTitle}".
+        The current narrative of the story is as follows: "${narrative}".
+        The character description is: ${characterDescription}.
+        The setting is: ${setting}.
+        The image should convey the character's emotion and interacting with any substance that the current narrative describes.
+        The setting can be altered slightly to adhere to the current narrative. 
+        The character should NOT be looking directly at the screen, rather they should interact or perform some sort of action that makes sense for the current narrative that is outlined.
+    `;
+}
 /**
  * 
  * Given this moment ${moment}.

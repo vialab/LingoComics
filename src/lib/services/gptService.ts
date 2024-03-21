@@ -78,6 +78,40 @@ export async function generateImage(prompt: string) {
     }
 }
 
+
+export async function generateImageNoSave(prompt: string) {
+    try {
+        const response = await openai.images.generate({
+            prompt: prompt,
+            model: imageModel,
+            n: 1,
+            size: '1024x1024',
+        });
+
+        // fetch image from URL
+        const imageUrl = response.data[0].url;
+        if (typeof imageUrl !== 'string') {
+            throw new Error('Invalid URL');
+        }
+        
+        const imageResponse = await fetch(imageUrl);
+        const arrayBuffer = await imageResponse.arrayBuffer();
+
+        const imageBuffer = Buffer.from(arrayBuffer);
+
+        // convert the buffer to a base64 string
+        const base64data = imageBuffer.toString('base64');
+
+        const imageBase64String = `data:image/png;base64,${base64data}`;
+        
+        // send base64 string as a response
+        return imageBase64String;
+        // return response.data[0].url;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 /**
  * Function to generate a detailed character description based on randomly generated attributes
  * @returns character description

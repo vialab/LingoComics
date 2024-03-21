@@ -1,8 +1,8 @@
 import { gptPrompt } from '$lib/services/gptService.js';
 import OpenAI from 'openai';
-import type { StoryStruct } from '../../../../utils/types.js';
+import type { StoryStruct } from '../../../../../utils/types.js';
 import { env } from '$env/dynamic/private';
-import { generateNarrativePrompt, generateNextStepPrompt, generateOptions } from '../../prompts.js';
+import { generateNarrativePrompt, generateNextStepPrompt, generateOptions } from '../../../prompts.js';
 import { text } from '@sveltejs/kit';
 
 const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
@@ -16,9 +16,6 @@ export const POST = async ({ request }) => {
     let moment : string = scenario.situations[0].moments[0].momentSummarization;
     
     try {
-
-        // phase 1 
-
         // narrative
         const narrativePrompt = generateNarrativePrompt(moment);
         const completion = (await gptPrompt(openai, chatModel, narrativePrompt)).choices[0].message.content?.trim() as string;

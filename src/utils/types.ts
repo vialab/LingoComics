@@ -74,11 +74,13 @@ export const emptyStoryStruct: StoryStruct = {
 export type Scene = {
     narrative: string,
     nextStep: string,
-    options: string[]
+    options: string[],
+    image: ""
 }
 
 export const defaultScene: Scene = {
     narrative: "",
     nextStep: "",
-    options: []
+    options: [],
+    image: ""
 }
