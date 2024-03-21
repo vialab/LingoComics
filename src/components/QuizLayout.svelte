@@ -180,6 +180,7 @@
                     {#each currentSituation.moments as moment}
                         <div class="flex flex-row w-full text-sm w-full bg-white rounded-lg p-3" >
                             <div class="container">
+                                <div class="absolute rounded-lg pl-3">{moment.momentSummarization}</div>
                                 <div
                                     use:touchDraggable={{ addPair, removePair, isDragging }}
                                     use:mouseDraggable={{ addPair, removePair, isDragging }}
