@@ -17,16 +17,54 @@ export function touchDraggable(node: HTMLElement, options: TouchDraggableOptions
     const originalBorderRadius : string = node.style.borderRadius;
 
     node.style.transition = 'all 0.5s ease';
+
+    let clone : HTMLElement;
     
     // handle the event when the user starts touching
     function handleTouchStart() {
-        // lastImageElement?.classList.remove("pair");
-        const originalWidth = `${node.offsetWidth}px`;
+        // clone = node.cloneNode(true) as HTMLElement;
+        // clone.style.position = 'absolute';
+        // clone.style.left = originalX;
+        // clone.style.top = originalY;
+        // clone.style.width = `${node.offsetWidth}px`;
 
-        node.style.width = originalWidth;
+        // clone.style.height = `${node.offsetHeight}px`;
+        // console.log(clone.style.height);
+        // let GP : HTMLElement = node.parentNode?.parentNode as HTMLElement;
+        // GP.style.height = `100px`;
+        // console.log(GP);
+        // clone.style.border = '';
+        // clone.removeAttribute('use:touchDraggable');
+        // clone.removeAttribute('use:mouseDraggable');
+        // clone.classList.add("background");
+        // node.parentNode?.insertBefore(clone, node);
+        
+        clone = document.createElement('div'); // Create a new div element
+        // Style the dummy div as needed, here are some example styles
+        clone.style.width = `${node.offsetWidth}px`;
+        clone.style.height = `${node.offsetHeight}px`;
+        clone.style.position = 'absolute';
+        clone.style.left = node.style.left; // Position the dummy at the same place as the node
+        clone.style.top = node.style.top;
+        clone.style.backgroundColor = '#f0f0f0'; // Example background color, adjust as necessary
+        clone.style.border = '1px dashed #ccc'; // Example border, adjust as necessary
+        clone.innerText = node.innerText;
+        clone.style.padding = '3px';
+        clone.className = 'dummy-div'; // Assign a class for further styling or identification
+
+        // Insert the dummy div right before the node in the node's parent
+        node.before(clone);
+
+        // lastImageElement?.classList.remove("pair");
+
+        node.style.width = `${originalWidth}px`;
         node.style.borderRadius = originalBorderRadius;
         node.style.position = 'fixed';
         node.style.zIndex = '1000';
+
+        node.style.transition = 'transform 0.2s ease, background-color 0.2s ease';
+        node.style.transform = 'scale(0.95)';
+        node.style.backgroundColor = '#e0e0e0';
 
         node.addEventListener('touchmove', handleTouchMove);
         node.addEventListener('touchend', handleTouchEnd);
@@ -112,7 +150,10 @@ export function touchDraggable(node: HTMLElement, options: TouchDraggableOptions
         node.style.backgroundColor = originalBackgroundColor;
         node.style.borderRadius = originalBorderRadius;
         node.style.border = '';
-        node.style.width = `${originalWidth}px`;
+        node.style.transform = 'scale(1.0)'
+        node.style.width = `${originalWidth}px`;   
+
+        clone.remove();
     }
 
     // apply styles to draggable ndoe

@@ -11,6 +11,7 @@
     import Modal from "./scenarios/Modal.svelte";
     import { highlightKeywords } from "$lib/utils/highlight-keywords";
     import { selectedLanguage } from "$lib/stores/languageStore";
+    import Icon from "@iconify/svelte";
     
     export let currentSituation : Situation;
     export let allSituationLength : number;
@@ -70,7 +71,7 @@
         
         if (allCorrect) {
             allCorrectAnswers = allCorrect;
-            points += 100;
+            if ($dragAssociationPairs.length === 4) points += 100;
             dispatch('updatePoints', { points });
         } else {
             // reset incorrect pairs to original position
@@ -159,50 +160,57 @@
         {/if}
 
         <!-- left side -->
-        <div class="w-full left-side flex items-center justify-center">
-            <PaginationButton situationLength={allSituationLength} currentSituationNumber={currentSituation.situationSort} handleSituationChange={handleSituationChange} />
-
-            <div class="grid grid-cols-2 gap-3 w-[500px] bg-gray-100 px-5 py-5 rounded-lg">
-                {#each currentSituation.image.momentImages as moment}
-                    <img src={moment.image} alt={moment.title || ""}  data-id={moment.momentId} />
-                {/each}
+        <div class="w-full left-side flex flex-col items-center justify-center">
+            <div class="bg-gray-100 px-5 py-5 rounded-lg flex flex-col justify-center items-center">
+                <PaginationButton situationLength={allSituationLength} currentSituationNumber={currentSituation.situationSort} handleSituationChange={handleSituationChange} />
+                <div class="grid grid-cols-2 gap-3 w-[450px]">
+                    {#each currentSituation.image.momentImages as moment}
+                        <img src={moment.image} alt={moment.title || ""}  data-id={moment.momentId} />
+                    {/each}
+                </div>
+                
             </div>
         </div>
 
         <!-- right side -->
-        <div class="w-full right-side h-full flex flex-col">
-            <div class="bg-gray-100 rounded-lg p-3 flex flex-col flex-grow">
+        <div class="w-full right-side h-full flex flex-col h-[700px]">
+            <div class="bg-gray-100 rounded-lg p-3 flex flex-col flex-grow h-[500px]">
                 <!-- <h1 class="text-2xl ">Options</h1> -->
-                <ul class="flex flex-col gap-5 p-3 overflow-auto flex-grow">
+                <ul class="flex flex-col gap-5 p-3 overflow-auto flex-grow" >
                     {#each currentSituation.moments as moment}
-                        <div class="flex flex-row w-full text-sm">
-                            <div
-                                use:touchDraggable={{ addPair, removePair, isDragging }}
-                                use:mouseDraggable={{ addPair, removePair, isDragging }}
-                                data-id={moment.momentId}
-                                class="bg-white rounded-lg p-3 draggable"
-                            >
-                                {@html highlightKeywords(moment.momentSummarization, moment.keywords ?? {}) }
-                            </div>  
-                            <div class="flex flex-col gap-3 ml-3">
+                        <div class="flex flex-row w-full text-sm w-full bg-white rounded-lg p-3" >
+                            <div class="container">
+                                <div
+                                    use:touchDraggable={{ addPair, removePair, isDragging }}
+                                    use:mouseDraggable={{ addPair, removePair, isDragging }}
+                                    data-id={moment.momentId}
+                                    class="front bg-white rounded-lg p-3 draggable"
+                                >
+                                    {@html highlightKeywords(moment.momentSummarization, moment.keywords ?? {}) }
+                                </div>      
+                            </div>
+                            
+                            <div class="flex flex-col ml-3 h-full justify-center items-center">
                                 <div class="util-btn flex justify-center items-center bg-white rounded-lg p-3" on:click={handleParentClick(moment)} tabindex="0" role="button" on:keydown={(e) => e.key === 'Enter'}>
-                                    Expand
+                                    <Icon icon="material-symbols:info" height={30} />
                                 </div>
-                                <div class="util-btn flex justify-center items-center bg-white rounded-lg p-3" on:click={handleTextToSpeech(moment)} tabindex="0" role="button" on:keydown={(e) => e.key === 'Enter'}>
+                                <!-- <div class="util-btn flex justify-center items-center bg-white rounded-lg p-3" on:click={handleTextToSpeech(moment)} tabindex="0" role="button" on:keydown={(e) => e.key === 'Enter'}>
                                     Speech
                                     <audio bind:this={audioElement} src={audio}></audio>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     {/each}
-                    {#if allCorrectAnswers && allSituationLength === currentSituation.situationSort}
-                        <button class="btn custom-btn-bg" id="checkMatches" on:click={completeQuiz}>Complete</button>
-                    {:else if allCorrectAnswers}
-                        <button class="btn custom-btn-bg" on:click={handleNextSituation}>Next situation</button>
-                    {:else}
-                        <button class="btn custom-btn-bg" id="checkMatches" on:click={checkAnswers}>Check answers</button>
-                    {/if}
                 </ul>
+                <div class="p-3 w-full">
+                    {#if allCorrectAnswers && allSituationLength === currentSituation.situationSort}
+                        <button class="btn custom-btn-bg w-full" id="checkMatches" on:click={completeQuiz}>Complete</button>
+                    {:else if allCorrectAnswers}
+                        <button class="btn custom-btn-bg w-full" on:click={handleNextSituation}>Next situation</button>
+                    {:else}
+                        <button class="btn custom-btn-bg w-full" id="checkMatches" on:click={checkAnswers}>Check answers</button>
+                    {/if}
+                </div>
             </div>
         </div>
 
@@ -218,7 +226,7 @@
     }
     .right-side {
         width: 40%;
-        height: 502px;
+        height: 100%;
     }
     .scenario-page {
         overflow-y: scroll;
@@ -228,15 +236,21 @@
         max-height: 475px;
         transition: all 0.5s ease;
     }
+    .util-btn {
+        transition: all 0.5s ease;
+    }
+
+    .container {
+        position: relative;
+    }
     .draggable {
-        width: 80%;
+        position: sticky;
+        z-index: 10;
     }
     .draggable:hover {
         cursor: grab;
     }
-    .util-btn {
-        transition: all 0.5s ease;
-    }
+
     :global(.highlight) {
         padding: 3px;
         border-radius: 5px;

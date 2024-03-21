@@ -4,7 +4,7 @@
 
 <slot>
     <a href={route} class="flex-1">
-        <div class="btn btn-square hover:bg-neutral svg-container">
+        <div class="btn btn-square hover:bg-neutral hover:text-white svg-container">
             <svg viewBox="0 0 1024 1024"
                 xmlns="http://www.w3.org/2000/svg" fill="currentColor">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
