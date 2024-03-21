@@ -178,9 +178,9 @@
                 <!-- <h1 class="text-2xl ">Options</h1> -->
                 <ul class="flex flex-col gap-5 p-3 overflow-auto flex-grow" >
                     {#each currentSituation.moments as moment}
-                        <div class="flex flex-row w-full text-sm w-full bg-white rounded-lg p-3" >
+                        <div class="flex flex-row w-full text-sm w-full bg-white rounded-lg p-3 xl:h-[108px] lg:h-[78px] md:h-[68px]" >
                             <div class="container">
-                                <div class="absolute rounded-lg pl-3">{moment.momentSummarization}</div>
+                                <div class="absolute rounded-lg p-2 back">{@html highlightKeywords(moment.momentSummarization, moment.keywords ?? {})}</div>
                                 <div
                                     use:touchDraggable={{ addPair, removePair, isDragging }}
                                     use:mouseDraggable={{ addPair, removePair, isDragging }}
@@ -223,10 +223,10 @@
 
 <style>
     .left-side {
-        width: 60%;
+        width: 50%;
     }
     .right-side {
-        width: 40%;
+        width: 50%;
         height: 100%;
     }
     .scenario-page {
@@ -250,6 +250,10 @@
     }
     .draggable:hover {
         cursor: grab;
+    }
+    .back {
+        background-color: #e7e7e7;
+        border: 1px dashed gray;
     }
 
     :global(.highlight) {

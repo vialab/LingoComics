@@ -2,7 +2,12 @@
     import { createEventDispatcher } from "svelte";
     import type { Moment } from "../../utils/types";
     import { highlightKeywords } from "$lib/utils/highlight-keywords";
+    import Icon from "@iconify/svelte";
+    
     export let moment : Moment;
+
+    let audio : string;
+    let audioElement : HTMLAudioElement;
     
     let showModal = true;
 
@@ -16,6 +21,28 @@
     }
     const highlightClasses = ['highlight-1', 'highlight-2', 'highlight-3', 'highlight-4', 'highlight-5'];
 
+
+    function handleTextToSpeech(moment: Moment) {
+        return async function(event: Event) {
+            try {
+                const response = await fetch(`/api/tts`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ text: moment.momentSummarization })
+                });
+                const data = await response.json();
+                audio = data.audio;
+                if (audioElement) {
+                    audioElement.src = audio;
+                    await audioElement.play();
+                }
+            } catch (error) {
+                console.error("Error calling text-to-sepech API:", error);
+            }
+        }
+    }
 </script>
 
 {#if showModal}
@@ -23,12 +50,20 @@
         <div class="modal-box relative">
             <h1 class="text-3xl mb-2">Keywords</h1>
 
-            <p class="mb-5">{@html highlightKeywords(moment.momentSummarization, moment.keywords ?? {})}</p>
+            <div class="flex flex-row gap-3 justify-center items-center">
+                <p class="mb-5">{@html highlightKeywords(moment.momentSummarization, moment.keywords ?? {})}</p>
+                <div class="util-btn flex justify-center items-center bg-white rounded-lg p-3" on:click={handleTextToSpeech(moment)} tabindex="0" role="button" on:keydown={(e) => e.key === 'Enter'}>
+                    <Icon icon="wpf:speaker" />
+                    <audio bind:this={audioElement} src={audio} />
+                </div>
+            </div>
 
-            {#each Object.entries(moment.keywords)  as [word, description], i}
-                <h3 class="text-xl mt-4">
+            {#each Object.entries(moment.keywords) as [word, description], i}
+                <!-- main word -->
+                <div class="text-xl mt-4 flex flex-row gap-3">
                     <span class="highlight {highlightClasses[i % highlightClasses.length]}">{word.charAt(0).toUpperCase() + word.slice(1)}</span> 
-                </h3>
+                </div>
+                <!-- word description -->
                 <p class="pb-2 mt-2">{description.charAt(0).toUpperCase() + description.slice(1)}</p>
                 <hr />
             {/each}

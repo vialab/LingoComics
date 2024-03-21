@@ -21,23 +21,8 @@ export function touchDraggable(node: HTMLElement, options: TouchDraggableOptions
     let clone : HTMLElement | null = null;
     
     // handle the event when the user starts touching
-    function handleTouchStart() {
-        // clone = document.createElement('div'); // Create a new div element
-        // // Style the dummy div as needed, here are some example styles
-        // clone.style.width = `${node.offsetWidth}px`;
-        // clone.style.height = `${node.offsetHeight}px`;
-        // clone.style.position = 'absolute';
-        // clone.style.left = node.style.left; // Position the dummy at the same place as the node
-        // clone.style.top = node.style.top;
-        // clone.style.backgroundColor = '#f0f0f0'; // Example background color, adjust as necessary
-        // clone.style.border = '1px dashed #ccc'; // Example border, adjust as necessary
-        // clone.innerText = node.innerText;
-        // clone.style.padding = '3px';
-        // clone.className = 'dummy-div'; // Assign a class for further styling or identification
-
-        // // Insert the dummy div right before the node in the node's parent
-        // node.before(clone);
-
+    function handleTouchStart() {       
+        
         // lastImageElement?.classList.remove("pair");
 
         node.style.width = `${originalWidth}px`;
@@ -126,20 +111,21 @@ export function touchDraggable(node: HTMLElement, options: TouchDraggableOptions
     // reset draggable nodes styling
     function resetDraggableStyles() {
         node.style.position = '';
-        node.style.left = `${originalX}px`;
-        node.style.top = `${originalY}px`;
+        node.style.left = ``;
+        node.style.top = ``;
         node.style.zIndex = '';
 
         node.style.backgroundColor = originalBackgroundColor;
         node.style.borderRadius = originalBorderRadius;
         node.style.border = '';
-        node.style.transform = 'scale(1.0)'
-        node.style.width = `${originalWidth}px`;   
+        node.style.transform = ''
+        node.style.width = ``;   
 
         if (clone) {
             clone.remove();
             clone = null;
         }
+        
     }
 
     // apply styles to draggable ndoe

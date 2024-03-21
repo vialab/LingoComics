@@ -68,11 +68,15 @@ export function mouseDraggable(node: HTMLElement, options: TouchDraggableOptions
     // Reset draggable nodes styling
     function resetDraggableStyles() {
         node.style.position = '';
+        node.style.left = ``;
+        node.style.top = ``;
         node.style.zIndex = '';
+
         node.style.backgroundColor = originalBackgroundColor;
         node.style.borderRadius = originalBorderRadius;
         node.style.border = '';
-        node.style.width = `${originalWidth}px`;
+        node.style.transform = ''
+        node.style.width = ``;   
     }
 
     // Apply styles to draggable node
