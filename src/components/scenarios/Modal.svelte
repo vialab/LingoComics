@@ -61,8 +61,8 @@
             {#each Object.entries(moment.keywords) as [word, description], i}
                 <!-- main word -->
                 <div class="text-xl mt-4 flex flex-row gap-3">
-                    <span class="highlight {highlightClasses[i % highlightClasses.length]}">{word.charAt(0).toUpperCase() + word.slice(1)}</span> 
-                    <div class="util-btn flex justify-center items-center bg-white rounded-lg p-3" on:click={handleTextToSpeech(`${word}. ${description}.`)} tabindex="0" role="button" on:keydown={(e) => e.key === 'Enter'}>
+                    <span class="w-[120px] text-center highlight {highlightClasses[i % highlightClasses.length]}">{word.charAt(0).toUpperCase() + word.slice(1)}</span> 
+                    <div class="util-btn flex justify-center items-center bg-white rounded-lg p-3" on:click={handleTextToSpeech(`${word}: ${description}.`)} tabindex="0" role="button" on:keydown={(e) => e.key === 'Enter'}>
                         <Icon icon="wpf:speaker" />
                         <audio bind:this={audioElement} src={audio} />
                     </div>
