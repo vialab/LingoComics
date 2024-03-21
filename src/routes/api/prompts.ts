@@ -236,20 +236,40 @@ export function generateContinueNarrativePrompt(previousOption: string, selected
     return `
         Generate a small length sentence for: ${selectedOption}.
         Make the tone of the sentence be in a narrative perspective so as to set up a scene for the same story in the sentence.
-        The last narrative for the story was: ${previousOption}, so make the new small length narrative option adhere to the new option.
+        The last narrative for the story was: ${previousOption} and so make the continuation of the new narrative flow with this in mind, so make the new small length narrative option adhere to the new option.
     `;
 }
 
-export function generateNewImagePrompt(characterDescription: string, setting: string, storyTitle: string, narrative: string) {
+export function generateNewImagePrompt(characterDescription: string, setting: string, storyTitle: string, narrative: string, selectedOption: string) {
+    // return `
+    //     Generate an image description that will be suitable for DALLE to generate, for: "${narrative}", for the story: ${storyTitle}.
+    //     The description of the character in the image is: ${characterDescription}.
+    //     The setting of the image should be: ${setting}.
+    //     Image is of a side-view camera angle to showcase the character's action and broader scene context.
+    //     The image should be a comic-style image.
+    // `;
     return `
-        Generate a comic-style image for the story: "${storyTitle}".
-        The current narrative of the story is as follows: "${narrative}".
-        The character description is: ${characterDescription}.
-        The setting is: ${setting}.
-        The image should convey the character's emotion and interacting with any substance that the current narrative describes.
-        The setting can be altered slightly to adhere to the current narrative. 
-        The character should NOT be looking directly at the screen, rather they should interact or perform some sort of action that makes sense for the current narrative that is outlined.
+        Create a detailed comic-style image that captures a scene from the story titled "${storyTitle}". 
+        In this scene, the narrative unfolds as: "${narrative}", and the character has chosen to: "${selectedOption}".
+        The character is described as: ${characterDescription}. 
+        They should be depicted within the setting of ${setting}, which can be modified to fit the narrative's progression.
+        The image should emphasize the character's emotions and interactions relevant to the narrative's context.
+        If the narrative involves interaction with another character, this character should also be included, depicted in a manner that complements the main character's actions.
+        The main character should not be facing the viewer directly; they should be engaged in an action that reflects the chosen narrative path.
+        Opt for a side view camera angle to showcase both the character's actions and the broader scene context.
     `;
+    // return `
+    //     Generate a comic-style image for the story: "${storyTitle}".
+    //     The current narrative of the story is as follows: "${narrative}".
+    //     The selected option that the character should follow as part of the narrative is: "${selectedOption}".
+    //     The character description is: ${characterDescription}.
+    //     The setting is: ${setting}.
+    //     The image should convey the character's emotion and interacting with any substance that the current narrative describes.
+    //     The setting can be altered slightly to adhere to the current narrative. 
+    //     If the narrative and selected option demands the character interacting with another person, then include the other person as well in the image.
+    //     The character should NOT be looking directly at the screen, rather they should interact or perform some sort of action that makes sense for the current narrative that is outlined.
+    //     Camera angle of the image should be a side view of the character and scene.
+    // `;
 }
 /**
  * 

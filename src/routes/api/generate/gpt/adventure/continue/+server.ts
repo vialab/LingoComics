@@ -29,8 +29,8 @@ export const POST = async ({ request }) => {
         const options = (await gptPrompt(openai, chatModel, optionsPrompt)).choices[0].message.content?.trim().split('\n').filter(op => op.trim() !== '');
 
         // generate new scene image
-        const newScenePrompt = generateNewImagePrompt(scenario.character, scenario.setting, scenario.scenario, scene.narrative);
-        const newScene = await generateImageNoSave(newScenePrompt);
+        const newSceneDescription = generateNewImagePrompt(scenario.character, scenario.setting, scenario.scenario, completion, selectedOption);
+        const newScene = await generateImageNoSave(newSceneDescription);
 
         const phaseContinue = { narrative: completion, nextStep: nextStep, options, image: newScene };
 
