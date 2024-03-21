@@ -207,6 +207,31 @@ export function translateTextPrompt(text: string, language: string) {
     `;
 }
 
+export function generateNarrativePrompt(text: string) {
+    return `
+        Generate a small length sentence for this piece of text: ${text}. 
+        Make the tone of sentence be in a narrative perspective so as to set up a scene for the same story in the sentence.
+    `;
+}
+
+export function generateNextStepPrompt(text: string) {
+    return `
+        Generate a small length instruction for this piece of text: ${text}.
+        Make the tone of the sentence be in a "next step" narrative perspective, 
+        for example, "what should [person] do next", but make sure to have the sentence fit 
+        the context. Make the sentence small.
+    `;
+}
+
+export function generateOptions(text: string) {
+    return `
+        Generate 3 short, contextually relevant dialogue options based on the following text: ${text}.
+        Each option should represent a possible way a character might respond or what they might do next in the scenario.
+        Keep the options concise and ensure they lead to different narrative branches.
+        The branches should be relatable in context to the user. The format should be like: "[num]: [option]".
+    `
+}
+
 /**
  * 
  * Given this moment ${moment}.

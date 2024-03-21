@@ -70,3 +70,15 @@ export const emptyStoryStruct: StoryStruct = {
     moments: '',
     isFinish: false,
 }
+
+export type Scene = {
+    narrative: string,
+    nextStep: string,
+    options: string[]
+}
+
+export const defaultScene: Scene = {
+    narrative: "",
+    nextStep: "",
+    options: []
+}
