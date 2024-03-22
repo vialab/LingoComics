@@ -1,6 +1,6 @@
 import { generateImageNoSave, gptPrompt } from '$lib/services/gptService.js';
 import OpenAI from 'openai';
-import { generateContinueNarrativePrompt, generateNarrativePrompt, generateNewImagePrompt, generateNextStepPrompt, generateOptions } from '../../../../prompts.js';
+import { generateContinueNarrativePrompt, generateNarrativePrompt, generateNewImagePrompt, generateNextStepPrompt, generateOptions, getKeywordPrompts } from '../../../../prompts.js';
 import { env } from '$env/dynamic/private';
 import type { Scene, StoryStruct } from '../../../../../../utils/types.js';
 
@@ -31,6 +31,26 @@ export const POST = async ({ request }) => {
         // generate new scene image
         const newSceneDescription = generateNewImagePrompt(scenario.character, scenario.setting, scenario.scenario, completion, selectedOption);
         const newScene = await generateImageNoSave(newSceneDescription);
+
+        // highlight keywords
+        if (options) {
+            let keywordsArray = [];
+            for (let option of options) {
+                const keywordPrompt = getKeywordPrompts(option);
+                const keywords = (await gptPrompt(openai, chatModel, keywordPrompt)).choices[0].message.content?.trim().split('\n').filter(op => op.trim() !== '');
+
+                let keywordsObjects = keywords?.map(keywordString => {
+                    const parts = keywordString.split(':');
+                    const word = parts[0].replace('- ', '').trim();
+                    const description = parts[1].trim();
+                    return { word, description };
+                });
+
+                keywordsArray?.push(keywordsObjects);
+            }
+
+            console.log(keywordsArray);
+        }
 
         const phaseContinue = { narrative: completion, nextStep: nextStep, options, image: newScene };
 

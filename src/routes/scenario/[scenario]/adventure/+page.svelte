@@ -41,6 +41,7 @@
         }
     }
 
+    // handle function for subsequent phases
     async function handleContinue() {
         let body = {
             scenario: scenario,
@@ -77,6 +78,8 @@
             selectedOption = option;
         }
     }
+
+    console.log('current scene:', scene);
 </script>
 
 

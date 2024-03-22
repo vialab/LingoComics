@@ -193,10 +193,11 @@ export function generateMomentImagePrompt(scenario: string, situation: string, m
 }
 
 
-export function getKeywordPrompts(moment: string) {
+export function getKeywordPrompts(text: string) {
     return `
-        Given this moment: ${moment}, give me the keywords within the sentence. Only return the word and a short description as to its significance.
-        Return in the format, "word: description".
+        Given this sentence: ${text}, give me the keywords within the sentence. 
+        Only return the word and a short description as to its significance.
+        Return exactly in the format: "[word]: [description]".
     `;
 }
 
