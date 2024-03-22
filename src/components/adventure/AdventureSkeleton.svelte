@@ -14,7 +14,7 @@
                     <hr />
                     <div class="flex flex-col gap-5 py-2">
                         {#each { length: 3 } as _, i}
-                            <div class="skeleton w-full bg-white h-32"></div>
+                            <div class="skeleton w-full bg-white h-16"></div>
                         {/each}
                     </div>
                 </div>

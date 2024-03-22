@@ -216,10 +216,10 @@ export function generateNarrativePrompt(text: string) {
 
 export function generateNextStepPrompt(text: string) {
     return `
-        Generate a small length instruction for this piece of text: ${text}.
+        Generate a small length instruction for this narrative: "${text}".
         Make the tone of the sentence be in a "next step" narrative perspective, 
         for example, "what should [person] do next", but make sure to have the sentence fit 
-        the context. Make the sentence small.
+        the context. Make the sentence small. Have the sentence be in the perspective of the main character in the narrative.
     `;
 }
 
