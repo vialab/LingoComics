@@ -1,5 +1,6 @@
 import { gptPrompt } from '$lib/services/gptService.js';
 import OpenAI from 'openai';
+import { v4 as uuidv4 } from 'uuid';
 import type { StoryStruct } from '../../../../../utils/types.js';
 import { env } from '$env/dynamic/private';
 import { generateNarrativePrompt, generateNextStepPrompt, generateOptions, getKeywordPrompts } from '../../../prompts.js';
@@ -27,12 +28,13 @@ export const POST = async ({ request }) => {
         const optionsPrompt = generateOptions(`${moment}. ${completion}. ${nextStep}`);
         const options = (await gptPrompt(openai, chatModel, optionsPrompt)).choices[0].message.content?.trim().split('\n').filter(op => op.trim() !== '');
 
-        let keywordsObject = {};
+        const optionKeywordsArray = [];
         if (options) {
             for (const option of options) {
                 const keywordPrompt = getKeywordPrompts(option);
                 const keywords = (await gptPrompt(openai, chatModel, keywordPrompt)).choices[0].message.content?.trim().split('\n').filter(op => op.trim() !== '');
 
+                let keywordsObject = {};
                 const keywordsObjects = keywords?.map(keywordString => {
                     const parts = keywordString.split(':');
                     const word = parts[0].replace('- ', '').trim();
@@ -41,15 +43,19 @@ export const POST = async ({ request }) => {
                 })
 
                 keywordsObjects?.forEach(keyword => {
-                    keywordsObject = {...keywordsObject, ...keyword};
-                })
+                    keywordsObject = {...keywordsObject, ...keyword };
+                });
+
+                optionKeywordsArray.push({
+                    momentId: uuidv4(),
+                    momentSummarization: option,
+                    keywords: keywordsObject
+                });
             }
         }
 
-        console.log(keywordsObject);
-
         // return obj
-        const phaseOne = { narrative: completion, nextStep: nextStep, options, keywordsObject };
+        const phaseOne = { sceneId: uuidv4(), narrative: completion, nextStep: nextStep, moment: optionKeywordsArray };
 
         return new Response(JSON.stringify({ "data": phaseOne }), { status: 200 });
     } catch (error) {

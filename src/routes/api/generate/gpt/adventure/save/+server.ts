@@ -1,19 +1,18 @@
 import { db } from '$lib/firebase/firebase.js';
-import { doc, setDoc } from 'firebase/firestore';
-// import { GOOGLE_API_KEY } from '$env/static/private';
+import { doc, updateDoc } from 'firebase/firestore';
 
-// This POST request saves story generation items to firestore
 export const POST = async ({ request }) => {
     const body = await request.json();
-    const { story } = body;
-
+    
+    const { scenario, scenes } = body;
+    
     try {
-        const docRef = doc(db, 'scenario', story.scenarioId);
-        await setDoc(docRef, story);
+        const docRef = doc(db, 'scenario', scenario.scenarioId);
+        await updateDoc(docRef, { scenes });
 
         return new Response(JSON.stringify({ "data": "story successfully saved" }), { status: 200 });
     } catch (error) {
-        console.error("Error saving story:", error);
+        console.error(error);
         return new Response(JSON.stringify({ "data": "error saving story" }), { status: 500 });
     }
 }

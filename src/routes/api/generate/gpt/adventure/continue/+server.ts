@@ -1,8 +1,9 @@
-import { generateImageNoSave, gptPrompt } from '$lib/services/gptService.js';
+import { generateImage, gptPrompt } from '$lib/services/gptService.js';
 import OpenAI from 'openai';
-import { generateContinueNarrativePrompt, generateNarrativePrompt, generateNewImagePrompt, generateNextStepPrompt, generateOptions, getKeywordPrompts } from '../../../../prompts.js';
+import { v4 as uuidv4 } from 'uuid';
+import { generateContinueNarrativePrompt, generateNewImagePrompt, generateNextStepPrompt, generateOptions, getKeywordPrompts } from '../../../../prompts.js';
 import { env } from '$env/dynamic/private';
-import type { Scene, StoryStruct } from '../../../../../../utils/types.js';
+import type { StoryStruct } from '../../../../../../utils/types.js';
 
 const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 const chatModel = 'gpt-3.5-turbo';
@@ -10,10 +11,10 @@ const chatModel = 'gpt-3.5-turbo';
 export const POST = async ({ request }) => {
     const body = await request.json();
 
-    let scenario : StoryStruct = body.scenario;
-    let scene : Scene = body.scene;
-    let previousNarrative = body.narrative;
-    let selectedOption = body.selectedOption;
+    const scenario : StoryStruct = body.scenario;
+    // const scene : Scene = body.scene;
+    const previousNarrative = body.narrative;
+    const selectedOption = body.selectedOption;
     
     try {
         // generate new narrative
@@ -30,29 +31,35 @@ export const POST = async ({ request }) => {
 
         // generate new scene image
         const newSceneDescription = generateNewImagePrompt(scenario.character, scenario.setting, scenario.scenario, completion, selectedOption);
-        const newScene = await generateImageNoSave(newSceneDescription);
+        const newScene = await generateImage(newSceneDescription);
 
-        // highlight keywords
+        const optionKeywordsArray = [];
         if (options) {
-            let keywordsArray = [];
-            for (let option of options) {
+            for (const option of options) {
                 const keywordPrompt = getKeywordPrompts(option);
                 const keywords = (await gptPrompt(openai, chatModel, keywordPrompt)).choices[0].message.content?.trim().split('\n').filter(op => op.trim() !== '');
 
-                let keywordsObjects = keywords?.map(keywordString => {
+                let keywordsObject = {};
+                const keywordsObjects = keywords?.map(keywordString => {
                     const parts = keywordString.split(':');
                     const word = parts[0].replace('- ', '').trim();
                     const description = parts[1].trim();
-                    return { word, description };
+                    return { [word]: description };
+                })
+
+                keywordsObjects?.forEach(keyword => {
+                    keywordsObject = {...keywordsObject, ...keyword };
                 });
 
-                keywordsArray?.push(keywordsObjects);
+                optionKeywordsArray.push({
+                    momentId: uuidv4(),
+                    momentSummarization: option,
+                    keywords: keywordsObject
+                });
             }
-
-            console.log(keywordsArray);
         }
 
-        const phaseContinue = { narrative: completion, nextStep: nextStep, options, image: newScene };
+        const phaseContinue = { sceneId: uuidv4(), narrative: completion, nextStep: nextStep, image: newScene, moment: optionKeywordsArray };
 
         return new Response(JSON.stringify({ "data": phaseContinue }), { status: 200 });
     } catch (error) {

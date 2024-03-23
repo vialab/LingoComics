@@ -75,12 +75,26 @@ export type Scene = {
     narrative: string,
     nextStep: string,
     options: string[],
+    moment: Moment[],
+    keywordsObject: Record<string, string>,
     image: ""
 }
 
 export const defaultScene: Scene = {
     narrative: "",
     nextStep: "",
+    moment: [],
     options: [],
+    keywordsObject: {},
     image: ""
+}
+
+export const emptyMoment: Moment = {
+    momentId: "",
+    image: "",
+    keywords: {},
+    textOptions: [],
+    momentImageDescriptionResponse: "",
+    momentDescription: "",
+    momentSummarization: ""
 }
