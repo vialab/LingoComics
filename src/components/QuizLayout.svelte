@@ -281,6 +281,7 @@
         padding: 3px;
         border-radius: 5px;
         margin: 1px;
+        line-height: 1.5rem;
         z-index: 2000;
     }
     :global(.highlight-1) {

@@ -292,20 +292,16 @@ export async function generateMoments(situations : Situation[], scenario: string
             const keywordPrompt = getKeywordPrompts(momentSummarization);
             const keywords = (await gptPrompt(openai, chatModel, keywordPrompt)).choices[0].message.content?.trim().split('\n').filter(op => op.trim() !== '');
             
-            let keywordsObject = {};
-            const keywordsObjects = keywords?.map(keywordString => {
+            const keywordsObject = {};
+            keywords?.map(keywordString => {
                 const parts = keywordString.split(":");
                 const word = parts[0].replace('- ', '').trim();
                 const description = parts[1].trim();
-                return { [word]: description };
-            });
-
-            keywordsObjects?.forEach(keyword => {
-                keywordsObject = { ...keywordsObject, ...keyword };
+                keywordsObject[word] = description;
             });
 
             // push structure with uuid for quiz
-            moments.push({ momentId: uuidv4(), momentSummarization, momentDescription, momentImageDescriptionResponse, keywords: keywordsObjects });
+            moments.push({ momentId: uuidv4(), momentSummarization, momentDescription, momentImageDescriptionResponse, keywords: keywordsObject });
         }
 
         structuredSituations.push({
