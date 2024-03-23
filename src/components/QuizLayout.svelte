@@ -36,6 +36,8 @@
 
     $: () => console.log($selectedLanguage);
 
+    console.log(currentSituation);
+
     // function to add a pair
     function addPair(pair: DragPair) {
         const existingPairs = $dragAssociationPairs.findIndex(p => p.draggable === pair.draggable);
@@ -110,6 +112,22 @@
         $dragAssociationPairs = [];
         allCorrectAnswers = false;
         dispatch('nextSituation');
+    }
+
+    // function to reset/clear positions of the draggable elements
+    function resetPositions() {
+        $dragAssociationPairs.forEach((pair) => {
+            pair.draggable.style.position = '';
+            pair.draggable.style.top = '';
+            pair.draggable.style.left = '';
+            pair.draggable.style.border = '';
+            pair.draggable.style.width = '';
+            pair.draggable.style.borderRadius = '';
+            pair.draggable.style.border = '';
+            pair.draggable.style.transform = '';
+        });
+        // reset drag pairs
+        $dragAssociationPairs = [];
     }
 
     function handleParentClick(moment: Moment) {
@@ -209,7 +227,10 @@
                     {:else if allCorrectAnswers}
                         <button class="btn custom-btn-bg w-full" on:click={handleNextSituation}>Next situation</button>
                     {:else}
-                        <button class="btn custom-btn-bg w-full" id="checkMatches" on:click={checkAnswers}>Check answers</button>
+                        <div class="flex flex-row gap-2">
+                            <button class="btn custom-btn-bg w-1/2" id="checkMatches" on:click={checkAnswers}>Check answers</button>
+                            <button class="btn clear-btn w-1/2" on:click={resetPositions}>Clear all</button>
+                        </div>
                     {/if}
                 </div>
             </div>
@@ -255,7 +276,9 @@
         background-color: #e7e7e7;
         border: 1px dashed gray;
     }
-
+    .clear-btn {
+        background-color: #f86565;
+    }
     :global(.highlight) {
         padding: 3px;
         border-radius: 5px;

@@ -3,7 +3,6 @@ import OpenAI from 'openai';
 import type { StoryStruct } from '../../../../../utils/types.js';
 import { env } from '$env/dynamic/private';
 import { generateNarrativePrompt, generateNextStepPrompt, generateOptions, getKeywordPrompts } from '../../../prompts.js';
-import { text } from '@sveltejs/kit';
 
 const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 const chatModel = 'gpt-3.5-turbo';
@@ -11,9 +10,9 @@ const chatModel = 'gpt-3.5-turbo';
 export const POST = async ({ request }) => {
     const body = await request.json();
 
-    let scenario : StoryStruct = body;
+    const scenario : StoryStruct = body;
 
-    let moment : string = scenario.situations[0].moments[0].momentSummarization;
+    const moment : string = scenario.situations[0].moments[0].momentSummarization;
     
     try {
         // narrative
@@ -28,17 +27,29 @@ export const POST = async ({ request }) => {
         const optionsPrompt = generateOptions(`${moment}. ${completion}. ${nextStep}`);
         const options = (await gptPrompt(openai, chatModel, optionsPrompt)).choices[0].message.content?.trim().split('\n').filter(op => op.trim() !== '');
 
+        let keywordsObject = {};
         if (options) {
-            for (let option of options) {
+            for (const option of options) {
                 const keywordPrompt = getKeywordPrompts(option);
                 const keywords = (await gptPrompt(openai, chatModel, keywordPrompt)).choices[0].message.content?.trim().split('\n').filter(op => op.trim() !== '');
 
-                console.log(keywords);
+                const keywordsObjects = keywords?.map(keywordString => {
+                    const parts = keywordString.split(':');
+                    const word = parts[0].replace('- ', '').trim();
+                    const description = parts[1].trim();
+                    return { [word]: description };
+                })
+
+                keywordsObjects?.forEach(keyword => {
+                    keywordsObject = {...keywordsObject, ...keyword};
+                })
             }
         }
 
+        console.log(keywordsObject);
+
         // return obj
-        const phaseOne = { narrative: completion, nextStep: nextStep, options };
+        const phaseOne = { narrative: completion, nextStep: nextStep, options, keywordsObject };
 
         return new Response(JSON.stringify({ "data": phaseOne }), { status: 200 });
     } catch (error) {
