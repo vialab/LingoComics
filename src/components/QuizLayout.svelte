@@ -34,9 +34,7 @@
         currentSituation.moments = shuffle([...currentSituation.moments]);
     });
 
-    $: () => console.log($selectedLanguage);
-
-    console.log(currentSituation);
+    // $: () => console.log($selectedLanguage);
 
     // function to add a pair
     function addPair(pair: DragPair) {
@@ -87,7 +85,7 @@
         $dragAssociationPairs.forEach((pair) => {
             const correctMatch = pair.draggable.dataset.id === pair.target.dataset.id;
             if (!correctMatch) {
-                pair.draggable.style.position = '';
+                resetDraggable(pair);
                 removePair(pair);
             }
         });
@@ -103,11 +101,7 @@
     // go to next situation and reset any variables needing reset
     function handleNextSituation() {
         $dragAssociationPairs.forEach((pair) => {
-            pair.draggable.style.position = '';
-            pair.draggable.style.border = '';
-            pair.draggable.style.width = '';
-            pair.draggable.style.borderRadius = '';
-            pair.target.style.border = '';
+            resetDraggable(pair);
         });
         $dragAssociationPairs = [];
         allCorrectAnswers = false;
@@ -117,17 +111,21 @@
     // function to reset/clear positions of the draggable elements
     function resetPositions() {
         $dragAssociationPairs.forEach((pair) => {
-            pair.draggable.style.position = '';
-            pair.draggable.style.top = '';
-            pair.draggable.style.left = '';
-            pair.draggable.style.border = '';
-            pair.draggable.style.width = '';
-            pair.draggable.style.borderRadius = '';
-            pair.draggable.style.border = '';
-            pair.draggable.style.transform = '';
+            resetDraggable(pair);
         });
         // reset drag pairs
         $dragAssociationPairs = [];
+    }
+
+    function resetDraggable(element: DragPair) {
+        element.draggable.style.position = '';
+        element.draggable.style.top = '';
+        element.draggable.style.left = '';
+        element.draggable.style.border = '';
+        element.draggable.style.width = '';
+        element.draggable.style.borderRadius = '';
+        element.draggable.style.border = '';
+        element.draggable.style.transform = '';
     }
 
     function handleParentClick(moment: Moment) {

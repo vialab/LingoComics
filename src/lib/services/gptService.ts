@@ -4,7 +4,7 @@ import { env } from '$env/dynamic/private';
 import { Storage } from '@google-cloud/storage';
 import OpenAI from "openai";
 import { generateCharacterAttributes } from "./characterGenerator";
-import { generateCharacterPrompt, generateMomentDescriptionPrompt, generateMomentPrompt, generateScenarioPrompt, generateSituationPrompt, getCharacterPrompt, getScenarioTitlePrompt, getStorySetting, summarizeMoment, summarizeStoryPrompt } from "../../routes/api/prompts";
+import { generateCharacterPrompt, generateMomentDescriptionPrompt, generateMomentPrompt, generateScenarioPrompt, generateSituationPrompt, getCharacterPrompt, getKeywordPrompts, getScenarioTitlePrompt, getStorySetting, summarizeMoment, summarizeStoryPrompt } from "../../routes/api/prompts";
 import { updateMomentDescriptionContextPrompt, updateMomentImageContextPrompt, updateStoryContextPrompt } from '../../routes/api/generate/update/update-prompts';
 
 // initialize bucket
@@ -289,8 +289,23 @@ export async function generateMoments(situations : Situation[], scenario: string
             const momentSummarizationPrompt = summarizeMoment(momentDescription);
             const momentSummarization = (await gptPrompt(openai, chatModel, momentSummarizationPrompt)).choices[0].message.content?.trim() as string;
 
+            const keywordPrompt = getKeywordPrompts(momentSummarization);
+            const keywords = (await gptPrompt(openai, chatModel, keywordPrompt)).choices[0].message.content?.trim().split('\n').filter(op => op.trim() !== '');
+            
+            let keywordsObject = {};
+            const keywordsObjects = keywords?.map(keywordString => {
+                const parts = keywordString.split(":");
+                const word = parts[0].replace('- ', '').trim();
+                const description = parts[1].trim();
+                return { [word]: description };
+            });
+
+            keywordsObjects?.forEach(keyword => {
+                keywordsObject = { ...keywordsObject, ...keyword };
+            });
+
             // push structure with uuid for quiz
-            moments.push({ momentId: uuidv4(), momentSummarization, momentDescription, momentImageDescriptionResponse });
+            moments.push({ momentId: uuidv4(), momentSummarization, momentDescription, momentImageDescriptionResponse, keywords: keywordsObjects });
         }
 
         structuredSituations.push({
