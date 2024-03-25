@@ -82,13 +82,23 @@ export function mouseDraggable(node: HTMLElement, options: TouchDraggableOptions
     // Apply styles to draggable node
     function draggableStyleOnSnap(dropTarget: Element) {
         const rect = dropTarget.getBoundingClientRect();
+
+        node.style.transform = 'scale(0.9)';
+        node.style.width = `${rect.width}px`;
         node.style.left = `${rect.left + 3}px`;
-        node.style.top = `${rect.bottom - node.offsetHeight - 6}px`;
-        node.style.backgroundColor = '#fffffff1';
+        node.style.top = `${rect.bottom - 60}px`;
+        node.style.backgroundColor = '#ffffff';
+        node.style.opacity = '0.9';
+        node.style.border = '2px solid black'
         node.style.borderRadius = '0';
-        node.style.border = '2px solid black';
-        if (highlightedElement) node.style.width = `${highlightedElement?.offsetWidth - 5}px`;
         if (highlightedElement) highlightedElement.style.border = '';
+        // node.style.left = `${rect.left + 3}px`;
+        // node.style.top = `${rect.bottom - node.offsetHeight - 6}px`;
+        // node.style.backgroundColor = '#fffffff1';
+        // node.style.borderRadius = '0';
+        // node.style.border = '2px solid black';
+        // if (highlightedElement) node.style.width = `${highlightedElement?.offsetWidth - 5}px`;
+        // if (highlightedElement) highlightedElement.style.border = '';
     }
 
     node.addEventListener('mousedown', handleMouseDown);

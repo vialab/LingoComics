@@ -91,6 +91,13 @@ export function touchDraggable(node: HTMLElement, options: TouchDraggableOptions
             if (swapNode) {
                 node.style.left = lastPairX;
                 node.style.top = lastPairY;
+                const rect = dropTarget?.getBoundingClientRect();
+
+                node.style.width = `${rect?.width}px`;
+                node.style.backgroundColor = '#ffffff';
+                node.style.opacity = '0.9';
+                node.style.border = '2px solid black'
+                node.style.borderRadius = '0';
             }
         } else if (dropTarget && dropTarget.tagName === 'IMG') {
             // check if correct match
@@ -132,13 +139,23 @@ export function touchDraggable(node: HTMLElement, options: TouchDraggableOptions
     function draggableStyleOnSnap(dropTarget: Element) {
         const rect = dropTarget.getBoundingClientRect();
 
-        node.style.left = `${rect.left + 3}px`;
-        node.style.top = `${rect.bottom - node.offsetHeight - 6}px`;
-        node.style.backgroundColor = '#fffffff1';
+        // node.style.transition = 'transform 0.2s ease, background-color 0.2s ease';
+        // node.style.transform = 'scale(0.9)';
+        node.style.width = `${rect.width}px`;
+        node.style.left = `${rect.left}px`;
+        node.style.top = `${rect.bottom - 60}px`;
+        node.style.backgroundColor = '#ffffff';
+        node.style.opacity = '0.9';
+        node.style.border = '2px solid black'
         node.style.borderRadius = '0';
-        node.style.border = '2px solid black';
-        if (highlightedElement) node.style.width = `${highlightedElement?.offsetWidth - 5}px`;
         if (highlightedElement) highlightedElement.style.border = '';
+        // node.style.left = `${rect.left + 3}px`;
+        // node.style.top = `${rect.bottom - node.offsetHeight - 6}px`;
+        // node.style.backgroundColor = '#fffffff1';
+        // node.style.borderRadius = '0';
+        // node.style.border = '2px solid black';
+        // if (highlightedElement) node.style.width = `${highlightedElement?.offsetWidth - 5}px`;
+        // if (highlightedElement) highlightedElement.style.border = '';
     }
 
     function handleSwap(targetId: string, swapId: string): void {
