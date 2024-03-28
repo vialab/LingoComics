@@ -45,8 +45,14 @@ type MomentImage = {
     moment: string
 }
 
+type Achievement = {
+    points: number,
+    timestamp: string
+}
+
 export type StoryStruct = {
     story: string,
+    achievements: Achievement[],
     setting: string,
     character: string,
     scenarioId: string,
@@ -60,6 +66,7 @@ export type StoryStruct = {
 
 export const emptyStoryStruct: StoryStruct = {
     story: '',
+    achievements: [],
     setting: '',
     character: '',
     scenarioId: '',

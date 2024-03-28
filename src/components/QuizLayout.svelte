@@ -39,7 +39,7 @@
 
     // when itemsMatched changes then change the checked to false   
     $: if (itemsMatched !== 0) {
-        console.log(itemsMatched);
+        // console.log(itemsMatched);
         checked = false;
     }
 
@@ -90,9 +90,11 @@
         if (allCorrect) {
             allCorrectAnswers = allCorrect;
             // if ($dragAssociationPairs.length === 4) points += 100;
-            if (!incorrectMatches && $dragAssociationPairs.length === currentSituation.moments.length) {
-                points += 100;
-            }
+
+            // bonus points
+            // if (!incorrectMatches && $dragAssociationPairs.length === currentSituation.moments.length) {
+            //     points += 100;
+            // }
         } else {
             // reset incorrect pairs to original position
             resetIncorrectPairs();
