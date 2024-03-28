@@ -117,6 +117,7 @@
         completedQuiz = true;
         // clear writable when quiz ends
         $dragAssociationPairs = [];
+        dispatch('saveResults', { points: points });
     }
 
     // go to next situation and reset any variables needing reset
@@ -136,13 +137,6 @@
         });
         // reset drag pairs
         $dragAssociationPairs = [];
-    }
-
-    function resetForNextSituation() {
-        resetPositions();
-        checked = false;
-        itemsMatched = 0;
-        allCorrectAnswers = false;
     }
 
     function resetDraggable(element: DragPair) {
@@ -171,28 +165,6 @@
     // handle next situation change
     function handleSituationChange(situationIndex: number) {
         dispatch('changeSituation', situationIndex);
-    }
-
-    function handleTextToSpeech(moment: Moment) {
-        return async function(event: Event) {
-            try {
-                const response = await fetch(`/api/tts`, {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': "application/json"
-                    },
-                    body: JSON.stringify({ text: moment.momentSummarization })
-                });
-                const data = await response.json();
-                audio = data.audio;
-                if (audioElement) {
-                    audioElement.src = audio;
-                    await audioElement.play();
-                }
-            } catch (error) {
-                console.error("Error calling text-to-speech API:", error);
-            }
-        }
     }
 </script>
 

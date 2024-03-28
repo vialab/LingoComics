@@ -29,6 +29,22 @@
     function handlePoints(event: CustomEvent) {
         points = event.detail.points;
     }
+
+    async function handleSaveResults(event: CustomEvent) {
+        let quizPoints = event.detail.points;
+        const body = { scenario, points: quizPoints };
+        try {
+            await fetch("/api/save/quiz", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            });
+        } catch (error) {
+            console.error("Error saving quiz results:", error);
+        }
+    }
 </script>
 
 
@@ -49,6 +65,7 @@
         on:nextSituation={handleNextSituation} 
         on:changeSituation={handleSituationChange} 
         on:updatePoints={handlePoints}
+        on:saveResults={handleSaveResults}
     />
 </div>
 
