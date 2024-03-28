@@ -21,9 +21,12 @@
     let selectedMoment : Moment;
     let audio : string = '';
     let audioElement : HTMLAudioElement;
+
     
-    // game points
-    let points = 0;
+    // game variables
+    let points : number = 0;
+    let itemsMatched : number = 0;
+    let checked : boolean = false;
 
     const dispatch = createEventDispatcher();
 
@@ -34,7 +37,11 @@
         currentSituation.moments = shuffle([...currentSituation.moments]);
     });
 
-    // $: () => console.log($selectedLanguage);
+    // when itemsMatched changes then change the checked to false   
+    $: if (itemsMatched !== 0) {
+        console.log(itemsMatched);
+        checked = false;
+    }
 
     // function to add a pair
     function addPair(pair: DragPair) {
@@ -44,6 +51,7 @@
             $dragAssociationPairs[existingPairs] = pair;
         } else {
             $dragAssociationPairs.push(pair);
+            itemsMatched += 1;
         }
 
     }
@@ -59,11 +67,21 @@
     // check if the answers are correct
     function checkAnswers() {
         let allCorrect = true;
+        let incorrectMatches = false;
 
         $dragAssociationPairs.forEach(({ draggable, target }) => {
             const correctMatch = draggable.dataset.id === target.dataset.id;
             draggable.style.border = correctMatch ? '3px solid green' : '3px solid red';
             target.style.border = correctMatch ? '3px solid green' : '3px solid red';
+
+            // logic for accumulating points
+            
+            if (correctMatch) {
+                points += 25;
+            } else {
+                incorrectMatches = true;
+                if (points > 0) points -= 10;
+            }
 
             // if any incorrct match then all correct is false
             if (!correctMatch) allCorrect = false;
@@ -71,13 +89,16 @@
         
         if (allCorrect) {
             allCorrectAnswers = allCorrect;
-            if ($dragAssociationPairs.length === 4) points += 100;
-            dispatch('updatePoints', { points });
+            // if ($dragAssociationPairs.length === 4) points += 100;
+            if (!incorrectMatches && $dragAssociationPairs.length === currentSituation.moments.length) {
+                points += 100;
+            }
         } else {
             // reset incorrect pairs to original position
             resetIncorrectPairs();
         }
-
+        checked = true;
+        dispatch('updatePoints', { points });
     }
 
     // reset incorrect image and option pairs
@@ -115,6 +136,13 @@
         });
         // reset drag pairs
         $dragAssociationPairs = [];
+    }
+
+    function resetForNextSituation() {
+        resetPositions();
+        checked = false;
+        itemsMatched = 0;
+        allCorrectAnswers = false;
     }
 
     function resetDraggable(element: DragPair) {
@@ -226,7 +254,7 @@
                         <button class="btn custom-btn-bg w-full" on:click={handleNextSituation}>Next situation</button>
                     {:else}
                         <div class="flex flex-row gap-2">
-                            <button class="btn custom-btn-bg w-1/2" id="checkMatches" on:click={checkAnswers}>Check answers</button>
+                            <button class="btn custom-btn-bg w-1/2" id="checkMatches" on:click={checkAnswers} disabled={checked}>Check answers</button>
                             <button class="btn clear-btn w-1/2" on:click={resetPositions}>Clear all</button>
                         </div>
                     {/if}
