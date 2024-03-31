@@ -10,7 +10,7 @@
 <div class="flex justify-center items-center w-full h-full">
     <div class="flex flex-col justify-center items-center w-3/5 h-full">
         <h1 class="m-2 text-bold text-3xl">Your achievements</h1>
-        <div class="w-full m-3">
+        <div class="w-full m-3 achievements-container">
             {#each scenarios as scenario}
                 <div class="p-3 flex">
                     <img class="rounded-lg m-2" src={scenario.image} alt={scenario.scenario} width="150" />
@@ -26,3 +26,10 @@
         </div>
     </div>
 </div>
+
+<style>
+    .achievements-container {
+        height: calc(100vh - 150px);
+        overflow-y: scroll;
+    }
+</style>

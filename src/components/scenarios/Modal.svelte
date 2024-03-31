@@ -83,19 +83,24 @@
         z-index: 3000;
     }
     .highlight-1 {
-        border: 2px solid #40bce2;
+        border: 2px solid #96CDFF;
+        /* border: 2px solid #40bce2; */
     }
     .highlight-2 {
-        border: 2px solid #4e9be3;
+        border: 2px solid #96CDFF;
+        /* border: 2px solid #4e9be3; */
     }
     .highlight-3 {
-        border: 2px solid #6e87d9;
+        border: 2px solid #96CDFF;
+        /* border: 2px solid #6e87d9; */
     }
     .highlight-4 {
-        border: 2px solid #a061a4;
+        border: 2px solid #96CDFF;
+        /* border: 2px solid #a061a4; */
     }
     .highlight-5 {
-        border: 2px solid #8d4862;
+        border: 2px solid #96CDFF;
+        /* border: 2px solid #8d4862; */
     }
 </style>
 
