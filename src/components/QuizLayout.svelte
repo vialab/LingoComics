@@ -287,23 +287,29 @@
         z-index: 2000;
     }
     :global(.highlight-1) {
-        background-color: #96CDFF;
+        /* background-color: #96CDFF; */
+        border: 1px solid #96CDFF;
+        color: #96CDFF;
     }
     :global(.highlight-2) {
         /* background-color: #96CDFF; */
-        background-color: #96CDFF;
+        border: 1px solid #96CDFF;
+        color: #96CDFF;
     }
     :global(.highlight-3) {
         /* background-color: #D8E1FF; */
-        background-color: #96CDFFFF;
+        border: 1px solid #96CDFF;
+        color: #96CDFF;
     }
     :global(.highlight-4) {
         /* background-color: #DBBADD; */
-        background-color: #96CDFF;
+        border: 1px solid #96CDFF;
+        color: #96CDFF;
     }
     :global(.highlight-5) {
         /* background-color: #BE92A2; */
-        background-color: #96CDFF;
+        border: 1px solid #96CDFF;
+        color: #96CDFF;
     }
 
 </style>
