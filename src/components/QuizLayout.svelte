@@ -171,7 +171,7 @@
     }
 
     function playSound() {
-        const audio : HTMLAudioElement = document.getElementById('correct-audio');
+        const audio : HTMLAudioElement = document.getElementById('correct-audio') as HTMLAudioElement;
         audio.play();
     }
 </script>
