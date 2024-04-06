@@ -78,6 +78,7 @@
             
             if (correctMatch) {
                 points += 25;
+                playSound();
             } else {
                 incorrectMatches = true;
                 if (points > 0) points -= 10;
@@ -168,11 +169,17 @@
     function handleSituationChange(situationIndex: number) {
         dispatch('changeSituation', situationIndex);
     }
+
+    function playSound() {
+        const audio : HTMLAudioElement = document.getElementById('correct-audio');
+        audio.play();
+    }
 </script>
 
 <div class="scenario-page">
     <p class="text-center italic">Drag each option from the right and drop it onto the image that you believe matches its description best</p>
     <div class="flex flex-col lg:flex-row justify-center items-center max-w-7xl mx-auto p-3 h-auto gap-3">
+        <audio id="correct-audio" src="/sounds/correct.mp3" preload="auto"></audio>
         {#if showModal}
             <Modal moment={selectedMoment} on:close={() => showModal = false} />
         {/if}
@@ -311,5 +318,4 @@
         border: 1px solid #96CDFF;
         color: #96CDFF;
     }
-
 </style>
