@@ -14,8 +14,6 @@ AI-generated comic-style story-based language learning application designed with
   - Image Storage
 
 ## How to Run
-
-## Run without Docker
 1. `git clone` the repository onto local machine
 2. `cd` into `lingocomics/` and run `npm install`
 3. In the directory's root (same location of `src/` file) make an `.env` file with the following configuration:
