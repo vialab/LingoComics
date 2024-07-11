@@ -42,6 +42,9 @@
 				<li class="text-xl">
 					<a href="/story" class:primary-bg={$page.url.pathname === '/story'}>Create new scenario</a>
 				</li>
+				<li class="text-xl">
+					<a href="/about" class:primary-bg={$page.url.pathname === '/about'}>About</a>
+				</li>
 			</ul>
 		</div>
 		<a href="/" class="btn btn-ghost text-xl">LingoComics</a>
@@ -59,6 +62,9 @@
 			</li>
 			<li class="text-xl px-1">
 				<a href="/story" class="transition-bg" class:primary-bg={$page.url.pathname === '/story'}>Story designer</a>
+			</li>
+			<li class="text-xl px-1">
+				<a href="/about" class="transition-bg" class:primary-bg={$page.url.pathname === '/about'}>About</a>
 			</li>
 		</ul>
 	</div>

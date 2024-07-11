@@ -208,7 +208,7 @@
 
         <!-- left side -->
         <div class="w-full left-side flex flex-col items-center justify-center">
-            <div class="bg-gray-100 px-5 py-5 rounded-lg flex flex-col justify-center items-center">
+            <div class="bg-gray-100 px-5 py-5 rounded-lg flex flex-col justify-center items-center h-[580px]">
                 <PaginationButton situationLength={allSituationLength} currentSituationNumber={currentSituation.situationSort} handleSituationChange={handleSituationChange} />
                 <div class="grid grid-cols-2 gap-3 w-[450px]">
                     {#each currentSituation.image.momentImages as moment}
@@ -221,11 +221,11 @@
 
         <!-- right side -->
         <div class="w-full right-side h-full flex flex-col h-[700px]">
-            <div class="bg-gray-100 rounded-lg p-3 flex flex-col flex-grow h-[500px]">
+            <div class="bg-gray-100 rounded-lg p-3 flex flex-col flex-grow h-[580px]">
                 <!-- <h1 class="text-2xl ">Options</h1> -->
                 <ul class="flex flex-col gap-5 p-3 overflow-auto flex-grow" >
                     {#each currentSituation.moments as moment}
-                        <div class="flex flex-row w-full text-sm w-full bg-white rounded-lg p-3 xl:h-[108px] lg:h-[78px] md:h-[68px]" >
+                        <div class="flex flex-row w-full text-sm w-full bg-white rounded-lg p-3 xl:h-[108px] lg:h-[88px] md:h-[68px]" >
                             <div class="container">
                                 <div class="absolute rounded-lg p-2 back">{@html highlightKeywords(moment.momentSummarization, moment.keywords ?? {})}</div>
                                 <div
@@ -280,7 +280,7 @@
         height: 100%;
     }
     .scenario-page {
-        overflow-y: scroll;
+        overflow-y: hidden;
         height: calc(100vh - 80px);
     }
     ul {
@@ -312,7 +312,7 @@
         padding: 3px;
         border-radius: 5px;
         margin: 1px;
-        line-height: 1.5rem;
+        line-height: 1.8rem;
         z-index: 2000;
     }
     :global(.highlight-1) {

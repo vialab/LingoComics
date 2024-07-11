@@ -9,6 +9,7 @@ export const POST : RequestHandler = async ({ request }) => {
     const body = await request.json();
 
     const text: string = body.text;
+    const fileName: string = body.fileName;
 
     try {
         const response = await openai.audio.speech.create({
@@ -19,7 +20,7 @@ export const POST : RequestHandler = async ({ request }) => {
 
         const audioData = Buffer.from(await response.arrayBuffer());
 
-        const filepath = "output.mp3";
+        const filepath = `${fileName}.mp3`;
 
         await writeFile(filepath, audioData);
 

@@ -21,6 +21,7 @@ export function getCharacterPrompt(story: string) {
         - clothing description
         - ethnicity
         THE DESCRIPTION MUST BE BRIEF AND TO THE POINT.
+        The character must be of AFRICAN AMERICAN ethnicity and appearance and male.
         Be descriptive about the description and return in the list format specified.
     `;
 }
@@ -38,7 +39,7 @@ export function summarizeMoment(moment: string) {
 export function getStorySetting(storySummary: string) {
     return `
         Given the summary of the story: ${storySummary}, 
-        generate a detailed description of the setting, 
+        generate a list format description of the setting with 5 points, 
         focusing on sensory details, 
         the atmosphere, 
         and key features that define the space. 
@@ -114,7 +115,7 @@ export function generateMomentPrompt(situationTitle: string, scenario: string, t
         - conflict: '${conflict}'
 
         Generate very concise description for moment ${currentMoment} in this situation, outlining the progression of events.
-        The description should include any action that the character should perform so that an image generation model can generate an image based on the description.
+        The description should include any action that the character should perform so that an image generation model can generate an image based on the description and the character should be interacting with another person or object.
 
         The output should be in the format Moment ${currentMoment}: <moment>
     `;
@@ -195,7 +196,7 @@ export function generateMomentImagePrompt(scenario: string, situation: string, m
 
 export function getKeywordPrompts(text: string) {
     return `
-        Given this sentence: ${text}, give me the keywords within the sentence. 
+        Given this sentence: ${text}, give me 3 keywords within the sentence. 
         Only return the word and a short description as to its significance.
         Return exactly in the format: "[word]: [description]".
     `;

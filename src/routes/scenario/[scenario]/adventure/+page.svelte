@@ -194,7 +194,7 @@
 
 <style>
     .scenario-page {
-        overflow-y: scroll;
+        overflow-y: hidden;
         height: calc(100vh - 80px);
     }
     .p-container {
