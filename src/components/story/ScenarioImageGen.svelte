@@ -32,7 +32,7 @@
 {#if $selectedSituation }
     <div class="flex gap-2 w-full h-[30rem]">
         <!-- Situation image -->
-        <div class="scenario-card rounded-lg relative w-[10rem] overflow-hidden flex-1">
+        <div class="scenario-card rounded-lg relative w-[10rem] overflow-hidden flex-1" on:click={goBack} tabindex="0" role="button" on:keydown={(e) => e.key === "Enter"}>
             <img src="{$selectedSituation.image.situationImage}" alt="selected situation" class="w-full h-full object-cover" />
             <div class="image-overlay absolute inset-0"></div>
             <div class="p-4 absolute bottom-0 left-0 right-0">
@@ -52,7 +52,7 @@
     </div>
 
     <!-- Go back button -->
-    <button on:click={goBack}>Go Back</button>
+    <!-- <button on:click={goBack}>Go Back</button> -->
 {:else if responseData.hasOwnProperty('image') && responseData.image && typeof responseData.image === 'string' && !responseData.image.includes("undefined")}    
     <!-- regenerate image button -->
     <button class="btn w-full mb-2" on:click={() => modalOpen = true}>Regenerate images</button>

@@ -19,7 +19,7 @@ type MomentImage = {
 }
 
 export type Moment = {
-    id: number,
+    momentId: string,
     image: string,
     textOptions: Array<string>,
     momentImageDescriptionResponse: string,

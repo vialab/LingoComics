@@ -1,5 +1,6 @@
 import { db } from "$lib/firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import type { StoryStruct } from "../../../utils/types.js";
 
 export async function load({ params }) {
 
@@ -13,9 +14,9 @@ export async function load({ params }) {
 
         if (docSnapshot.exists()) {
             // if document exists then return its data
-            const scenario = {
-                id: docSnapshot.id,
-                ...docSnapshot.data()
+            const scenario: StoryStruct = {
+                scenarioId: docSnapshot.id,
+                ...(docSnapshot.data() as Omit<StoryStruct, 'scenarioId'>)
             }
 
             return { scenario };

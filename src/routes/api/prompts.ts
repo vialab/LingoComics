@@ -21,6 +21,7 @@ export function getCharacterPrompt(story: string) {
         - clothing description
         - ethnicity
         THE DESCRIPTION MUST BE BRIEF AND TO THE POINT.
+        The character must be of AFRICAN AMERICAN ethnicity and appearance and male.
         Be descriptive about the description and return in the list format specified.
     `;
 }
@@ -31,14 +32,14 @@ export function summarizeStoryPrompt(story: string) {
 
 export function summarizeMoment(moment: string) {
     return `
-        Summarize the following moment: ${moment}, highlighting the key aspects in 10-15 words or less.
+        Summarize the following moment: ${moment}, highlighting the key aspects in 8-10 words or less. The summarization should highlight a distinct action if the moment describes one.
     `;
 }
 
 export function getStorySetting(storySummary: string) {
     return `
         Given the summary of the story: ${storySummary}, 
-        generate a detailed description of the setting, 
+        generate a list format description of the setting with 5 points, 
         focusing on sensory details, 
         the atmosphere, 
         and key features that define the space. 
@@ -114,7 +115,7 @@ export function generateMomentPrompt(situationTitle: string, scenario: string, t
         - conflict: '${conflict}'
 
         Generate very concise description for moment ${currentMoment} in this situation, outlining the progression of events.
-        The description should include any action that the character should perform so that an image generation model can generate an image based on the description.
+        The description should include any action that the character should perform so that an image generation model can generate an image based on the description and the character should be interacting with another person or object.
 
         The output should be in the format Moment ${currentMoment}: <moment>
     `;
@@ -193,6 +194,85 @@ export function generateMomentImagePrompt(scenario: string, situation: string, m
 }
 
 
+export function getKeywordPrompts(text: string) {
+    return `
+        Given this sentence: ${text}, give me 3 keywords within the sentence. 
+        Only return the word and a short description as to its significance.
+        Return exactly in the format: "[word]: [description]".
+    `;
+}
+
+export function translateTextPrompt(text: string, language: string) {
+    return `
+        Translate this text: ${text} to ${language}.
+        Only give the translation.
+    `;
+}
+
+export function generateNarrativePrompt(text: string) {
+    return `
+        Generate a small length sentence for this piece of text: ${text}. 
+        Make the tone of sentence be in a narrative perspective so as to set up a scene for the same story in the sentence.
+    `;
+}
+
+export function generateNextStepPrompt(text: string) {
+    return `
+        Generate a small length instruction for this narrative: "${text}".
+        Make the tone of the sentence be in a "next step" narrative perspective, 
+        for example, "what should [person] do next", but make sure to have the sentence fit 
+        the context. Make the sentence small. Have the sentence be in the perspective of the main character in the narrative.
+    `;
+}
+
+export function generateOptions(text: string) {
+    return `
+        Generate 3 short, contextually relevant dialogue options based on the following text: ${text}.
+        Each option should represent a possible way a character might respond or what they might do next in the scenario.
+        Keep the options concise and ensure they lead to different narrative branches.
+        The branches should be relatable in context to the user. The format should be like: "[num]: [option]".
+    `
+}
+
+export function generateContinueNarrativePrompt(previousOption: string, selectedOption: string) {
+    return `
+        Generate a small length sentence for: ${selectedOption}.
+        Make the tone of the sentence be in a narrative perspective so as to set up a scene for the same story in the sentence.
+        The last narrative for the story was: ${previousOption} and so make the continuation of the new narrative flow with this in mind, so make the new small length narrative option adhere to the new option.
+    `;
+}
+
+export function generateNewImagePrompt(characterDescription: string, setting: string, storyTitle: string, narrative: string, selectedOption: string) {
+    // return `
+    //     Generate an image description that will be suitable for DALLE to generate, for: "${narrative}", for the story: ${storyTitle}.
+    //     The description of the character in the image is: ${characterDescription}.
+    //     The setting of the image should be: ${setting}.
+    //     Image is of a side-view camera angle to showcase the character's action and broader scene context.
+    //     The image should be a comic-style image.
+    // `;
+    return `
+        Create a detailed comic-style image that captures a scene from the story titled "${storyTitle}". 
+        In this scene, the narrative unfolds as: "${narrative}", and the character has chosen to: "${selectedOption}".
+        The character is described as: ${characterDescription}. 
+        They should be depicted within the setting of ${setting}, which can be modified to fit the narrative's progression.
+        The image should emphasize the character's emotions and interactions relevant to the narrative's context.
+        If the narrative involves interaction with another character, this character should also be included, depicted in a manner that complements the main character's actions.
+        The main character should not be facing the viewer directly; they should be engaged in an action that reflects the chosen narrative path.
+        Opt for a side view camera angle to showcase both the character's actions and the broader scene context.
+    `;
+    // return `
+    //     Generate a comic-style image for the story: "${storyTitle}".
+    //     The current narrative of the story is as follows: "${narrative}".
+    //     The selected option that the character should follow as part of the narrative is: "${selectedOption}".
+    //     The character description is: ${characterDescription}.
+    //     The setting is: ${setting}.
+    //     The image should convey the character's emotion and interacting with any substance that the current narrative describes.
+    //     The setting can be altered slightly to adhere to the current narrative. 
+    //     If the narrative and selected option demands the character interacting with another person, then include the other person as well in the image.
+    //     The character should NOT be looking directly at the screen, rather they should interact or perform some sort of action that makes sense for the current narrative that is outlined.
+    //     Camera angle of the image should be a side view of the character and scene.
+    // `;
+}
 /**
  * 
  * Given this moment ${moment}.

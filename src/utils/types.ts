@@ -1,3 +1,17 @@
+export interface DragPair {
+    draggable: HTMLElement,
+    target: HTMLElement
+}
+
+export interface TouchDraggableOptions {
+    addPair: (pair: DragPair) => void;
+    removePair: (pair: DragPair) => void;
+    isDragging: boolean;
+    handleSwap?: (pair1: DragPair, pair2: DragPair) => void;
+    resetIncorrectPairs?: () => void;
+    resetFunction?: () => void;
+}
+
 export type FirestoreData = {
     scenarios: Array<StoryStruct>;
 };
@@ -6,7 +20,7 @@ export type MomentObject = {
     [key: string]: string;
 }
 
-type Situation = {
+export type Situation = {
     id: string,
     title: string,
     image: { situationImage: string, momentImages: MomentImage[] },
@@ -15,8 +29,9 @@ type Situation = {
 }
 
 export type Moment = {
-    id: number,
+    momentId: string,
     image: string,
+    keywords: Record<string, string>,
     textOptions: Array<string>,
     momentImageDescriptionResponse: string,
     momentDescription: string,
@@ -24,13 +39,20 @@ export type Moment = {
 };
 
 type MomentImage = {
+    momentId: string,
     image: string,
     title: string,
     moment: string
 }
 
+type Achievement = {
+    points: number,
+    timestamp: string
+}
+
 export type StoryStruct = {
     story: string,
+    achievements: Achievement[],
     setting: string,
     character: string,
     scenarioId: string,
@@ -44,6 +66,7 @@ export type StoryStruct = {
 
 export const emptyStoryStruct: StoryStruct = {
     story: '',
+    achievements: [],
     setting: '',
     character: '',
     scenarioId: '',
@@ -53,4 +76,32 @@ export const emptyStoryStruct: StoryStruct = {
     situations: [],
     moments: '',
     isFinish: false,
+}
+
+export type Scene = {
+    narrative: string,
+    nextStep: string,
+    options: string[],
+    moment: Moment[],
+    keywordsObject: Record<string, string>,
+    image: ""
+}
+
+export const defaultScene: Scene = {
+    narrative: "",
+    nextStep: "",
+    moment: [],
+    options: [],
+    keywordsObject: {},
+    image: ""
+}
+
+export const emptyMoment: Moment = {
+    momentId: "",
+    image: "",
+    keywords: {},
+    textOptions: [],
+    momentImageDescriptionResponse: "",
+    momentDescription: "",
+    momentSummarization: ""
 }

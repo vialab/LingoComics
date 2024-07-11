@@ -4,7 +4,7 @@ import { env } from '$env/dynamic/private';
 import { Storage } from '@google-cloud/storage';
 import OpenAI from "openai";
 import { generateCharacterAttributes } from "./characterGenerator";
-import { generateCharacterPrompt, generateMomentDescriptionPrompt, generateMomentPrompt, generateScenarioPrompt, generateSituationPrompt, getCharacterPrompt, getScenarioTitlePrompt, getStorySetting, summarizeMoment, summarizeStoryPrompt } from "../../routes/api/prompts";
+import { generateCharacterPrompt, generateMomentDescriptionPrompt, generateMomentPrompt, generateScenarioPrompt, generateSituationPrompt, getCharacterPrompt, getKeywordPrompts, getScenarioTitlePrompt, getStorySetting, summarizeMoment, summarizeStoryPrompt } from "../../routes/api/prompts";
 import { updateMomentDescriptionContextPrompt, updateMomentImageContextPrompt, updateStoryContextPrompt } from '../../routes/api/generate/update/update-prompts';
 
 // initialize bucket
@@ -79,6 +79,40 @@ export async function generateImage(prompt: string) {
         
         // send base64 string as a response
         return `https://storage.googleapis.com/lingoimages/${imageFile?.name}`;
+        // return response.data[0].url;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+export async function generateImageNoSave(prompt: string) {
+    try {
+        const response = await openai.images.generate({
+            prompt: prompt,
+            model: imageModel,
+            n: 1,
+            size: '1024x1024',
+        });
+
+        // fetch image from URL
+        const imageUrl = response.data[0].url;
+        if (typeof imageUrl !== 'string') {
+            throw new Error('Invalid URL');
+        }
+        
+        const imageResponse = await fetch(imageUrl);
+        const arrayBuffer = await imageResponse.arrayBuffer();
+
+        const imageBuffer = Buffer.from(arrayBuffer);
+
+        // convert the buffer to a base64 string
+        const base64data = imageBuffer.toString('base64');
+
+        const imageBase64String = `data:image/png;base64,${base64data}`;
+        
+        // send base64 string as a response
+        return imageBase64String;
         // return response.data[0].url;
     } catch (error) {
         console.error(error);
@@ -262,8 +296,19 @@ export async function generateMoments(situations : Situation[], scenario: string
             const momentSummarizationPrompt = summarizeMoment(momentDescription);
             const momentSummarization = (await gptPrompt(openai, chatModel, momentSummarizationPrompt)).choices[0].message.content?.trim() as string;
 
+            const keywordPrompt = getKeywordPrompts(momentSummarization);
+            const keywords = (await gptPrompt(openai, chatModel, keywordPrompt)).choices[0].message.content?.trim().split('\n').filter(op => op.trim() !== '');
+            
+            const keywordsObject = {};
+            keywords?.map(keywordString => {
+                const parts = keywordString.split(":");
+                const word = parts[0].replace('- ', '').trim();
+                const description = parts[1].trim();
+                keywordsObject[word] = description;
+            });
 
-            moments.push({ momentSummarization, momentDescription, momentImageDescriptionResponse });
+            // push structure with uuid for quiz
+            moments.push({ momentId: uuidv4(), momentSummarization, momentDescription, momentImageDescriptionResponse, keywords: keywordsObject });
         }
 
         structuredSituations.push({

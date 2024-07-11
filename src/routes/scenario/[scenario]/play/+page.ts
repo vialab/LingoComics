@@ -1,5 +1,3 @@
-import { db } from '$lib/firebase/firebase.js';
-import { doc, getDoc } from 'firebase/firestore';
 import type { StoryStruct } from '../../../../utils/types.js';
 
 export async function load({ params, fetch }) {
@@ -12,9 +10,6 @@ export async function load({ params, fetch }) {
         const result = await response.json();
 
         const scenario = result as StoryStruct;
-
-        console.log('loaded scenario',  scenario);
-
         
         return { scenario }
     } catch (error) {

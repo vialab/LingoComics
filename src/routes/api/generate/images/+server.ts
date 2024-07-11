@@ -44,7 +44,7 @@ export const POST = async ({ request }) => {
                 
                 const momentPrompt = generateMomentImagePrompt(summary, situation.title, momentImageDescription, character, setting);
                 const momentImage = await generateImage(momentPrompt);
-                momentImages.push({ title: situation.title, image: momentImage, moment: moment.momentDescription });
+                momentImages.push({ title: situation.title, image: momentImage, moment: moment.momentDescription, momentId: moment.momentId });
             }
             situationImages.push({ situationImage, momentImages });
         }
