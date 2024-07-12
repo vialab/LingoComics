@@ -7,9 +7,4 @@ services:
       dockerfile: Dockerfile
     ports:
       - "4173:4173"
-    environment:
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
-      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
-      GOOGLE_CLOUD_KEY: ${GOOGLE_CLOUD_KEY}
-      GOOGLE_CLOUD_BUCKET: ${GOOGLE_CLOUD_BUCKET}
     command: npm run preview -- --host 0.0.0.0
