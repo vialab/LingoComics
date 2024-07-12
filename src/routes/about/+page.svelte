@@ -1,5 +1,6 @@
 <script lang="ts">
     import comicBookImage from "../../assets/images/home_comic_img.png";
+    import storyDesignerForm from '../../assets/images/story_designer form.jpg';
 </script>
 
 <div class="scenario-page">
@@ -13,8 +14,13 @@
         </div>
     
         <div class="rounded-lg shadow-lg py-14 px-5">
-            <h1 class="text-3xl">Story designer</h1>
-            <p class="w-1/2 mt-10">A feature that allows you to create your own stories.</p>
+            <div class="flex relative flex-col">
+                <div>
+                    <h1 class="text-3xl">Story designer</h1>
+                    <p class="w-1/2 mt-10">A feature that allows you to create your own stories.</p>
+                </div>
+                <img src={storyDesignerForm} alt="story designer form" class="absolute w-1/5 xl:w-1/6 top-0 right-5" />
+            </div>  
 
             <h2 class="font-bold mt-5">To create your story:</h2>
             <ol class="list-decimal pl-5">
@@ -22,7 +28,7 @@
                 <p>Navigate to the Story Designer section to get started</p>
 
                 <li class="mt-2 font-bold">Specify information in the form</li>
-                <p>Fill in the form, providing the context, setting, number of situations, emotional tone, and primary conflict of the desired story</p>
+                <p class="xl:w-1/2">Fill in the form, providing the context, setting, number of situations, emotional tone, and primary conflict of the desired story</p>
 
                 <li class="mt-2 font-bold">Click the 'Generate Story' button</li>
                 <p>Once you have completed the form, click the 'Generate Story' button. The system will use your inputs to create a story that aligns with your language learning goals</p>

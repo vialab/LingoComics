@@ -21,7 +21,6 @@ export function getCharacterPrompt(story: string) {
         - clothing description
         - ethnicity
         THE DESCRIPTION MUST BE BRIEF AND TO THE POINT.
-        The character must be of AFRICAN AMERICAN ethnicity and appearance and male.
         Be descriptive about the description and return in the list format specified.
     `;
 }
@@ -39,11 +38,13 @@ export function summarizeMoment(moment: string) {
 export function getStorySetting(storySummary: string) {
     return `
         Given the summary of the story: ${storySummary}, 
-        generate a list format description of the setting with 5 points, 
-        focusing on sensory details, 
-        the atmosphere, 
-        and key features that define the space. 
+        generate a description that will best fit the story.
+        The description should have the following:
+        - ambiance
+        - atmosphere
+        - lighting
         THE DESCRIPTION MUST BE BRIEF AND TO THE POINT.
+        Be descriptive about the description and return in the exact list format specified no numbers.
     `;
 }
 

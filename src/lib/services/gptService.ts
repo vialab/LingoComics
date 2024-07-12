@@ -136,6 +136,7 @@ export async function generateCharacterDescription() : Promise<string> {
  * @returns 
  */
 export async function getScenarioTitle(story: string) : Promise<string> {
+    console.log("Getting scenario title...");
     const scenarioTitlePrompt : string = getScenarioTitlePrompt(story);
     const scenario : string = (await gptPrompt(openai, chatModel, scenarioTitlePrompt)).choices[0].message.content?.trim() as string;
     return scenario;
@@ -147,6 +148,7 @@ export async function getScenarioTitle(story: string) : Promise<string> {
  * @returns 
  */
 export async function getCharacterFromScenario(story: string) : Promise<string> {
+    console.log("Extracting character from story...");
     const characterPrompt : string = getCharacterPrompt(story);
     const character : string = (await gptPrompt(openai, chatModel, characterPrompt)).choices[0].message.content?.trim() as string;
     return character;
@@ -158,6 +160,7 @@ export async function getCharacterFromScenario(story: string) : Promise<string> 
  * @returns 
  */
 export async function summarizeStory(story: string) : Promise<string> {
+    console.log("Summarizing story...");
     const summaryPrompt : string = summarizeStoryPrompt(story); 
     const summary : string = (await gptPrompt(openai, chatModel, summaryPrompt)).choices[0].message.content?.trim() as string;
     return summary;
@@ -169,6 +172,7 @@ export async function summarizeStory(story: string) : Promise<string> {
  * @returns description of story setting
  */
 export async function summarizeSetting(storySummary: string) : Promise<string> {
+    console.log("Summarizing setting");
     const settingPrompt : string = getStorySetting(storySummary);
     const setting : string = (await gptPrompt(openai, chatModel, settingPrompt)).choices[0].message.content?.trim() as string;
     return setting;
@@ -183,6 +187,7 @@ export async function summarizeSetting(storySummary: string) : Promise<string> {
  * @returns scenario title
  */
 export async function generateScenario(title : string, setting : string, tone : string, conflict : string) : Promise<string> {
+    console.log("Generating story...");
     const scenarioPrompt : string = generateScenarioPrompt(title, setting, tone, conflict);
     const scenario = (await gptPrompt(openai, chatModel, scenarioPrompt)).choices[0].message.content?.trim() as string;
     return scenario;
@@ -211,6 +216,7 @@ export async function updateScenario(story : string, updatedContent : string, up
  * @returns 
  */
 export async function generateSituations(scenario: string ,situation: string, tone: string, conflict: string) {
+    console.log("Generating situations...");
     const totalSituations = Number(situation);
     let previousSituationTitle = "";
     const situations = [];

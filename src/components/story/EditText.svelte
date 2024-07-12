@@ -9,17 +9,28 @@
     export let updateType: string | null = null;
     let isLoading = false;
     let isEditable = false;
+    let initialEditText: string | null = null;
 
     const dispatch = createEventDispatcher();
 
     // toggle between toggeable state
     function toggleEdit() {
-        isEditable = !isEditable;
-        // dispatch event when confirming the edit
-        if (!isEditable) {
-            dispatch('change', { editText });
-            updateStoryMetadata();
+        if (isEditable) {
+            // toggle out of edit mode
+            if (editText !== initialEditText) {
+                console.log("UPDATE STORY", editText);
+            }
+        } else {
+            initialEditText = editText;
+            console.log("NO CHANGES MADE");
         }
+        isEditable = !isEditable;
+
+        // dispatch event when confirming the edit
+        // if (!isEditable) {
+        //     dispatch('change', { editText });
+        //     updateStoryMetadata();
+        // }
     }
 
     // call /api/generate/update
@@ -47,19 +58,26 @@
             isLoading = false;
         }
     }
+
+    // format editText string
+    const regex = /-\s(.+?):\s(.+)/g;
+
+    $: formattedString = editText?.replace(regex, (match, p1, p2) => {
+        return `<strong>${p1}</strong>: ${p2}<br>`
+    })
 </script>
 
 {#if isLoading}
     <span class="loading loading-dots loading-lg"></span>
 {:else}
-    <div>
+    <div class="mt-5">
         <h1 class="text-2xl text-bold">{title}</h1>
         {#if isEditable}
             <textarea bind:value={editText} class="editable-text" />
         {:else}
-            <p>{editText}</p>
+            <p id="editText">{@html formattedString}</p>
         {/if}
-        <button class="btn rounded" on:click={toggleEdit}>{isEditable ? 'Confirm' : 'Edit'}</button>
+        <button class="btn rounded mt-5" on:click={toggleEdit}>{isEditable ? 'Confirm' : 'Edit'}</button>
     </div>
 {/if}
 
@@ -69,7 +87,7 @@
     .editable-text {
         /* Styles for your textarea/input when editable */
         width: 100%;
-        height: 100px; /* Adjust as needed */
+        height: 300px; /* Adjust as needed */
         margin: 10px 0;
         padding: 10px;
         border: 1px solid gray;
