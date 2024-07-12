@@ -1,10 +1,6 @@
 # use node base image
 FROM node:latest
 
-# define environment variables
-ENV OPENAI_API_KEY="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"
-ENV GOOGLE_API_KEY="./apiKey.json"
-
 # set the working directory in the container
 WORKDIR /app
 
