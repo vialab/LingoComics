@@ -4,7 +4,7 @@ FROM node:latest
 # set the working directory in the container
 WORKDIR /app
 
-ARG OPENAI_API_KEY
+ENV OPENAI_API_KEY="fakekey"
 
 # copy package.json and package-lock.json
 COPY package*.json ./
