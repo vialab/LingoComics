@@ -5,6 +5,7 @@ FROM node:latest
 WORKDIR /app
 
 ENV OPENAI_API_KEY="fakekey"
+ENV ORIGIN=https://lingocomics.apps.science.ontariotechu.ca/
 
 # copy package.json and package-lock.json
 COPY package*.json ./
