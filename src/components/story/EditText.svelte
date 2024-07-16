@@ -19,6 +19,8 @@
             // toggle out of edit mode
             if (editText !== initialEditText) {
                 console.log("UPDATE STORY", editText);
+                dispatch('change', { editText });
+                updateStoryMetadata();
             }
         } else {
             initialEditText = editText;
